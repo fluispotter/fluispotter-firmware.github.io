@@ -1,0 +1,2361 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Fluispotter</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.8c3ca2c6.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#api-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="Fluispotter" class="md-header__button md-logo" aria-label="Fluispotter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fluispotter
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Fluispotter" class="md-nav__button md-logo" aria-label="Fluispotter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fluispotter
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    API Reference
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    API Reference
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#development-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      Development API
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Development API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#development.PIDConstants" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;PIDConstants
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#development.SpotReceiverConstants" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;SpotReceiverConstants
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#development.create_controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;create_controller
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#development.log" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;log
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#development.drive_tape_reel_with_spot_receiver_sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;drive_tape_reel_with_spot_receiver_sync
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#development.sample_spot_receiver_sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;sample_spot_receiver_sync
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#development.drive_pump_by_revolutions_sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;drive_pump_by_revolutions_sync
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#development.drive_pump_by_segmented_revolutions_sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;drive_pump_by_segmented_revolutions_sync
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#development.drive_pump_by_absolute_pulses_sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;drive_pump_by_absolute_pulses_sync
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#development.drive_pump_by_relative_pulses_sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;drive_pump_by_relative_pulses_sync
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#development.drive_pump_cycle_sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;drive_pump_cycle_sync
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#development.drive_pump_sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;drive_pump_sync
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#development.drive_pump_with_fluid_receiver_sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;drive_pump_with_fluid_receiver_sync
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#development.collect_blood_sample_sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;collect_blood_sample_sync
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#veml6035" class="md-nav__link">
+    <span class="md-ellipsis">
+      VEML6035
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="VEML6035">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fluispotter.veml6035.CONFIGURATION_SENSITIVITY_HIGH" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;CONFIGURATION_SENSITIVITY_HIGH
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fluispotter.veml6035.CONFIGURATION_SENSITIVITY_LOW" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;CONFIGURATION_SENSITIVITY_LOW
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fluispotter.veml6035.CONFIGURATION_DG_NORMAL" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;CONFIGURATION_DG_NORMAL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fluispotter.veml6035.CONFIGURATION_DG_DOUBLE" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;CONFIGURATION_DG_DOUBLE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fluispotter.veml6035.CONFIGURATION_GAIN_NORMAL" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;CONFIGURATION_GAIN_NORMAL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fluispotter.veml6035.CONFIGURATION_GAIN_DOUBLE" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;CONFIGURATION_GAIN_DOUBLE
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fluispotter.veml6035.CONFIGURATION_INTEGRATION_TIME_25MS" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;CONFIGURATION_INTEGRATION_TIME_25MS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fluispotter.veml6035.CONFIGURATION_INTEGRATION_TIME_50MS" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;CONFIGURATION_INTEGRATION_TIME_50MS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fluispotter.veml6035.CONFIGURATION_INTEGRATION_TIME_100MS" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;CONFIGURATION_INTEGRATION_TIME_100MS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fluispotter.veml6035.CONFIGURATION_INTEGRATION_TIME_200MS" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;CONFIGURATION_INTEGRATION_TIME_200MS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fluispotter.veml6035.CONFIGURATION_INTEGRATION_TIME_400MS" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;CONFIGURATION_INTEGRATION_TIME_400MS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fluispotter.veml6035.CONFIGURATION_INTEGRATION_TIME_800MS" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;CONFIGURATION_INTEGRATION_TIME_800MS
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pretty-print" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pretty print
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pretty print">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#development.pretty_print.Table" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Table
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#development.pretty_print.CSV" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;CSV
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="api-reference">API Reference</h1>
+<p>Fluispotter device firmware for the ESP32-S3 with octal-SPIRAM.</p>
+<h2 id="development-api">Development API</h2>
+<p>The <code>development</code> module contains functions used for R&amp;D and are meant to be run in the MicroPython REPL on the device.</p>
+<p>All the <code>*_sync</code> functions have an async equivalent which require <code>asyncio</code> to run. It is possible to forcibly stop a sync function
+by issuing a keyboard interrupt with <code>CTRL+C</code> in the REPL. The program will try to cleanup as best as possible on an interrupt
+but there is no guarantee that it will end in a valid state, in that case soft reboot the device with <code>CTRL+D</code>.</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="development.PIDConstants" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">PIDConstants</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;PIDConstants&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;proportional&#39;</span><span class="p">,</span> <span class="s1">&#39;integral&#39;</span><span class="p">,</span> <span class="s1">&#39;derivative&#39;</span><span class="p">,</span> <span class="s1">&#39;setpoint&#39;</span><span class="p">,</span> <span class="s1">&#39;initial_power&#39;</span><span class="p">,</span> <span class="s1">&#39;sleep_duration_ms&#39;</span><span class="p">))</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Struct containing settings for the PID controller.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>proportional</code></td>
+            <td>
+                  <code>float</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Value for the proportional gain.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>integral</code></td>
+            <td>
+                  <code>float</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Value for the integral gain.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>derivative</code></td>
+            <td>
+                  <code>float</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Value for the derivative gain.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>setpoint</code></td>
+            <td>
+                  <code>float</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Target value in seconds per revolution the PID will try to archive.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>initial_power</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Initial power (value between 0 and 4095) for the motor.
+It also serves as the starting point for the PID, avoiding the PID outputting zero
+at the beginning and moving the system too much away from desired setpoint.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>sleep_duration_ms</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of milliseconds between each PID adjustment.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>Create a <code>PIDConstants</code> instance.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">development</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">pid_constants</span> <span class="o">=</span> <span class="n">PIDConstants</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">1600</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+</code></pre></div>
+</details>    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="development.SpotReceiverConstants" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">SpotReceiverConstants</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;SpotReceiverConstants&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;integration_time&#39;</span><span class="p">,</span> <span class="s1">&#39;gain&#39;</span><span class="p">,</span> <span class="s1">&#39;dg&#39;</span><span class="p">,</span> <span class="s1">&#39;sensitivity&#39;</span><span class="p">))</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Struct containing settings for the VEML6035 spot sensor.</p>
+<p>See <a href="/#veml6035">VEML6035</a> section for more information about configuration options.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>integration_time</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>One of <a class="autorefs autorefs-internal" href="#fluispotter.veml6035.CONFIGURATION_INTEGRATION_TIME_25MS">CONFIGURATION_INTEGRATION_TIME_*</a> constants.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>gain</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>One of <a class="autorefs autorefs-internal" href="#fluispotter.veml6035.CONFIGURATION_GAIN_NORMAL">CONFIGURATION_GAIN_*</a> constants.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>dg</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>One of <a class="autorefs autorefs-internal" href="#fluispotter.veml6035.CONFIGURATION_DG_NORMAL">CONFIGURATION_DG_*</a> constants.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>sensitivity</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>One of <a class="autorefs autorefs-internal" href="#fluispotter.veml6035.CONFIGURATION_SENSITIVITY_HIGH">CONFIGURATION_SENSITIVITY_*</a> constants.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+    </div>
+
+</div>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="development.create_controller" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">create_controller</span><span class="p">()</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Create or retrieve a singleton controller instance.</p>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="fluispotter.Controller">Controller</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A controller instance.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="development.log" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">log</span><span class="p">(</span><span class="o">*</span><span class="n">message</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Print message to terminal.</p>
+<p>The mesage includes a timestamp computed using the external RTC.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>message</code></td>
+            <td>
+                  <code><span title="typing.Any">Any</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>One or more values which will be stringified and joined
+using the provided seperator.</p>
+              </div>
+            </td>
+            <td>
+                  <code>()</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>sep</code></td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Seperator for joining message values.</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39; &#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>end</code></td>
+            <td>
+                  <code>str</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Suffix added to the final message.</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;\n&#39;</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>Print simple message.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">development</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">log</span><span class="p">(</span><span class="s1">&#39;Numbers&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+</code></pre></div>
+<p>Which outputs the following.</p>
+<div class="highlight"><pre><span></span><code>[2000-01-01 00:00:06]: Numbers, 1, 2
+</code></pre></div>
+</details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="development.drive_tape_reel_with_spot_receiver_sync" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">drive_tape_reel_with_spot_receiver_sync</span><span class="p">(</span><span class="n">pulses</span><span class="p">,</span> <span class="n">spot_sample_interval_ms</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">indexer_circumference_mm</span><span class="o">=</span><span class="mf">15.5</span><span class="p">,</span> <span class="n">spot_receiver_constants</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">writer</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Run the tape reel for provided number of indexer pulses while
+sampling from the blood spot sensor.</p>
+<p>The spot sensor is sampled every specified interval. Every indexer pulse
+the measured spot sensor values and the calculated distances are written to the
+terminal.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>pulses</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of indexer pulses to run the tape reel (<code>0</code> run forever).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>spot_sample_interval_ms</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>How often to sample the spot sensor in millisconds.</p>
+              </div>
+            </td>
+            <td>
+                  <code>100</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>indexer_circumference_mm</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Indexer circumference in millimeters used to calculate the distance
+between spot sensor samples.</p>
+              </div>
+            </td>
+            <td>
+                  <code>15.5</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>spot_receiver_constants</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="development.SpotReceiverConstants" href="#development.SpotReceiverConstants">SpotReceiverConstants</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Settings for the spot sensor.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>writer</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="development.pretty_print.Table" href="#development.pretty_print.Table">Table</a> | <a class="autorefs autorefs-internal" title="development.pretty_print.CSV" href="#development.pretty_print.CSV">CSV</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The formatter for writting the output.
+If none specified <a class="autorefs autorefs-internal" href="#development.pretty_print.Table">Table</a> is used.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>Run the tape reel with custom spot sensor constants and CSV format.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">development</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">drive_tape_reel_with_spot_receiver_sync</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">writer</span><span class="o">=</span><span class="n">CSV</span><span class="p">(),</span> <span class="n">spot_receiver_constants</span><span class="o">=</span><span class="n">SpotReceiverConstants</span><span class="p">(</span>
+    <span class="n">CONFIGURATION_INTEGRATION_TIME_100MS</span><span class="p">,</span>
+    <span class="n">CONFIGURATION_GAIN_NORMAL</span><span class="p">,</span>
+    <span class="n">CONFIGURATION_DG_NORMAL</span><span class="p">,</span>
+    <span class="n">CONFIGURATION_SENSITIVITY_LOW</span><span class="p">))</span>
+</code></pre></div>
+</details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="development.sample_spot_receiver_sync" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">sample_spot_receiver_sync</span><span class="p">(</span><span class="n">spot_sample_interval_ms</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">spot_receiver_constants</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">writer</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Sample the blood spot sensor every specified interval.</p>
+<p>For every interval the measured sport sensor values are printed to the terminal.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>spot_sample_interval_ms</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>How often to sample the spot sensor in millisconds.</p>
+              </div>
+            </td>
+            <td>
+                  <code>100</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>spot_receiver_constants</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="development.SpotReceiverConstants" href="#development.SpotReceiverConstants">SpotReceiverConstants</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Settings for the spot sensor.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>writer</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="development.pretty_print.Table" href="#development.pretty_print.Table">Table</a> | <a class="autorefs autorefs-internal" title="development.pretty_print.CSV" href="#development.pretty_print.CSV">CSV</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The formatter for writting the output.
+If none specified <a class="autorefs autorefs-internal" href="#development.pretty_print.Table">Table</a> is used.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>Sample the spot sensor and print with CSV format.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">development</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">sample_spot_receiver_sync</span><span class="p">(</span><span class="n">spot_sample_interval_ms</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">writer</span><span class="o">=</span><span class="n">CSV</span><span class="p">())</span>
+</code></pre></div>
+</details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="development.drive_pump_by_revolutions_sync" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">drive_pump_by_revolutions_sync</span><span class="p">(</span><span class="n">pump</span><span class="p">,</span> <span class="n">revolutions</span><span class="p">,</span> <span class="n">pid_constants</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Run the pump for provided number of revolutions.</p>
+<p>The pump is first calibrated and parked. Then started and run for
+specified number of revolutions using a PID controller. The revolutions
+are counted using the Hall switch.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>pump</code></td>
+            <td>
+                  <code><span title="fluispotter.PumpMotor">PumpMotor</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Pump motor instance.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>revolutions</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of revolutions to run the pump (<code>0</code> run forever).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>pid_constants</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="development.PIDConstants" href="#development.PIDConstants">PIDConstants</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Settings for the PID controller.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>Create a controller and run the blood pump for 8 revolutions.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">development</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">controller</span> <span class="o">=</span> <span class="n">create_controller</span><span class="p">()</span>
+<span class="n">drive_pump_by_revolutions_sync</span><span class="p">(</span><span class="n">controller</span><span class="o">.</span><span class="n">blood_pump</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">PIDConstants</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">1600</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
+</code></pre></div>
+</details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="development.drive_pump_by_segmented_revolutions_sync" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">drive_pump_by_segmented_revolutions_sync</span><span class="p">(</span><span class="n">pump</span><span class="p">,</span> <span class="n">revolutions</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">pid_constants</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Run the pump for provided number of revolutions while outputting motor statistics
+every segment covered.</p>
+<p>The pump is first calibrated and parked. Then started and run for
+specified number of revolutions using a PID controller.</p>
+<p>If <code>segments</code> is an integer, each revolution is split into
+provided number of segments and for each segment relevant statistics are printed to
+the terminal. The segments are counted using motor encoder pulses while whole revolutions
+are counted using the Hall switch.</p>
+<p>Otherwise <code>segments</code> can be a list of tuples each containing a start and end position in degrees
+and PID settings for that segment. The first segment must start with 0 (park position) and the last
+end with 360. The PID internals are preserved after exiting a segment and restored when entering
+the same segment again.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>pump</code></td>
+            <td>
+                  <code><span title="fluispotter.PumpMotor">PumpMotor</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Pump motor instance.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>revolutions</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of revolutions to run the pump (<code>0</code> run forever).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>segments</code></td>
+            <td>
+                  <code>int | list[tuple[int, int, <a class="autorefs autorefs-internal" title="development.PIDConstants" href="#development.PIDConstants">PIDConstants</a>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of segments in a
+revolution or a list of tuples containing segment start degrees, end degrees and PID settings.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>pid_constants</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="development.PIDConstants" href="#development.PIDConstants">PIDConstants</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Settings for the PID controller.
+Only applicable if <code>segments</code> is a number.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>Create a controller and run the blood pump for 4 revolutions splitting each
+revolution into 2 segments.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">development</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">controller</span> <span class="o">=</span> <span class="n">create_controller</span><span class="p">()</span>
+<span class="n">drive_pump_by_segmented_revolutions_sync</span><span class="p">(</span><span class="n">controller</span><span class="o">.</span><span class="n">blood_pump</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">PIDConstants</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">1600</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
+</code></pre></div>
+</details>
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>Create a controller and run the blood pump for 4 revolutions splitting each
+revolution into the 3 explicitly provided segments.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">development</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">controller</span> <span class="o">=</span> <span class="n">create_controller</span><span class="p">()</span>
+<span class="n">drive_pump_by_segmented_revolutions_sync</span><span class="p">(</span><span class="n">controller</span><span class="o">.</span><span class="n">blood_pump</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">[</span>
+    <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="n">PIDConstants</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">1600</span><span class="p">,</span> <span class="mi">25</span><span class="p">)),</span>
+    <span class="p">(</span><span class="mi">90</span><span class="p">,</span> <span class="mi">270</span><span class="p">,</span> <span class="n">PIDConstants</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1800</span><span class="p">,</span> <span class="mi">25</span><span class="p">)),</span>
+    <span class="p">(</span><span class="mi">270</span><span class="p">,</span> <span class="mi">360</span><span class="p">,</span> <span class="n">PIDConstants</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">1600</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
+<span class="p">])</span>
+</code></pre></div>
+</details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="development.drive_pump_by_absolute_pulses_sync" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">drive_pump_by_absolute_pulses_sync</span><span class="p">(</span><span class="n">pump</span><span class="p">,</span> <span class="n">pulses</span><span class="p">,</span> <span class="n">pid_constants</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Run the pump for provided number of motor encoder pulses from
+the park position.</p>
+<p>The pump is first calibrated and parked. Then started and run for
+specified number of pulses using a PID controller.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>pump</code></td>
+            <td>
+                  <code><span title="fluispotter.PumpMotor">PumpMotor</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Pump motor instance.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>pulses</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of motor encoder pulses to run the pump (<code>0</code> run forever).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>pid_constants</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="development.PIDConstants" href="#development.PIDConstants">PIDConstants</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Settings for the PID controller.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>Create a controller and run the blood pump for 2048 pulses.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">development</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">controller</span> <span class="o">=</span> <span class="n">create_controller</span><span class="p">()</span>
+<span class="n">drive_pump_by_absolute_pulses_sync</span><span class="p">(</span><span class="n">controller</span><span class="o">.</span><span class="n">blood_pump</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="n">PIDConstants</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">1600</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
+</code></pre></div>
+</details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="development.drive_pump_by_relative_pulses_sync" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">drive_pump_by_relative_pulses_sync</span><span class="p">(</span><span class="n">pump</span><span class="p">,</span> <span class="n">pulses</span><span class="p">,</span> <span class="n">pid_constants</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Run the pump for provided number of motor encoder pulses from
+the current position.</p>
+<p>Run the pump from current position for specified number of pulses using
+a PID controller.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>pump</code></td>
+            <td>
+                  <code><span title="fluispotter.PumpMotor">PumpMotor</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Pump motor instance.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>pulses</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of motor encoder pulses to run the pump (<code>0</code> run forever).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>pid_constants</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="development.PIDConstants" href="#development.PIDConstants">PIDConstants</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Settings for the PID controller.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>Create a controller and run the AC pump for 2048 pulses.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">development</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">controller</span> <span class="o">=</span> <span class="n">create_controller</span><span class="p">()</span>
+<span class="n">drive_pump_by_relative_pulses_sync</span><span class="p">(</span><span class="n">controller</span><span class="o">.</span><span class="n">ac_pump</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="n">PIDConstants</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">1600</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
+</code></pre></div>
+</details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="development.drive_pump_cycle_sync" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">drive_pump_cycle_sync</span><span class="p">(</span><span class="n">pump</span><span class="p">,</span> <span class="n">pid_constants</span><span class="p">,</span> <span class="n">encoder_sample_time_ms</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Run the pump while only sampling the pump encoder for specified amount of time
+before regulating using the PID.</p>
+<p>The pump is first calibrated and parked. Then started and run using a PID controller.
+Each control loop the pump encoder is turned on and sampled for <code>encoder_sample_time_ms</code>
+milliseconds and the pump power adjusted. The control loop ends with a sleep period of
+<a class="autorefs autorefs-internal" href="#development.PIDConstants">PIDConstants.sleep_duration_ms</a> milliseconds.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>pump</code></td>
+            <td>
+                  <code><span title="fluispotter.PumpMotor">PumpMotor</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Pump motor instance.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>pid_constants</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="development.PIDConstants" href="#development.PIDConstants">PIDConstants</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Settings for the PID controller.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>encoder_sample_time_ms</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>For how long to sample the pump encoder.</p>
+              </div>
+            </td>
+            <td>
+                  <code>250</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="note" open>
+  <summary>Note</summary>
+  <p>This function counts revolutions using only the Hall switch since the encoder
+needs to be on the whole time to determine when the park position has been crossed.</p>
+</details>
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>Create a controller and run the blood pump.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">development</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">controller</span> <span class="o">=</span> <span class="n">create_controller</span><span class="p">()</span>
+<span class="n">drive_pump_cycle_sync</span><span class="p">(</span><span class="n">controller</span><span class="o">.</span><span class="n">blood_pump</span><span class="p">,</span> <span class="n">PIDConstants</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">1600</span><span class="p">,</span> <span class="mi">25</span><span class="p">),</span> <span class="mi">25</span><span class="p">)</span>
+</code></pre></div>
+</details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="development.drive_pump_sync" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">drive_pump_sync</span><span class="p">(</span><span class="n">pump</span><span class="p">,</span> <span class="n">pid_constants</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Run the pump outputting motor and PID statistics every adjustment.</p>
+<p>The pump is first calibrated and parked. Then started and run using a PID controller.
+For every PID adjustment relevant statistics are printed to the terminal, e.g. number of
+motor encoder pulses since last adjustment and start of revolution.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>pump</code></td>
+            <td>
+                  <code><span title="fluispotter.PumpMotor">PumpMotor</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Pump motor instance.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>pid_constants</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="development.PIDConstants" href="#development.PIDConstants">PIDConstants</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Settings for the PID controller.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>Create a controller and run the blood pump.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">development</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">controller</span> <span class="o">=</span> <span class="n">create_controller</span><span class="p">()</span>
+<span class="n">drive_pump_sync</span><span class="p">(</span><span class="n">controller</span><span class="o">.</span><span class="n">blood_pump</span><span class="p">,</span> <span class="n">PIDConstants</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">1600</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
+</code></pre></div>
+</details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="development.drive_pump_with_fluid_receiver_sync" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">drive_pump_with_fluid_receiver_sync</span><span class="p">(</span><span class="n">pump</span><span class="p">,</span> <span class="n">fluid_receiver</span><span class="p">,</span> <span class="n">revolutions</span><span class="p">,</span> <span class="n">pid_constants</span><span class="p">,</span> <span class="n">fluid_sample_interval_ms</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Run the pump for provided number of revolutions while sampling from
+the analog fluid sensor.</p>
+<p>The fluid sensor is sampled every specified interval and the result together
+with other statistics printed to the terminal.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>pump</code></td>
+            <td>
+                  <code><span title="fluispotter.PumpMotor">PumpMotor</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Pump motor instance.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>fluid_receiver</code></td>
+            <td>
+                  <code><span title="fluispotter.FluidReceiver">FluidReceiver</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fluid receiver/sensor instance.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>revolutions</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of revolutions to run the pump (<code>0</code> run forever).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>pid_constants</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="development.PIDConstants" href="#development.PIDConstants">PIDConstants</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Settings for the PID controller.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>fluid_sample_interval_ms</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>How often to sample the fluid sensor in millisconds.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1000</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>Create a controller and run the blood pump for 8 revolutions.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">development</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">controller</span> <span class="o">=</span> <span class="n">create_controller</span><span class="p">()</span>
+<span class="n">drive_pump_with_fluid_receiver_sync</span><span class="p">(</span>
+    <span class="n">controller</span><span class="o">.</span><span class="n">blood_pump</span><span class="p">,</span> <span class="n">controller</span><span class="o">.</span><span class="n">blood_fluid_receiver</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">PIDConstants</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">1600</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
+</code></pre></div>
+</details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="development.collect_blood_sample_sync" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">collect_blood_sample_sync</span><span class="p">(</span><span class="n">sample_pulses</span><span class="p">,</span> <span class="n">pid_constants</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Run the collect blood sample procedure.</p>
+<p>The procedure consists of the following steps:</p>
+<ul>
+<li>Calibrate and park the blood pump (without PID).</li>
+<li>Move blood pump to ready/start position.</li>
+<li>Open valve.</li>
+<li>Pump blood onto tape for provided number of motor encoder pulses.</li>
+<li>Move tape reel.</li>
+<li>Wait.</li>
+<li>Close valve.</li>
+<li>Park blood pump.</li>
+<li>Move tape reel.</li>
+</ul>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>sample_pulses</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of motor encoder pulses to move the blood pump
+when dispensing blood onto the tape.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>pid_constants</code></td>
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="development.PIDConstants" href="#development.PIDConstants">PIDConstants</a></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Settings for the PID controller.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<details class="example" open>
+  <summary>Example</summary>
+  <p>Create a controller and sample blood for 2048 pulses.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">development</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">controller</span> <span class="o">=</span> <span class="n">create_controller</span><span class="p">()</span>
+<span class="n">collect_blood_sample_sync</span><span class="p">(</span><span class="mi">2048</span><span class="p">,</span> <span class="n">PIDConstants</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">1600</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
+</code></pre></div>
+</details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="veml6035">VEML6035</h2>
+<p>The spot sensor is a VEML6035 ambient light sensor. The device is able to function both with dim and bright light
+sources using the correct configurations.</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="fluispotter.veml6035.CONFIGURATION_SENSITIVITY_HIGH" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">CONFIGURATION_SENSITIVITY_HIGH</span> <span class="o">=</span> <span class="mi">0</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="fluispotter.veml6035.CONFIGURATION_SENSITIVITY_LOW" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">CONFIGURATION_SENSITIVITY_LOW</span> <span class="o">=</span> <span class="mi">1</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="fluispotter.veml6035.CONFIGURATION_DG_NORMAL" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">CONFIGURATION_DG_NORMAL</span> <span class="o">=</span> <span class="mi">0</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="fluispotter.veml6035.CONFIGURATION_DG_DOUBLE" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">CONFIGURATION_DG_DOUBLE</span> <span class="o">=</span> <span class="mi">1</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="fluispotter.veml6035.CONFIGURATION_GAIN_NORMAL" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">CONFIGURATION_GAIN_NORMAL</span> <span class="o">=</span> <span class="mi">0</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="fluispotter.veml6035.CONFIGURATION_GAIN_DOUBLE" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">CONFIGURATION_GAIN_DOUBLE</span> <span class="o">=</span> <span class="mi">1</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="fluispotter.veml6035.CONFIGURATION_INTEGRATION_TIME_25MS" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">CONFIGURATION_INTEGRATION_TIME_25MS</span> <span class="o">=</span> <span class="mi">12</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="fluispotter.veml6035.CONFIGURATION_INTEGRATION_TIME_50MS" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">CONFIGURATION_INTEGRATION_TIME_50MS</span> <span class="o">=</span> <span class="mi">8</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="fluispotter.veml6035.CONFIGURATION_INTEGRATION_TIME_100MS" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">CONFIGURATION_INTEGRATION_TIME_100MS</span> <span class="o">=</span> <span class="mi">0</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="fluispotter.veml6035.CONFIGURATION_INTEGRATION_TIME_200MS" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">CONFIGURATION_INTEGRATION_TIME_200MS</span> <span class="o">=</span> <span class="mi">1</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="fluispotter.veml6035.CONFIGURATION_INTEGRATION_TIME_400MS" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">CONFIGURATION_INTEGRATION_TIME_400MS</span> <span class="o">=</span> <span class="mi">2</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="fluispotter.veml6035.CONFIGURATION_INTEGRATION_TIME_800MS" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <code class="highlight language-python"><span class="n">CONFIGURATION_INTEGRATION_TIME_800MS</span> <span class="o">=</span> <span class="mi">3</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>The VEML6035 is capable of a resolution of 0.0004 lux for dim light
+sources in the range of approximately 0 to 26 lux. This can be achieved
+by using:</p>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Integration time</td>
+<td><a class="autorefs autorefs-internal" href="#fluispotter.veml6035.CONFIGURATION_INTEGRATION_TIME_800MS">CONFIGURATION_INTEGRATION_TIME_800MS</a></td>
+</tr>
+<tr>
+<td>Gain</td>
+<td><a class="autorefs autorefs-internal" href="#fluispotter.veml6035.CONFIGURATION_GAIN_DOUBLE">CONFIGURATION_GAIN_DOUBLE</a></td>
+</tr>
+<tr>
+<td>DG</td>
+<td><a class="autorefs autorefs-internal" href="#fluispotter.veml6035.CONFIGURATION_DG_DOUBLE">CONFIGURATION_DG_DOUBLE</a></td>
+</tr>
+<tr>
+<td>Sensitivity</td>
+<td><a class="autorefs autorefs-internal" href="#fluispotter.veml6035.CONFIGURATION_SENSITIVITY_HIGH">CONFIGURATION_SENSITIVITY_HIGH</a></td>
+</tr>
+</tbody>
+</table>
+<p>For brighter light sources up to about 6710 lux gain, dg and sensitivity can be
+reduced at the cost of the resolution. Higher integration time results in
+a higher resolution but if faster meassurements are needed it can be reduced
+down to 25 ms.</p>
+<p>The following is the recommended starting point to avoid saturation / overflow effects.</p>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Integration time</td>
+<td><a class="autorefs autorefs-internal" href="#fluispotter.veml6035.CONFIGURATION_INTEGRATION_TIME_100MS">CONFIGURATION_INTEGRATION_TIME_100MS</a></td>
+</tr>
+<tr>
+<td>Gain</td>
+<td><a class="autorefs autorefs-internal" href="#fluispotter.veml6035.CONFIGURATION_GAIN_NORMAL">CONFIGURATION_GAIN_NORMAL</a></td>
+</tr>
+<tr>
+<td>DG</td>
+<td><a class="autorefs autorefs-internal" href="#fluispotter.veml6035.CONFIGURATION_DG_NORMAL">CONFIGURATION_DG_NORMAL</a></td>
+</tr>
+<tr>
+<td>Sensitivity</td>
+<td><a class="autorefs autorefs-internal" href="#fluispotter.veml6035.CONFIGURATION_SENSITIVITY_LOW">CONFIGURATION_SENSITIVITY_LOW</a></td>
+</tr>
+</tbody>
+</table>
+<p>To determine correct configuration values for the device start out with the above values
+and read the raw light value. While the raw value is less than or equal to 100 keep increasing the
+configuration values.</p>
+<ol>
+<li>Increase sensitivity to <a class="autorefs autorefs-internal" href="#fluispotter.veml6035.CONFIGURATION_SENSITIVITY_HIGH">CONFIGURATION_SENSITIVITY_HIGH</a>.</li>
+<li>Increase gain to <a class="autorefs autorefs-internal" href="#fluispotter.veml6035.CONFIGURATION_GAIN_DOUBLE">CONFIGURATION_GAIN_DOUBLE</a>.</li>
+<li>Increase dg to <a class="autorefs autorefs-internal" href="#fluispotter.veml6035.CONFIGURATION_DG_DOUBLE">CONFIGURATION_DG_DOUBLE</a>.</li>
+<li>Increase integration time to <a class="autorefs autorefs-internal" href="#fluispotter.veml6035.CONFIGURATION_INTEGRATION_TIME_200MS">CONFIGURATION_INTEGRATION_TIME_200MS</a>
+    and keep increasing integration time all the way up to <a class="autorefs autorefs-internal" href="#fluispotter.veml6035.CONFIGURATION_INTEGRATION_TIME_800MS">CONFIGURATION_INTEGRATION_TIME_800MS</a>.</li>
+</ol>
+    </div>
+
+</div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="pretty-print">Pretty print</h2>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="development.pretty_print.Table" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>              <code class="highlight language-python"><span class="n">Table</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="p">(),</span> <span class="n">width</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+
+        <p>ASCII table formatter.</p>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="development.pretty_print.CSV" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>              <code class="highlight language-python"><span class="n">CSV</span><span class="p">(</span><span class="n">header</span><span class="o">=</span><span class="p">(),</span> <span class="n">separator</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span></code>
+
+</h3>
+
+
+    <div class="doc doc-contents ">
+
+
+        <p>CSV formatter.</p>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["content.code.copy", "toc.integrate"], "search": "assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>
