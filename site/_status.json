@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-07-23T17:26:54+00:00",
+ "generated_at": "2026-07-23T19:42:15+00:00",
  "firmware_version": "0.1.142",
  "ulp_operational": "1.15.0",
  "hub_service": null,
@@ -13,14 +13,28 @@
    "headBranch": "dev",
    "conclusion": "",
    "status": "in_progress",
-   "updatedAt": "2026-07-23T17:26:33Z"
+   "updatedAt": "2026-07-23T19:41:51Z"
   },
   {
    "workflowName": "ci",
    "headBranch": "dev",
    "conclusion": "",
    "status": "in_progress",
-   "updatedAt": "2026-07-23T17:26:33Z"
+   "updatedAt": "2026-07-23T19:41:55Z"
+  },
+  {
+   "workflowName": "Documentation",
+   "headBranch": "dev",
+   "conclusion": "success",
+   "status": "completed",
+   "updatedAt": "2026-07-23T17:27:01Z"
+  },
+  {
+   "workflowName": "ci",
+   "headBranch": "dev",
+   "conclusion": "failure",
+   "status": "completed",
+   "updatedAt": "2026-07-23T17:29:26Z"
   },
   {
    "workflowName": "ci",
@@ -77,26 +91,12 @@
    "conclusion": "failure",
    "status": "completed",
    "updatedAt": "2026-07-23T14:07:19Z"
-  },
-  {
-   "workflowName": "ci",
-   "headBranch": "dev",
-   "conclusion": "failure",
-   "status": "completed",
-   "updatedAt": "2026-07-23T13:54:04Z"
-  },
-  {
-   "workflowName": "ci",
-   "headBranch": "dev",
-   "conclusion": "failure",
-   "status": "completed",
-   "updatedAt": "2026-07-23T12:37:44Z"
   }
  ],
  "latest_commit": {
-  "hash": "2657bbc0833ff238e5cbe696eaa2d5619541a53c",
+  "hash": "191b8a334078e5243c5d913533bce73f95b68200",
   "date": "2026-07-23",
-  "subject": "Merge: fw 0.1.142 SWR-299 CPU-side #48 defense",
+  "subject": "Merge: docs-site Issues page + traceability",
   "body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
  }
 }

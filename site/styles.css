@@ -729,3 +729,10 @@ table.data .evidence  { font-size: 13px; color: var(--ink-soft); max-width: 46ch
 .ci-badge.ok   { background: #e5f4ea; color: #17693a; border-color: #bfe3cd; }
 .ci-badge.bad  { background: #fbe9e7; color: #a02718; border-color: #f3c3bd; }
 .ci-badge.warn { background: #fdf3e0; color: #8a5a12; border-color: #f0dbb0; }
+
+/* Issues page */
+.issues-table { border-collapse: collapse; width: 100%; font-size: .85rem; }
+.issues-table th { text-align: left; padding: .4rem .7rem; border-bottom: 2px solid var(--line, #d8dee4); white-space: nowrap; }
+.issues-table td { padding: .45rem .7rem; border-bottom: 1px solid var(--line, #e5e9ee); vertical-align: top; }
+.issues-table .issue-title { min-width: 18rem; }
+.issues-table .issue-swrs, .issues-table .issue-fix { font-size: .8rem; color: var(--ink-soft); }

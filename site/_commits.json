@@ -1,5 +1,17 @@
 [
 {
+"hash": "191b8a334078e5243c5d913533bce73f95b68200",
+"date": "2026-07-23",
+"subject": "Merge: docs-site Issues page + traceability",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "56bdf1147f068708b5b2e55ee84c2954ce7d5381",
+"date": "2026-07-23",
+"subject": "Docs site: Issues page with full version + requirement traceability",
+"body": "Owner instruction 2026-07-23: every issue listed with date, firmware,\nULP, runtime-image and hub versions, associated requirements, and fix\nversions.  _refresh_data.py now pulls all issues via gh and parses each\n'Seen on' footer into fw/ulp/image/hub/fix fields + SWR references from\nthe whole body; _build_site.py renders issues.html (nav under\nReference, open-issues stat on the index).  An em-dash exposes units a\nfooter does not stamp.  Workflow gains issues:read.\n\n#48's footer updated on GitHub with the COMPLETE deployed-unit set —\nit previously lacked the runtime image (v1.25.0-12.ga83202261 / IMG-4)\nand the 0.1.140 battery re-occurrence + SWR-299/SWR-114 association.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
 "hash": "2657bbc0833ff238e5cbe696eaa2d5619541a53c",
 "date": "2026-07-23",
 "subject": "Merge: fw 0.1.142 SWR-299 CPU-side #48 defense",
@@ -1786,17 +1798,5 @@
 "date": "2026-06-10",
 "subject": "ULP_Operational 1.3.1: Simple-P 16-tick as the production control law + spec 2.9",
 "body": "Promote the bench-validated Simple-P (16-tick) regulator to the operational\nbinary, replacing the positional integer-tick PID for steady-state SPR\nregulation. Re-fitted into the tick-based op model (ac_tick/bp_tick →\nregulate_pump), preserving spin-up, stall recovery, dosing, parking.\n\nmain.c (operational, no test defines):\n- run_simple_p(): %-error over N=16 edges, 1% deadband, pwr += err%·step_per_pct,\n  saturate-and-continue, no integral (no windup limit cycle). Per-pump gains\n  ac_p_step_per_pct=7 / bp_p_step_per_pct=3 (kp=7 oscillates/stalls BP) + shared\n  op_p_* knobs, host-tunable with baked-in defaults.\n- adapt_skip_pct(): %-error skip ladder; AC hall read moved before the skip\n  early-return so revolutions count through the skip idle (matches BP).\n- sample_encoder(): N param + ENCODER_SKIP_PULSES turn-on skip + decoupled\n  ~50 ms first-edge stall window vs the longer 16-edge measurement window\n  (calc_meas_timeout_us) — stall detection stays fast.\n- Stall/no-start interventions: spin-up KICK escalates to DAC_MAX_POWER after\n  op_p_start_escalate_n(3) kicks; BOTH failure types log motor_stop_events —\n  MOTOR_STOP_* (running-stall) + new MOTOR_START_FAIL_* (never-started, bits\n  2/3) — captured even on a successful restart.\n- run_pid + PID/skip vars kept for BP dosing/parking; AC gains + legacy skip\n  vars pinned __attribute__((used, retain)) so host imports survive --gc-sections.\n- Operational version 1.2.4 → 1.3.1; 6348 B (boot-loaded), no new libgcc.\n\nvariables.py regenerated (+9 OP_P_* vars, none removed).\n\nBench-validated on hardware (target 16 s/rev): AC@kp7 holds ±1% at skip level 6\n(revs counted through skip); BP@kp3 stall-free (kp7 oscillated + 1 recovered\nstall, validating the recovery + event path).\n\ndocs/fluispotter_spec_repo.html: §5.5 rewritten to v2.9 for Simple-P 16-tick\nwith the stall/no-start intervention tables; §5.7/§5.7.9 cross-refs updated.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
-},
-{
-"hash": "777acee9fb7dfdc17c64d8dc97164b4c636b264c",
-"date": "2026-06-10",
-"subject": "ULP Simple-P: count HALL revs through the skip-ladder idle",
-"body": "test_p_regulate() sampled the hall switch only inside the N=16 measurement\nloop. While idling on the skip ladder it just spun on rtc_ticks() without\nreading hall, so a revolution completing during the idle (up to 1.58 s at\nskip level 5) was missed — under-counting both the revolution total and the\n`revs` run-length stop.\n\nFix:\n- ULP (main.c): the skip-idle loop now polls the hall switch every iteration,\n  counts revolutions continuously, and honors the rev-count stop during the\n  idle. Revolution tracking is now independent of whether the regulation\n  measurement is skipped.\n- Host (monitor/board_script.py): pid_p_regulate_script detected the rev\n  boundary only on a measurement update (test_rev_done change); rev detection\n  now runs every poll so revolutions counted during a long idle surface live.\n\ntest_p_regulate is shared by the test + test2 images, so both versions bump:\nULP_Test2 1.3.0 -> 1.3.1, ULP_Test 1.2.13 -> 1.2.14. Operational stays\nbyte-identical (1.2.4). test2 = 3204 B (under the 4592 B RTC-load ceiling,\n4772 B headroom), no new libgcc. test2_variables.py regenerated for the\nshifted addresses.\n\nBench-validated on AC (Kp=7, skip_max=5): converged, climbed to skip level 5,\nand counted all revolutions through the 1.63 s sparse sampling (hall_rev\n0->4, ~16 s apart); measured per-level sampling rate matched theory.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
-},
-{
-"hash": "832693055c3a683d0a2b2e76bd06ceffa1e3569e",
-"date": "2026-06-10",
-"subject": "Monitor.app: add application icon",
-"body": "Set CFBundleIconFile to AppIcon and add Resources/AppIcon.icns so the macOS\nMonitor launcher shows a proper icon in the Dock and Finder.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 }
 ]

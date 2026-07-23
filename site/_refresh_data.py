@@ -111,6 +111,57 @@ if r.returncode == 0 and r.stdout.strip():
     except ValueError:
         pass
 
+# --- issues (graceful offline) -------------------------------------------
+def _grab(pattern, s):
+    if not s:
+        return None
+    hits = [h if isinstance(h, str) else next(x for x in h if x)
+            for h in re.findall(pattern, s)]
+    return ', '.join(dict.fromkeys(hits)) or None
+
+
+issues = []
+r = sh('gh', 'issue', 'list', '--state', 'all', '--limit', '100', '--json',
+       'number,title,state,createdAt,closedAt,body')
+if r.returncode == 0 and r.stdout.strip():
+    try:
+        raw = json.loads(r.stdout)
+    except ValueError:
+        raw = []
+    for it in raw:
+        body = it.get('body') or ''
+        m = re.search(r'\*\*Seen on:\*\*\s*(.+?)(?:\n\s*\n|\Z)', body, re.S)
+        seen = ' '.join(m.group(1).split()) if m else None
+        fix = None
+        if seen and ';' in seen:
+            head, _, tail = seen.partition(';')
+            if 'fix' in tail.lower():
+                seen, fix = head.strip(), tail.strip()
+        issues.append({
+            'number': it['number'],
+            'title': it['title'],
+            'state': it['state'],
+            'created': (it.get('createdAt') or '')[:10],
+            'closed': (it.get('closedAt') or '')[:10] or None,
+            'seen_on': seen,
+            'fix': fix,
+            'fw': _grab(r'fw[\s:]+([0-9]+\.[0-9]+\.[0-9]+'
+                        r'(?:\s*[\u2013-]\s*(?:fw\s*)?[0-9.]+)?)', seen),
+            'ulp': _grab(r'(?:ULP|TestOp)[\s:]+((?:dev\.)?[0-9]+\.[0-9]+'
+                         r'(?:\.[0-9]+)?(?:\s*[\u2013-]\s*(?:dev\.)?[0-9.]+)?)',
+                         seen),
+            'image': _grab(r'(v1\.2[0-9]\.[0-9]+[-.\w]*|IMG-[0-9]+[^,;)]*)',
+                           seen),
+            'hub': _grab(r'hub(?:\s+service)?[\s:]+([0-9]+\.[0-9]+'
+                         r'(?:\.[0-9]+)?(?:\s*[\u2013-]\s*[0-9.]+)?)', seen),
+            'swrs': sorted(set(re.findall(r'SWR-[0-9]+', body)),
+                           key=lambda s: int(s[4:])),
+        })
+with open(os.path.join(HERE, '_issues.json'), 'w', encoding='utf-8') as f:
+    json.dump(issues, f, ensure_ascii=False, indent=1)
+print('_issues.json: %d issues (%d open)' % (
+    len(issues), sum(1 for i in issues if i['state'] == 'OPEN')))
+
 status = {
     'generated_at': datetime.datetime.now(datetime.timezone.utc)
                     .isoformat(timespec='seconds'),

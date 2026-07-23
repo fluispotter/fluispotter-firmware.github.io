@@ -64,6 +64,12 @@ DATASHEETS = [
 with open(os.path.join(HERE, "_commits.json"), encoding="utf-8") as f:
     COMMITS = json.load(f)
 
+try:
+    with open(os.path.join(HERE, "_issues.json"), encoding="utf-8") as f:
+        ISSUES = json.load(f)
+except OSError:
+    ISSUES = []
+
 # Optional status sidecar (versions + CI snapshot), written by
 # _refresh_data.py alongside _commits.json.  The site renders without it.
 try:
@@ -135,6 +141,7 @@ NAV = [
     ]),
     ("Reference", [
         ("datasheets.html", "Datasheets", "chip"),
+        ("issues.html", "Issues", "bug"),
         ("history.html", "History", "history"),
     ]),
 ]
@@ -146,6 +153,7 @@ ICONS = {
     "arch":  '<rect x="3" y="3" width="5" height="5" rx="1"/><rect x="12" y="3" width="5" height="5" rx="1"/><rect x="7.5" y="12" width="5" height="5" rx="1"/><path d="M5.5 8v2h9V8M10 10v2" fill="none" stroke-width="1.3"/>',
     "proc":  '<circle cx="10" cy="10" r="6.5" fill="none" stroke-width="1.4"/><path d="M10 6v4l3 2" fill="none" stroke-width="1.5"/>',
     "chip":  '<rect x="5" y="5" width="10" height="10" rx="1.5"/><path d="M8 2v3M12 2v3M8 15v3M12 15v3M2 8h3M2 12h3M15 8h3M15 12h3" stroke-width="1.3"/>',
+    "bug":   '<circle cx="10" cy="11" r="5" fill="none" stroke-width="1.5"/><path d="M10 6V3M6.5 7.5 4.5 5.5M13.5 7.5l2-2M4 11H1.5M18.5 11H16M6 14.5l-2 2M14 14.5l2 2" stroke-width="1.4" fill="none"/>',
     "history": '<circle cx="10" cy="10" r="7" fill="none" stroke-width="1.4"/><path d="M10 5.5V10l3 2" fill="none" stroke-width="1.5"/>',
 }
 
@@ -417,6 +425,7 @@ def build_index():
   <div class="stat"><div class="stat-num">{len(DATASHEETS)}</div><div class="stat-label">component datasheets</div></div>
   <div class="stat"><div class="stat-num">{len(COMMITS)}</div><div class="stat-label">git commits</div></div>
   <div class="stat"><div class="stat-num">5</div><div class="stat-label">shippable components</div></div>
+  <div class="stat"><div class="stat-num">{sum(1 for i in ISSUES if i["state"] == "OPEN") if ISSUES else "&mdash;"}</div><div class="stat-label">open issues</div></div>
 </div>
 
 <h2>Explore the documentation</h2>
@@ -582,6 +591,64 @@ def build_datasheets():
 </div>
 """
     return write("datasheets.html", page("datasheets.html", "Datasheets", body))
+
+
+# --------------------------------------------------------------------------
+# PAGE: issues (GitHub issues with version + requirement traceability)
+# --------------------------------------------------------------------------
+
+def build_issues():
+    def cell(v):
+        return html.escape(v) if v else "&mdash;"
+    rows = []
+    ordered = sorted(ISSUES, key=lambda i: (i["state"] != "OPEN",
+                                            -i["number"]))
+    for i in ordered:
+        badge = ('<span class="ci-badge %s">%s</span>'
+                 % ("warn" if i["state"] == "OPEN" else "ok",
+                    html.escape(i["state"])))
+        swrs = ", ".join(i.get("swrs") or []) or None
+        url = ("https://github.com/fluispotter/fluispotter-firmware/issues/%d"
+               % i["number"])
+        rows.append("""<tr>
+  <td><a href="%s">#%d</a></td>
+  <td class="issue-title">%s</td>
+  <td>%s</td>
+  <td>%s</td>
+  <td>%s</td>
+  <td>%s</td>
+  <td>%s</td>
+  <td>%s</td>
+  <td class="issue-swrs">%s</td>
+  <td class="issue-fix">%s</td>
+</tr>""" % (url, i["number"], cell(i["title"]), badge, cell(i["created"]),
+            cell(i.get("fw")), cell(i.get("ulp")), cell(i.get("image")),
+            cell(i.get("hub")), cell(swrs), cell(i.get("fix"))))
+    if rows:
+        table = ("""<div class="panel" style="overflow-x:auto">
+<table class="issues-table">
+<tr><th>#</th><th>Title</th><th>State</th><th>Opened</th><th>Firmware</th>
+<th>ULP</th><th>Image</th><th>Hub</th><th>Requirements</th><th>Fix</th></tr>
+%s
+</table>
+</div>""" % "\n".join(rows))
+    else:
+        table = ('<div class="panel"><p style="color:var(--ink-soft)">No '
+                 'issue data in this build (the refresh step ran without '
+                 'GitHub access).</p></div>')
+    body = """
+<div class="pagehead">
+  <div class="eyebrow">Reference</div>
+  <h1>Issues</h1>
+  <p class="lead">Every GitHub issue with its version association &mdash; the
+  firmware, ULP, runtime image and hub versions it was seen on, the
+  requirements it touches, and the fix versions.  Parsed from each issue's
+  <em>Seen on</em> footer; an em-dash means that unit is not stamped in the
+  footer (the issue body on GitHub remains authoritative).</p>
+</div>
+%s
+""" % table
+    return write("issues.html", page("issues.html", "Issues", body))
 
 
 # --------------------------------------------------------------------------
@@ -768,6 +835,7 @@ def main():
         "Engineering process: the staged CI / release plan, and the append-only conversation compacting log.",
         {"Process"}))
     written.append(build_datasheets())
+    written.append(build_issues())
     written.append(build_history())
     print("WROTE:", ", ".join(written))
 
