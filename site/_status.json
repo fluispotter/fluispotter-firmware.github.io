@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-07-23T19:42:15+00:00",
+ "generated_at": "2026-07-23T20:02:14+00:00",
  "firmware_version": "0.1.142",
  "ulp_operational": "1.15.0",
  "hub_service": null,
@@ -9,18 +9,32 @@
  },
  "ci": [
   {
-   "workflowName": "Documentation",
-   "headBranch": "dev",
-   "conclusion": "",
-   "status": "in_progress",
-   "updatedAt": "2026-07-23T19:41:51Z"
-  },
-  {
    "workflowName": "ci",
    "headBranch": "dev",
    "conclusion": "",
    "status": "in_progress",
-   "updatedAt": "2026-07-23T19:41:55Z"
+   "updatedAt": "2026-07-23T20:01:58Z"
+  },
+  {
+   "workflowName": "Documentation",
+   "headBranch": "dev",
+   "conclusion": "",
+   "status": "in_progress",
+   "updatedAt": "2026-07-23T20:01:58Z"
+  },
+  {
+   "workflowName": "Documentation",
+   "headBranch": "dev",
+   "conclusion": "success",
+   "status": "completed",
+   "updatedAt": "2026-07-23T19:42:23Z"
+  },
+  {
+   "workflowName": "ci",
+   "headBranch": "dev",
+   "conclusion": "failure",
+   "status": "completed",
+   "updatedAt": "2026-07-23T19:44:47Z"
   },
   {
    "workflowName": "Documentation",
@@ -77,26 +91,12 @@
    "conclusion": "failure",
    "status": "completed",
    "updatedAt": "2026-07-23T15:08:17Z"
-  },
-  {
-   "workflowName": "ci",
-   "headBranch": "dev",
-   "conclusion": "failure",
-   "status": "completed",
-   "updatedAt": "2026-07-23T15:03:59Z"
-  },
-  {
-   "workflowName": "ci",
-   "headBranch": "dev",
-   "conclusion": "failure",
-   "status": "completed",
-   "updatedAt": "2026-07-23T14:07:19Z"
   }
  ],
  "latest_commit": {
-  "hash": "191b8a334078e5243c5d913533bce73f95b68200",
+  "hash": "80a8390e86fef1ff7914d809e43c6d5f19a32276",
   "date": "2026-07-23",
-  "subject": "Merge: docs-site Issues page + traceability",
-  "body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+  "subject": "Merge: evening logs",
+  "body": ""
  }
 }

@@ -620,6 +620,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#2026-07-23-evening-422-contract-fix-docs-site-overhaul-48-cpu-defense" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-23 evening (422 contract fix, docs-site overhaul, #48 CPU defense)
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -946,6 +955,36 @@ pre-epoch clock and the gate fired LIVE — warning event → 'RTC synced via NT
 pre-epoch stamps in the new record (the 520 store-wide are historical).  Hub
 devices row: fw 0.1.139 + op ULP 1.15.0, syncing.  Board at AWAIT_CALIBRATION,
 DEQUE_AUDIT overlay still ON, battery still flat (campaign blocked on owner).</p>
+<h2 id="2026-07-23-evening-422-contract-fix-docs-site-overhaul-48-cpu-defense">2026-07-23 evening (422 contract fix, docs-site overhaul, #48 CPU defense)</h2>
+<p>Battery arm hit the third 422-class outage: littlefs transient block
+overcount → negative statvfs bfree → hub (correctly) rejected full syncs.
+Fixed both sides (fw 0.1.140 clamp; hub 1.14.3 logs 422 field detail) +
+NEW SWR-297 contract gate: verification imports the hub's own
+DeviceRequestSchema and validates firmware-shaped payloads (owner order).
+15-min zero-422 window proven.  Hub 1.14.1/1.14.2 (live-but-uncommitted)
+committed retroactively.</p>
+<p>Docs site overhauled (owner order): publishes from dev+master+dispatch,
+self-refreshing commits/status/CI data (_refresh_data.py), Project-status
+card, NEW Issues page (50 issues with date/fw/ULP/image/hub/SWRs/fix
+parsed from Seen-on footers), deploy fixed (pages repo had ZERO deploy
+keys — new pair minted).  CI true-green campaign: lint green (config +
+real fixes, fw 0.1.141), SW suite green (ErrorHolder runner crash +
+2 stale assertions + spec 2.29 table cell), verify exit-0 discipline
+(pipes were masking failures).  ULP headroom job stays red = owner
+decision.</p>
+<p>Battery unplug browned out → PWRON boot → #48 blindness LIVE (AC blind
+from the calibration→AC-bag boundary, SPR7+SPR20 stagger, hall=0).
+Owner 'go' → fw 0.1.142 SWR-299: CPU-side IRQ-bracketed pad-clock
+defense at every ULP pump start + every runtime claim site (12 sites;
+lazy-import proxy; op ULP untouched).  165 req, 143 PASS / 0 FAIL.
+Acceptance trials 3/3: blindness signature GONE (AC-bag primes each
+boot); fault net caught stale-flag drains + a pre-existing AC SPR-20
+dry restall cycle → split to NEW #55.  #48 footer now carries ALL units
+incl. image IMG-4; SWR-298 registered (AC revs from bag puncture).
+Overnight: radio-hot soak at AWAIT_CALIBRATION (marker 1784836699),
+CDC drainer on the Mac (a bench app's port grab had silently halted the
+board for an hour — apps-closed discipline).  Morning: soak verdict →
+battery dry run 1 on the defended stack.</p>
 
 
 

@@ -1,5 +1,17 @@
 [
 {
+"hash": "80a8390e86fef1ff7914d809e43c6d5f19a32276",
+"date": "2026-07-23",
+"subject": "Merge: evening logs",
+"body": ""
+},
+{
+"hash": "0ed08573a3dda08890e19bdacfa14208e6298e44",
+"date": "2026-07-23",
+"subject": "docs: prompts + summaries through the 0.1.142 defense evening",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
 "hash": "191b8a334078e5243c5d913533bce73f95b68200",
 "date": "2026-07-23",
 "subject": "Merge: docs-site Issues page + traceability",
@@ -1786,17 +1798,5 @@
 "date": "2026-06-11",
 "subject": "docs: add Monitor & Control app spec repos; spec §4A.6 board_config (v2.11)",
 "body": "Add two living application specifications under docs/, matching the\nfluispotter_spec_repo style and versioning/change-log discipline:\n- monitor_spec_repo.html (v1.0): passive pyserial telemetry viewer; 9 tabs.\n- control_spec_repo.html (v1.0): raw-REPL injection, 3 ULP binaries, modes;\n  14 tabs. Each covers architecture, threading, data handling, hardware\n  interaction, and a per-tab reference (incl. the new Board Config tab).\n\nBump fluispotter_spec_repo to v2.11: new §4A.6 Board Configuration Constants\nlisting the firmware board_config.py values (68 const / 11 sections), now\nalso surfaced live in a Board Config tab in both apps.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
-},
-{
-"hash": "8a5df4d650eefc317d2031a34744d8b1cd9fae9e",
-"date": "2026-06-11",
-"subject": "Control App: Operational PID-Tuner→Simple-P, sensor cutoff tuning, VEML + ADC fixes; spec 2.10",
-"body": "Control App (host-side):\n- PID Tuner \"Operational\" mode now tunes the LIVE Simple-P production regulation\n  (ULP_Operational 1.3.1): new pid_operational_p_regulate_script writes the per-pump\n  *_p_step_per_pct + shared op_p_* knobs and arms <pump>_pump_running on the running\n  binary (no swap); the panel exposes the Simple-P knobs (kp/ki/kd are Test-mode only),\n  Apply live-tunes op_p_*, and the display shows skip level + a stall/start-fail flag.\n- UI cleanup: removed the orphaned \"Revolutions\" + \"PID skip\" controls (old\n  operational-PID knobs, unused under Simple-P) and the dead status branch.\n- Sensors tab: per-sensor cutoff TUNING — adjustable thresholds with tinted\n  classification bands + dashed lines over the 400-sample retrospective buffer\n  (Blood/Water/Air, AC Water/Air, Spot, Line) + a live class + %-per-band readout;\n  defaults from board_config; host-side only.\n\nSensor fixes:\n- VEML6035 \"no signal\": the monitor scripts never configured the sensor (it boots\n  shut down) and read the wrong register. Now write CONFIG 0x00=0x0300 (power on,\n  25ms, sens HIGH) for both 0x29/0x3A at startup, read ALS data reg 0x04, lux=count*0.0512\n  (matches the firmware driver). Fixed in both sensors_monitor_script and MONITOR_SCRIPT.\n- ADC attenuation: PressureSensor + FluidReceivers (+ the _sv ADCs) now create\n  ADC(..., atten=ADC.ATTN_11DB) for the full 0-3.3 V range; the MicroPython default\n  capped at ~0.95 V and clipped pressure. read_uv() returns true µV in-range, so the\n  air thresholds are unaffected. (Firmware change — needs a deploy.)\n\nSpec → v2.10: §4.1 VEML read protocol + new §4.1b analog ADC attenuation; §7.3 PID\nTuner 3 modes + Sensors cutoff tuning + the single-channel telemetry constraint.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
-},
-{
-"hash": "4d86e363fe6b94a8fddebccd28f466993f30a5c4",
-"date": "2026-06-10",
-"subject": "ULP_Operational 1.3.1: Simple-P 16-tick as the production control law + spec 2.9",
-"body": "Promote the bench-validated Simple-P (16-tick) regulator to the operational\nbinary, replacing the positional integer-tick PID for steady-state SPR\nregulation. Re-fitted into the tick-based op model (ac_tick/bp_tick →\nregulate_pump), preserving spin-up, stall recovery, dosing, parking.\n\nmain.c (operational, no test defines):\n- run_simple_p(): %-error over N=16 edges, 1% deadband, pwr += err%·step_per_pct,\n  saturate-and-continue, no integral (no windup limit cycle). Per-pump gains\n  ac_p_step_per_pct=7 / bp_p_step_per_pct=3 (kp=7 oscillates/stalls BP) + shared\n  op_p_* knobs, host-tunable with baked-in defaults.\n- adapt_skip_pct(): %-error skip ladder; AC hall read moved before the skip\n  early-return so revolutions count through the skip idle (matches BP).\n- sample_encoder(): N param + ENCODER_SKIP_PULSES turn-on skip + decoupled\n  ~50 ms first-edge stall window vs the longer 16-edge measurement window\n  (calc_meas_timeout_us) — stall detection stays fast.\n- Stall/no-start interventions: spin-up KICK escalates to DAC_MAX_POWER after\n  op_p_start_escalate_n(3) kicks; BOTH failure types log motor_stop_events —\n  MOTOR_STOP_* (running-stall) + new MOTOR_START_FAIL_* (never-started, bits\n  2/3) — captured even on a successful restart.\n- run_pid + PID/skip vars kept for BP dosing/parking; AC gains + legacy skip\n  vars pinned __attribute__((used, retain)) so host imports survive --gc-sections.\n- Operational version 1.2.4 → 1.3.1; 6348 B (boot-loaded), no new libgcc.\n\nvariables.py regenerated (+9 OP_P_* vars, none removed).\n\nBench-validated on hardware (target 16 s/rev): AC@kp7 holds ±1% at skip level 6\n(revs counted through skip); BP@kp3 stall-free (kp7 oscillated + 1 recovered\nstall, validating the recovery + event path).\n\ndocs/fluispotter_spec_repo.html: §5.5 rewritten to v2.9 for Simple-P 16-tick\nwith the stall/no-start intervention tables; §5.7/§5.7.9 cross-refs updated.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 }
 ]

@@ -1,5 +1,19 @@
 [
  {
+  "number": 55,
+  "title": "AC SPR-20 dry-run restall cycle: stall flag every ~3 s with successful re-regulation between",
+  "state": "OPEN",
+  "created": "2026-07-23",
+  "closed": null,
+  "seen_on": "fw 0.1.142, operational ULP 1.15.0 (map fnv 0xc5bd43c1), runtime image v1.25.0-12.ga83202261 (IMG-4, 2026-07-16), hub service 1.14.3, dry bench + USB power (2026-07-23)",
+  "fix": "related class previously on ULP 1.12.0 (2026-07-18); fix: none yet — needs its own investigation (stall-window/kick tuning for SPR 20 dry)",
+  "fw": "0.1.142",
+  "ulp": "1.15.0",
+  "image": "v1.25.0-12.ga83202261, IMG-4",
+  "hub": "1.14.3",
+  "swrs": []
+ },
+ {
   "number": 54,
   "title": "IMG-4 runtime image freezes main.py — filesystem /main.py NEVER executes; every main.py deploy since 2026-07-16 was silently dead",
   "state": "OPEN",
