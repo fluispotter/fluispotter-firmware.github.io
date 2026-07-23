@@ -1,0 +1,354 @@
+{\rtf1\ansi\ansicpg1252
+{\fonttbl\f0\fswiss Helvetica;\f1\fmodern CourierNewPSMT;\f2\fswiss Helvetica-Bold;}
+{\colortbl;\red0\green0\blue0;\red80\green80\blue80;\red0\green120\blue0;\red30\green30\blue160;}
+\paperw11905\paperh16837\margl1417\margr1417\margt1417\margb1417
+\pard\sb0\f2\fs36\b ULP RISC-V Pump Regulator -- PID Code Annotated Reference\b0\par
+\pard\f0\fs18\cf2 File: esp32/pump_regulator/main/ulp/main.c   |   April 2026\cf1\par
+\pard\sb40\par
+\pard\sb280\f2\fs30\b 1.  Architecture Overview\b0\par
+\pard\sb80\f0\fs20 The ULP RISC-V core runs at 8 MHz while the main ESP32-S3 CPU sleeps. Every wakeup it executes main(), which calls ac_tick() and bp_tick() once each. Because the ULP has no FPU and no OS, all arithmetic is fixed-point integer.\par
+\pard\sb80\f0\fs20 DAC inversion convention.  The DAC7574 output is electrically inverted: register 0 = maximum motor drive; register 4095 = motor off. All internal variables store DAC register values. The Python control app uses an intuitive power scale (0=off, 4095=max) and converts:\par
+\pard\sb80\f1\fs18\cf4     DAC_register = 4095 - power_level\cf1\par
+\pard\sb80\f0\fs20 Encoder.  A quadrature encoder with both channels XOR-ed produces 5184 rising edges per revolution (PULSES_PER_REV = 5184). The PID collects batches of 10 pulses (TARGET_PULSE_COUNT = 10), measures elapsed time, and computes speed deviation from setpoint.\par
+\pard\sb280\f2\fs30\b 2.  Key Constants\b0\par
+\pard\sb200\f2\fs24\b Physical\b0\par
+\pard\sb80\f1\fs18\cf4 #define PULSES_PER_REV     5184   /* 4 quadrature edges x 1296 cycles/rev */\line #define TARGET_PULSE_COUNT   10   /* pulses collected per PID call        */\cf1\par
+\pard\sb80\f0\fs20 Collecting 10 pulses per call gives enough resolution for timing without making each batch excessively long.\par
+\pard\sb200\f2\fs24\b DAC Levels\b0\par
+\pard\sb80\f1\fs18\cf4 #define DAC_HALT       4095   /* motor off  -- inverted logic               */\line #define DAC_MAX_POWER     0   /* maximum motor drive                         */\line #define DAC_START      1000   /* initial DAC register on first start         */\line                               /* power = 4095-1000 = 3095 (~76 %)            */\line #define DAC_RESTART       0   /* DAC register after stall recovery           */\line                               /* power = 4095-0 = 4095 (100 %)               */\cf1\par
+\pard\sb80\f0\fs20 DAC_START (register 1000 = power 3095, ~76 %) is an aggressive startup kick required to overcome static friction / stiction when the motor transitions from HALT under load. It is NOT a conservative value -- the motor needs this high power to start moving at all. The Python control app pre-sets dac_value = 1095 (power=3000) before writing pump_running = 1, bypassing the DAC_START initialisation (which only fires when dac_value == DAC_HALT = 4095).\par
+\pard\sb80\f0\fs20 DAC_START also acts as the PID power FLOOR during spin-up:   if (*dac_value > DAC_START) *dac_value = DAC_START; -- this clamps the DAC register to at most 1000, so power cannot drop below ~76 % during spin-up. Because of this dual role, DAC_START must NOT be raised (which would reduce the minimum startup power) -- slow SPR targets would lose the kick they need to reach steady state.\par
+\pard\sb80\f0\fs20 DAC_RESTART (register 0 = power 4095, 100 %) gives full power after stall recovery -- the most aggressive kick, used to break whatever caused the stall (bound material, fluid column, etc.).\par
+\pard\sb200\f2\fs24\b PID Gains\b0\par
+\pard\sb80\f1\fs18\cf4 #define DEFAULT_KP_SCALED  5    /* Kp = 0.005 DAC-steps per ms of error  */\line #define DEFAULT_KI_SCALED  1    /* Ki = 0.001                             */\line #define DEFAULT_KD_SCALED  0    /* Kd = 0.0   (derivative off by default) */\line \line #define INTEGRAL_LIMIT  4095000 /* anti-windup clamp: +/- 4095000 ms      */\cf1\par
+\pard\sb80\f0\fs20 Gains are stored x1000 to avoid floating-point. At runtime: actual Kp = kp_scaled / 1000. The anti-windup clamp at +/-4095000 limits the I-term contribution to +/-4095 DAC steps (the full hardware range) so the integrator can never produce an impossible output.\par
+\pard\sb280\f2\fs30\b 3.  Timing Helpers\b0\par
+\pard\sb80\f1\fs18\cf4 static uint64_t rtc_ticks(void) \{\line     /* Latch both 32-bit halves atomically before reading. */\line     SET_PERI_REG_MASK(RTC_CNTL_TIME_UPDATE_REG, RTC_CNTL_TIME_UPDATE);\line     return ((uint64_t)READ_PERI_REG(RTC_CNTL_TIME1_REG) << 32)\line            | READ_PERI_REG(RTC_CNTL_TIME0_REG);\line \}\line \line static uint64_t us_to_ticks(uint64_t us, uint32_t period) \{\line     return (us << RTC_CLK_CAL_FRACT) / period;   /* RTC_CLK_CAL_FRACT = 19 */\line \}\line static uint64_t ticks_to_us(uint64_t ticks, uint32_t period) \{\line     return (ticks * period) >> RTC_CLK_CAL_FRACT;\line \}\cf1\par
+\pard\sb80\f0\fs20 The calibration period (ticks per 2^19 microseconds) is written to RTC_CNTL_STORE1_REG at boot. The left-shift/right-shift replaces an expensive division by using the fixed-point representation directly.\par
+\pard\sb280\f2\fs30\b 4.  Adaptive Batch Timeout  --  calc_batch_timeout_us()\b0\par
+\pard\sb80\f0\fs20 The stall-detection window scales with the SPR target so slow pumps are not falsely declared stalled.\par
+\pard\sb80\f1\fs18\cf4 #define BATCH_TIMEOUT_MULTIPLIER  3u        /* 3x expected batch time    */\line #define BATCH_TIMEOUT_MIN_US      50000ULL  /* 50 ms floor (fast motors) */\line \line static uint64_t calc_batch_timeout_us(uint32_t target_ms_per_rev) \{\line \line     /* Expected time for one 10-pulse batch:                           */\line     /* expected_us = target_ms * 10 * 1000 / 5184                     */\line     /* (converts ms/rev to us/rev, scaled by batch fraction of rev)   */\line     uint64_t expected = ((uint64_t)target_ms_per_rev\line                          * TARGET_PULSE_COUNT * 1000ULL) / PULSES_PER_REV;\line \line     /* Allow 3x the expected time before declaring stall.             */\line     uint64_t timeout = expected * BATCH_TIMEOUT_MULTIPLIER;\line \line     /* Never less than 50 ms, even at very high motor speeds.         */\line     return (timeout < BATCH_TIMEOUT_MIN_US) ? BATCH_TIMEOUT_MIN_US : timeout;\line \}\cf1\par
+\pard\sb80\f0\fs20 Examples:\par
+\pard\sb80\f1\fs18\cf4 At 17 s/rev: expected = 17000 x 10 x 1000 / 5184 = ~32800 us (33 ms)  timeout = 99 ms\line At 60 s/rev: expected = ~116 ms                                         timeout = 348 ms\line At  5 s/rev: expected = ~10 ms  -> floor applies                        timeout = 50 ms\cf1\par
+\pard\sb280\f2\fs30\b 5.  Adaptive Skip Counter  --  calc_max_skip()\b0\par
+\pard\sb80\f0\fs20 Two pumps share the main loop. Each pump skips service calls to keep PID updates near 1 second apart regardless of motor speed.\par
+\pard\sb80\f1\fs18\cf4 #define PID_SKIP_TARGET_US  1000000u   /* target ~1 s between PID updates */\line \line static uint32_t calc_max_skip(uint32_t target_ms_per_rev) \{\line     /* Time for one 10-pulse encoder batch. */\line     uint32_t batch_us = (uint32_t)(((uint64_t)target_ms_per_rev\line                                     * TARGET_PULSE_COUNT * 1000ULL)\line                                    / PULSES_PER_REV);\line     /* Two pumps per loop -> one loop ~ 2 x batch_us. */\line     uint32_t loop_us = batch_us * 2u;\line     /* How many loops fit in one second? Guard divide-by-zero. */\line     return (loop_us > 0u) ? (PID_SKIP_TARGET_US / loop_us) : 15u;\line \}\cf1\par
+\pard\sb80\f0\fs20 After each service event the skip counter is set proportionally to the pulse-count error:\par
+\pard\sb80\f1\fs18\cf4     error = |count - TARGET_PULSE_COUNT|\line \line     error > 5    ->  skip = 0              (PID runs every loop -- far from target)\line     error 1..5   ->  skip = MAX x (5-err)/5  (linear ramp)\line     error = 0    ->  skip = MAX            (~1 s between updates -- motor settled)\cf1\par
+\pard\sb280\f2\fs30\b 6.  The PID Function  --  run_pid()\b0\par
+\pard\sb80\f1\fs18\cf4 static uint32_t run_pid(\line     uint32_t  actual_us,   /* measured time for the 10-pulse batch    */\line     uint32_t  target_us,   /* ideal time for batch at target SPR      */\line     uint32_t  dac_current, /* DAC register before this update         */\line     int32_t  *integral,    /* persistent integrator state (in/out)    */\line     int32_t  *prev_error)  /* error from previous call    (in/out)    */\line \{\cf1\par
+\pard\sb40\par
+\pard\sb200\f2\fs24\b Step 1 -- Compute error in milliseconds\b0\par
+\pard\sb80\f1\fs18\cf4     int32_t error_ms = ((int32_t)actual_us - (int32_t)target_us) / 1000;\line \line     /* Positive error_ms: pump is SLOWER than target (actual > target)  */\line     /* Negative error_ms: pump is FASTER than target (actual < target)  */\line     /* Divide by 1000: converts us -> ms, keeps values int32-safe.      */\cf1\par
+\pard\sb200\f2\fs24\b Step 2 -- Update and clamp integrator (I term)\b0\par
+\pard\sb80\f1\fs18\cf4     *integral += error_ms;\line     if (*integral >  INTEGRAL_LIMIT) *integral =  INTEGRAL_LIMIT;  /* +4095000 */\line     if (*integral < -INTEGRAL_LIMIT) *integral = -INTEGRAL_LIMIT;  /* -4095000 */\line \line     /* Accumulates error over calls. Grows when pump fights back-pressure. */\line     /* Anti-windup: at Ki=0.001, clamp caps I-term at +/-4095 DAC steps.  */\line     /* That is the full DAC range, so output can never exceed hardware.    */\cf1\par
+\pard\sb200\f2\fs24\b Step 3 -- Compute derivative (D term)\b0\par
+\pard\sb80\f1\fs18\cf4     int32_t derivative_ms = error_ms - *prev_error;\line     *prev_error = error_ms;   /* save for next call */\line \line     /* Positive derivative: error growing (pump slowing further down).    */\line     /* Negative derivative: error shrinking (pump recovering).            */\line     /* Default Kd = 0, so computed but has zero weight.                   */\line     /* Enable by writing kd_scaled > 0 from MicroPython.                 */\cf1\par
+\pard\sb200\f2\fs24\b Step 4 -- Compute total PID output\b0\par
+\pard\sb80\f1\fs18\cf4     int32_t pid_out = (int32_t)kp_scaled * error_ms      / 1000   /* P */\line                     + (int32_t)ki_scaled * (*integral)   / 1000   /* I */\line                     + (int32_t)kd_scaled * derivative_ms / 1000;  /* D */\line \line     /* All gains x1000; divide by 1000 restores true gain value.         */\line     /* Output units: DAC register steps per call.                         */\cf1\par
+\pard\sb200\f2\fs24\b Step 5 -- Apply output to DAC register\b0\par
+\pard\sb80\f1\fs18\cf4     int32_t new_dac = (int32_t)dac_current - pid_out;\line     if (new_dac > (int32_t)DAC_MAX) new_dac = (int32_t)DAC_MAX;  /* 4095=off  */\line     if (new_dac < (int32_t)DAC_MIN) new_dac = (int32_t)DAC_MIN;  /* 0=full pwr*/\line     return (uint32_t)new_dac;\line \}\cf1\par
+\pard\sb80\f0\fs20 Output is SUBTRACTED because the DAC is inverted: positive error (too slow) -> positive pid_out -> lower DAC register -> MORE power. Negative error (too fast) -> negative pid_out -> higher DAC register -> LESS power.\par
+\pard\sb80\f0\fs20 Worked example -- first call, target = 17 s/rev:\par
+\pard\sb80\f1\fs18\cf4     target_us  = 17000 x 10 x 1000 / 5184  =  32793 us\line     actual_us  = 36000 us   (pump 10% too slow)\line     error_ms   = (36000 - 32793) / 1000  =  3 ms\line \line     First call: integral = 0, kd = 0\line     pid_out    = 5 x 3 / 1000 + 0 + 0  =  0  (rounds to zero)\line     new_dac    = dac_current - 0  =  unchanged\line \line     After ~1000 calls: integral = 3000\line     I-term     = 1 x 3000 / 1000  =  3 DAC steps\line     new_dac    = dac_current - 3   (motor gets slightly more power)\cf1\par
+\pard\sb80\f0\fs20 Note: at default gains Kp=0.005 and Ki=0.001 the response is intentionally gentle to avoid oscillation in a fluidic system with soft compliance.\par
+\pard\sb280\f2\fs30\b 7.  The Regulation Loop  --  regulate_pump()\b0\par
+\pard\sb80\f0\fs20 regulate_pump() is called once per loop for each pump. It sequences: motor enable -> encoder batch -> PID update -> DAC write -> stall recovery.\par
+\pard\sb200\f2\fs24\b Function signature\b0\par
+\pard\sb80\f1\fs18\cf4 static void regulate_pump(\line     gpio_num_t      enable_gpio,       /* motor enable pin              */\line     gpio_num_t      enc_enable_gpio,   /* encoder power enable          */\line     gpio_num_t      enc_gpio,          /* encoder signal pin            */\line     dac7574_channel dac_ch,            /* DAC ch (0=AC, 1=blood pump)   */\line     uint32_t        target_ms_per_rev, /* SPR setpoint in ms            */\line     uint32_t       *dac_value,         /* current DAC register (in/out) */\line     uint32_t       *last_pulse_count,  /* telemetry output              */\line     uint32_t       *last_elapsed_us,   /* telemetry output              */\line     int32_t        *integral,          /* PID I accumulator (in/out)    */\line     int32_t        *prev_error,        /* PID D memory (in/out)         */\line     bool           *has_started,       /* true once first pulse seen    */\line     bool           *recovery_signaled, /* true once stall wakeup sent   */\line     uint32_t       *max_power,         /* per-run DAC tracking          */\line     uint32_t       *min_power,         /* per-run DAC tracking          */\line     uint32_t        event_bit)         /* MOTOR_STOP_AC or _BP bit      */\line \{\cf1\par
+\pard\sb200\f2\fs24\b Gate -- first call after a stop\b0\par
+\pard\sb80\f1\fs18\cf4     /* stop_pump() sets *dac_value = DAC_HALT (4095) as sentinel.       */\line     /* Only this exact value triggers re-initialisation.               */\line     /* If Python pre-sets dac_value (e.g. 1095 for power=3000)         */\line     /* before writing pump_running = 1, this block is skipped entirely. */\line     if (*dac_value == DAC_HALT) \{\line         *dac_value         = DAC_START;   /* 3200 -> power 895 (22%)    */\line         *integral          = 0;\line         *prev_error        = 0;\line         *has_started       = false;\line         *recovery_signaled = false;\line     \}\cf1\par
+\pard\sb200\f2\fs24\b Encoder batch\b0\par
+\pard\sb80\f1\fs18\cf4     ulp_riscv_gpio_output_level(enable_gpio,     1);  /* motor ON  */\line     ulp_riscv_gpio_output_level(enc_enable_gpio, 1);  /* encoder ON */\line \line     uint64_t timeout_us = calc_batch_timeout_us(target_ms_per_rev);\line     uint32_t count;\line     uint32_t elapsed_us = sample_encoder(enc_gpio, &count, timeout_us);\line \line     ulp_riscv_gpio_output_level(enc_enable_gpio, 0);  /* encoder OFF */\line \line     *last_pulse_count = count;       /* publish for main CPU telemetry */\line     *last_elapsed_us  = elapsed_us;\cf1\par
+\pard\sb200\f2\fs24\b Branch A -- Normal: count > 0\b0\par
+\pard\sb80\f1\fs18\cf4     if (count > 0) \{\line         *has_started       = true;\line         *recovery_signaled = false;  /* re-arm stall event */\line \line         /* Scale target to actual pulse count collected.              */\line         /* target_us = target_ms * count * 1000 / PULSES_PER_REV    */\line         uint32_t target_us = (target_ms_per_rev * count * 1000U)\line                              / PULSES_PER_REV;\line \line         *dac_value = run_pid(elapsed_us, target_us, *dac_value,\line                              integral, prev_error);\line \line         /* Track per-run extremes (lower DAC = more power). */\line         if (*dac_value < *max_power) *max_power = *dac_value;\line         if (*dac_value > *min_power) *min_power = *dac_value;\line \line         dac7574_write_control(WRITE_DAC_REGISTER, dac_ch,\line                               POWER_NORMAL, (uint16_t)*dac_value);\line         return;\line     \}\cf1\par
+\pard\sb200\f2\fs24\b Branch B -- Spin-up: count == 0, not yet started\b0\par
+\pard\sb80\f1\fs18\cf4     if (!*has_started) \{\line         /* Motor spinning up; encoder not yet picking up edges.       */\line         /* Nudge DAC back to floor if PID somehow reduced it.         */\line         /* Do NOT call run_pid -- no useful timing data yet.          */\line         if (*dac_value > DAC_START) *dac_value = DAC_START;\line         dac7574_write_control(WRITE_DAC_REGISTER, dac_ch,\line                               POWER_NORMAL, (uint16_t)*dac_value);\line         return;\line     \}\cf1\par
+\pard\sb200\f2\fs24\b Branch C -- Stall recovery: count == 0, was running\b0\par
+\pard\sb80\f1\fs18\cf4     /* Motor was confirmed started but produced zero pulses in 3x      */\line     /* expected time. Execute 7-step power-cycle recovery.             */\line \line     /* Step 1: Cut power, disable motor. */\line     dac7574_write_control(WRITE_DAC_REGISTER, dac_ch, POWER_NORMAL, DAC_HALT);\line     ulp_riscv_gpio_output_level(enable_gpio, 0);\line \line     /* Step 2: Wait 200 ms for back-EMF and rotor to stop. */\line     \{ uint64_t t = rtc_ticks() + us_to_ticks(MOTOR_RESTART_PAUSE_US, period);\line       while (rtc_ticks() < t) \{\} \}\line \line     /* Step 3: Full power restart to overcome static friction. */\line     ulp_riscv_gpio_output_level(enable_gpio, 1);\line     dac7574_write_control(WRITE_DAC_REGISTER, dac_ch, POWER_NORMAL, DAC_MAX_POWER);\line \line     /* Step 4: Encoder ON; wait for first rising edge or timeout. */\line     ulp_riscv_gpio_output_level(enc_enable_gpio, 1);\line     /* ... rising-edge detection loop (omitted for brevity) ... */\line \line     /* Step 5: Encoder OFF. */\line     ulp_riscv_gpio_output_level(enc_enable_gpio, 0);\line \line     /* Step 6: Set recovery power; clear PID state.               */\line     /* DAC_RESTART = 2300 -> power 1795 (~44%). More than DAC_START */\line     /* to overcome stopped-under-load static friction.             */\line     /* Clearing integral prevents a pre-stall accumulated I-term  */\line     /* from causing a power spike when regulation resumes.        */\line     *dac_value  = DAC_RESTART;\line     *integral   = 0;\line     *prev_error = 0;\line     dac7574_write_control(WRITE_DAC_REGISTER, dac_ch, POWER_NORMAL, DAC_RESTART);\line \line     /* Step 7: Notify main CPU once per stall episode.            */\line     /* recovery_signaled prevents repeated wakeups on every call. */\line     /* Cleared in Branch A when motor resumes normal pulsing.    */\line     if (!*recovery_signaled) \{\line         motor_stop_events |= event_bit;  /* bit0=AC, bit1=blood pump */\line         *recovery_signaled = true;\line         wakeup_main_cpu();   /* RTC interrupt to main CPU */\line     \}\line \}\cf1\par
+\pard\sb280\f2\fs30\b 8.  Per-Pump State Variables  (RTC slow RAM)\b0\par
+\pard\sb80\f1\fs18\cf4 /* Declared static -> stored in ULP RTC slow RAM. Persist across wakeups. */\line \line static int32_t  ac_integral    = 0;  /* PID I accumulator  (AC pump)   */\line static int32_t  ac_prev_error  = 0;  /* PID D memory       (AC pump)   */\line static int32_t  bp_integral    = 0;  /* PID I accumulator  (blood pump) */\line static int32_t  bp_prev_error  = 0;  /* PID D memory       (blood pump) */\line \line /* true after first encoder pulse -- separates spin-up (B) from stall (C) */\line static bool  ac_has_started       = false;\line static bool  bp_has_started       = false;\line \line /* Prevents repeated stall wakeups during one episode.                    */\line /* Cleared in Branch A when motor resumes normal pulsing.                 */\line static bool  ac_recovery_signaled = false;\line static bool  bp_recovery_signaled = false;\line \line /* Counts loops to skip between PID service calls.                        */\line static uint32_t  ac_skip_counter  = 0;\line static uint32_t  bp_skip_counter  = 0;\cf1\par
+\pard\sb280\f2\fs30\b 9.  Shared Variables  (main CPU <-> ULP)\b0\par
+\pard\sb80\f1\fs18\cf4 /* Written by main CPU, read by ULP: */\line uint32_t ac_pump_running      = 0;      /* 0=stop, 1=run              */\line uint32_t bp_pump_running      = 0;\line uint32_t ac_target_ms_per_rev = 17000;  /* SPR setpoint in ms         */\line uint32_t bp_target_ms_per_rev = 17000;\line uint32_t kp_scaled            = 5;      /* PID gains x1000            */\line uint32_t ki_scaled            = 1;\line uint32_t kd_scaled            = 0;\line \line /* Written by ULP, read by main CPU: */\line uint32_t ac_dac_value         = DAC_HALT; /* current DAC register     */\line uint32_t bp_dac_value         = DAC_HALT;\line uint32_t ac_last_pulse_count  = 0;   /* pulses in last batch          */\line uint32_t ac_last_elapsed_us   = 0;   /* us for last batch             */\line uint32_t bp_last_pulse_count  = 0;\line uint32_t bp_last_elapsed_us   = 0;\line \line /* Stall bitmask: set by ULP, cleared by main CPU after reading.       */\line uint32_t motor_stop_events    = 0;   /* bit0=AC stall, bit1=BP stall  */\cf1\par
+\pard\sb80\f0\fs20 Accessed from MicroPython: machine.mem32[address]. Addresses in fluispotter/variables.py.\par
+\pard\sb280\f2\fs30\b 10.  Gain Tuning Guide\b0\par
+\pard\sb200\f2\fs24\b Kp  (kp_scaled = 5,  Kp = 0.005)\b0\par
+\pard\sb80\f0\fs20 Sets proportional response speed. At 3 ms error: P-term = 5 x 3 / 1000 = 0.015 DAC steps (rounds to zero). The P-term only produces 1 DAC step per call at errors > 200 ms. Increase Kp if response is too sluggish; decrease if oscillation is observed.\par
+\pard\sb200\f2\fs24\b Ki  (ki_scaled = 1,  Ki = 0.001)\b0\par
+\pard\sb80\f0\fs20 Eliminates steady-state error. Very slow by design: requires 1000 ms accumulated error to produce 1 DAC step. Prevents integrator-induced oscillation in a fluidic system with soft compliance. Raise Ki if the pump sits persistently off target speed.\par
+\pard\sb200\f2\fs24\b Kd  (kd_scaled = 0,  Kd = 0.0)\b0\par
+\pard\sb80\f0\fs20 Off by default. Derivative reacts to measurement noise and can cause DAC chattering. Enable only if overshoot persists after P/I tuning. Start with kd_scaled = 1 or 2.\par
+\pard\sb200\f2\fs24\b Live gain write from MicroPython\b0\par
+\pard\sb80\f1\fs18\cf4     import machine as _m\line     _m.mem32[0x50001d98] = 10   # kp_scaled = 10  ->  Kp = 0.010\line     _m.mem32[0x50001d94] =  2   # ki_scaled =  2  ->  Ki = 0.002\line     _m.mem32[0x50001e8c] =  0   # kd_scaled =  0  ->  Kd = 0\cf1\par
+\pard\sb280\f2\fs30\b 11.  Complete Signal Flow\b0\par
+\pard\sb80\f1\fs18\cf4 Main CPU writes:  ac_pump_running = 1,  ac_target_ms_per_rev = 17000\line                   (optionally pre-sets ac_dac_value = 1095 for power=3000 start)\line \line ULP main() calls ac_tick() on every wakeup:\line \line   ac_tick()\line     |\line     +-- ac_pump_running == 1?  YES\line     |     |\line     |     +-- ac_skip_counter > 0?  YES -> decrement and return\line     |     |\line     |     +-- ac_skip_counter == 0 -> call regulate_pump()\line     |           |\line     |           +-- dac_value == DAC_HALT? (first call after stop)\line     |           |     YES -> init dac=DAC_START, clear PID\line     |           |\line     |           +-- enable motor GPIO\line     |           +-- enable encoder, collect batch (up to 10 pulses)\line     |           +-- disable encoder\line     |           |\line     |           +-- count > 0?  BRANCH A: normal\line     |           |     -> run_pid() -> new dac -> write DAC7574\line     |           |     -> update skip counter\line     |           |\line     |           +-- count==0, has_started==false?  BRANCH B: spin-up\line     |           |     -> nudge dac to DAC_START floor, return\line     |           |\line     |           +-- count==0, has_started==true?  BRANCH C: stall\line     |                 1. Cut power, disable motor\line     |                 2. Wait 200 ms\line     |                 3. Full power restart\line     |                 4. Wait for first encoder pulse\line     |                 5. Encoder OFF\line     |                 6. dac=DAC_RESTART, clear PID accumulators\line     |                 7. Set motor_stop_events bit, wake main CPU\line     |\line     +-- ac_pump_running == 0? -> stop_pump() (dac=DAC_HALT, idempotent)\cf1\par
+\pard\sb280\f2\fs30\b 12.  PID Deep Dive -- Data Types, Inputs, and Error Computation\b0\par
+\pard\sb80\f0\fs20 This section traces every variable from raw hardware signal through to the DAC write, documenting the exact C type at each stage and explaining why each type was chosen.\par
+\pard\sb200\f2\fs24\b 12.1  Hardware input: the quadrature encoder\b0\par
+\pard\sb80\f0\fs20 The AC and blood pumps each have a quadrature optical encoder. Both A and B channels are XOR-ed in hardware before reaching the ESP32 GPIO, so the ULP sees a single signal with 4x the edge density of one channel alone. 5184 rising edges per revolution (PULSES_PER_REV = 5184). 5184 = 4 quadrature edges x 1296 encoder lines/rev.\par
+\pard\sb80\f0\fs20 sample_encoder() drives the encoder-enable GPIO high (powering the optical sensor), then polls the encoder GPIO in a tight loop counting rising-edge transitions until TARGET_PULSE_COUNT (10) pulses are collected or the timeout fires. The loop also records start and end RTC ticks to measure elapsed time.\par
+\pard\sb80\f1\fs18\cf4 static uint32_t sample_encoder(gpio_num_t encoder_gpio,\line
+                               uint32_t *count_out,\line
+                               uint64_t timeout_us)\line
+\{\line
+    uint32_t period     = rtc_cal_period();         /* ticks per 2^19 us         */\line
+    uint64_t t_start    = rtc_ticks();              /* 48-bit RTC counter value   */\line
+    uint64_t t_deadline = t_start + us_to_ticks(timeout_us, period);\line
+\line
+    uint32_t last_level = ulp_riscv_gpio_get_level(encoder_gpio);\line
+    uint32_t count      = 0;    /* max = TARGET_PULSE_COUNT (10)           */\line
+    uint64_t t_now      = t_start;\line
+\line
+    while (count < TARGET_PULSE_COUNT && t_now < t_deadline) \{\line
+        uint32_t level = ulp_riscv_gpio_get_level(encoder_gpio);\line
+        if (level != last_level) \{\line
+            if (last_level == 0) count++;     /* rising edge detected          */\line
+            last_level = level;\line
+        \}\line
+        t_now = rtc_ticks();\line
+    \}\line
+\line
+    *count_out = count;\line
+    uint64_t elapsed_ticks = t_now - t_start;\line
+    uint64_t elapsed_us    = ticks_to_us(elapsed_ticks, period); /* uint64    */\line
+    /* Guard: result exceeding uint32 max (~71 min) returns sentinel value.  */\line
+    return (elapsed_us > 0xFFFFFFFFULL) ? 0xFFFFFFFFUL : (uint32_t)elapsed_us;\line
+\}\cf1\par
+\pard\sb80\f0\fs20 Outputs: count (uint32_t, 0..10) and elapsed_us (uint32_t, microseconds). In practice elapsed_us is at most a few hundred milliseconds. The uint32_t overflow guard at 0xFFFFFFFF (~71 minutes) is a defensive sentinel, never triggered in normal pump operation.\par
+\pard\sb200\f2\fs24\b 12.2  RTC timing and the period calibration constant\b0\par
+\pard\sb80\f0\fs20 The RTC slow oscillator runs at roughly 150 kHz (varies with temperature and supply). At boot the main CPU calibrates it and stores the result in RTC_CNTL_STORE1_REG as a uint32_t called "period". The period value represents ticks per 2^19 microseconds (RTC_CLK_CAL_FRACT = 19). The ULP reads this register on every call to rtc_cal_period().\par
+\pard\sb80\f1\fs18\cf4 /* Conversion helpers.                                                       */\line
+/* The ULP RISC-V core has no hardware divide unit, so shifts replace /2^19. */\line
+\line
+static uint64_t ticks_to_us(uint64_t ticks, uint32_t period) \{\line
+    /* ticks * period  =  ticks * (actual_ticks_per_2^19_us)                */\line
+    /* >> 19  divides by 2^19 to recover true microseconds.                 */\line
+    return (ticks * period) >> RTC_CLK_CAL_FRACT;   /* >> 19              */\line
+\}\line
+\line
+static uint64_t us_to_ticks(uint64_t us, uint32_t period) \{\line
+    /* << 19 first to preserve precision before integer divide.            */\line
+    return (us << RTC_CLK_CAL_FRACT) / period;      /* << 19              */\line
+\}\line
+\line
+/* Both inputs and outputs are uint64_t.                                   */\line
+/* ticks * period can exceed uint32_t:                                     */\line
+/*   park timeout ticks * period  =  3 750 000 * 8 000 = 30 000 000 000   */\line
+/*   That is ~30 billion -- far beyond uint32_t max of ~4.3 billion.       */\cf1\par
+\pard\sb200\f2\fs24\b 12.3  Building actual_us and target_us for run_pid()\b0\par
+\pard\sb80\f0\fs20 regulate_pump() collects the encoder batch then constructs two values in identical units (microseconds) to pass to run_pid(). The difference between them IS the speed error.\par
+\pard\sb80\f1\fs18\cf4 /* actual_us: uint32_t.  How long did the batch actually take?              */\line
+uint32_t elapsed_us = sample_encoder(enc_gpio, &count, timeout_us);\line
+/* Example: at 17 SPR running 10% slow, 10 pulses took 35 000 us.          */\line
+\line
+/* target_us: uint32_t.  How long SHOULD "count" pulses take at setpoint?  */\line
+/*                                                                          */\line
+/* Formula: target_us = target_ms_per_rev * count * 1000U / PULSES_PER_REV */\line
+/*                                                                          */\line
+/*   target_ms_per_rev  -- the SPR setpoint in ms  (e.g. 17000 for 17 s)  */\line
+/*   count              -- actual pulses collected  (0..10)                */\line
+/*   * 1000U            -- convert ms to us                                */\line
+/*   / PULSES_PER_REV   -- scale from per-revolution to per-batch          */\line
+/*                                                                          */\line
+/* Example: 17 000 * 10 * 1000 / 5184 = 32 793 us                         */\line
+/*                                                                          */\line
+/* Overflow check (from source comment):                                   */\line
+/*   Max: 60 000 * 10 * 1 000 / 8 = 75 000 000  -- fits uint32_t (max 4.3e9) */\line
+\line
+uint32_t target_us = (target_ms_per_rev * count * 1000U) / PULSES_PER_REV;\line
+\line
+/* IMPORTANT: target_us is proportional to count, not fixed at 10 pulses. */\line
+/* If timeout fires after only 7 pulses:                                   */\line
+/*   target_us = 17 000 * 7 * 1000 / 5184 = 22 955 us  (7/10 of normal)  */\line
+/*   actual_us = timeout duration (>>22 955 us, pump was very slow)        */\line
+/*   error_ms  = large positive -- correct, pump was much too slow         */\line
+/* Without this scaling a partial batch would produce an artificially      */\line
+/* large error and over-drive the motor on every near-stall event.         */\cf1\par
+\pard\sb200\f2\fs24\b 12.4  Data types at every step inside run_pid()\b0\par
+\pard\sb80\f1\fs18\cf4 static uint32_t run_pid(\line
+    uint32_t  actual_us,   /* TYPE: uint32_t  measured batch time in us      */\line
+    uint32_t  target_us,   /* TYPE: uint32_t  ideal batch time in us         */\line
+    uint32_t  dac_current, /* TYPE: uint32_t  DAC register [0..4095]         */\line
+    int32_t  *integral,    /* TYPE: int32_t*  persistent I accumulator        */\line
+    int32_t  *prev_error)  /* TYPE: int32_t*  D memory from previous call     */\line
+\{\cf1\par
+\pard\sb80\f0\fs20 -- Step 1: error_ms\par
+\pard\sb80\f1\fs18\cf4     int32_t error_ms = ((int32_t)actual_us - (int32_t)target_us) / 1000;\line
+    /*\line
+     * TYPE: int32_t -- MUST be signed because pump can be faster than target.\line
+     *\line
+     * Both actual_us and target_us are uint32_t.\line
+     * Cast both to int32_t BEFORE subtraction to get a signed difference.\line
+     * If done as unsigned: (35000 - 40000) wraps to ~4 294 927 296  (WRONG).\line
+     *\line
+     * Divide by 1000 converts microseconds to milliseconds.\line
+     * This is an integer truncation, not rounding.\line
+     *   (35 000 - 32 793) / 1000 = 2207 / 1000 = 2  (not 2.207)\line
+     *\line
+     * Why milliseconds instead of microseconds?\line
+     *   integral += error every call.  At error = 5000 us and 1 call/s:\line
+     *   overflow in 2.1e9 / 5000 = 430 000 calls = 120 hours.\line
+     *   At error = 5 ms: overflow in 2.1e9 / 5 = 430 000 000 calls.\line
+     *   Anti-windup clamp at +-4 095 000 ms is the actual operative guard.\line
+     *\line
+     * Sign semantics:\line
+     *   error_ms > 0 : pump TOO SLOW  (actual took longer than target)\line
+     *   error_ms < 0 : pump TOO FAST  (actual took shorter than target)\line
+     *   error_ms = 0 : perfect speed  (integer truncation makes this rare)\line
+     */\cf1\par
+\pard\sb80\f0\fs20 -- Step 2: integral accumulation and anti-windup\par
+\pard\sb80\f1\fs18\cf4     *integral += error_ms;\line
+    /*\line
+     * TYPE: int32_t -- signed, stored in RTC slow RAM (static variable).\line
+     * Persists across ULP wakeups; survives main CPU sleep.\line
+     * Grows when pump runs persistently slow (positive errors).\line
+     * Shrinks or goes negative when pump overshoots.\line
+     */\line
+    if (*integral >  INTEGRAL_LIMIT) *integral =  INTEGRAL_LIMIT;  /* +4 095 000 */\line
+    if (*integral < -INTEGRAL_LIMIT) *integral = -INTEGRAL_LIMIT;  /* -4 095 000 */\line
+    /*\line
+     * INTEGRAL_LIMIT = 4 095 000 ms (defined constant).\line
+     * Anti-windup reasoning:\line
+     *   I-term = ki_scaled * integral / 1000\line
+     *   At ki_scaled=1 and integral=4 095 000: I = 4 095 000 / 1000 = 4095 steps.\line
+     *   4095 is the full DAC range (0 = max power, 4095 = off).\line
+     *   The integrator can NEVER produce an output beyond hardware limits,\line
+     *   no matter how long the pump fights against back-pressure.\line
+     */\cf1\par
+\pard\sb80\f0\fs20 -- Step 3: derivative\par
+\pard\sb80\f1\fs18\cf4     int32_t derivative_ms = error_ms - *prev_error;\line
+    *prev_error = error_ms;\line
+    /*\line
+     * TYPE: int32_t -- signed.\line
+     * prev_error is also int32_t; subtraction stays within int32_t.\line
+     *\line
+     * derivative_ms > 0 : error growing  (pump decelerating further)\line
+     * derivative_ms < 0 : error shrinking (pump recovering)\line
+     *\line
+     * Default kd_scaled = 0: derivative is computed but has zero weight.\line
+     * Enable by writing kd_scaled > 0 from MicroPython.\line
+     */\cf1\par
+\pard\sb80\f0\fs20 -- Step 4: PID output\par
+\pard\sb80\f1\fs18\cf4     int32_t pid_out = (int32_t)kp_scaled * error_ms      / 1000\line
+                    + (int32_t)ki_scaled * (*integral)   / 1000\line
+                    + (int32_t)kd_scaled * derivative_ms / 1000;\line
+    /*\line
+     * TYPE: int32_t -- signed.\line
+     *\line
+     * Gain variables (kp_scaled etc.) are uint32_t in RTC slow RAM.\line
+     * Cast to int32_t before multiply so the product is a signed int.\line
+     * Without cast: uint32_t * int32_t is implementation-defined for\line
+     * negative int32_t; explicit cast documents intent.\line
+     *\line
+     * EACH TERM divides by 1000 separately -- NOT summed first.\line
+     * Reason: ki_scaled(1) * integral(4 095 000) = 4 095 000 000.\line
+     * INT32_MAX = 2 147 483 647.\line
+     * 4 095 000 000 > INT32_MAX -- wraps silently on RISC-V.\line
+     * Dividing per-term: 1 * 4 095 000 / 1000 = 4095  (safe).\line
+     * Users raising ki_scaled above 2 should be aware of this overflow.\line
+     *\line
+     * pid_out units: DAC register steps per call.\line
+     * pid_out > 0 : reduce DAC register -> more power\line
+     * pid_out < 0 : increase DAC register -> less power\line
+     */\cf1\par
+\pard\sb80\f0\fs20 -- Step 5: apply to DAC and clamp\par
+\pard\sb80\f1\fs18\cf4     int32_t new_dac = (int32_t)dac_current - pid_out;\line
+    /*\line
+     * SUBTRACT pid_out because the DAC is inverted:\line
+     *   pump too slow  -> positive error -> positive pid_out\line
+     *                  -> new_dac = dac_current - (+N) = lower register\line
+     *                  -> lower register = MORE motor drive\line
+     *   pump too fast  -> negative error -> negative pid_out\line
+     *                  -> new_dac = dac_current - (-N) = higher register\line
+     *                  -> higher register = LESS motor drive\line
+     *\line
+     * Intermediate type int32_t: may transiently exceed [0..4095].\line
+     */\line
+    if (new_dac > (int32_t)DAC_MAX) new_dac = (int32_t)DAC_MAX;  /* 4095 */\line
+    if (new_dac < (int32_t)DAC_MIN) new_dac = (int32_t)DAC_MIN;  /*    0 */\line
+    return (uint32_t)new_dac;   /* cast safe: value is now in [0..4095]  */\line
+\}\cf1\par
+\pard\sb200\f2\fs24\b 12.5  Complete data-type table\b0\par
+\pard\sb80\f1\fs18\cf4 Variable                 C type      Typical range        Notes\line
+-----------------------  ----------  -------------------  --------------------------\line
+actual_us                uint32_t    0..~350 000 us       RTC-measured batch time\line
+target_us                uint32_t    0..75 000 000 us     computed from SPR setpoint\line
+count                    uint32_t    0..10                rising-edge count in batch\line
+error_ms                 int32_t     ~-350..+350 ms       signed: neg=too fast\line
+integral                 int32_t     +-4 095 000 ms       anti-windup accumulator\line
+derivative_ms            int32_t     ~-700..+700 ms       change in error per call\line
+kp_scaled (shared RAM)   uint32_t    0..UINT32_MAX        gain x1000, default 5\line
+ki_scaled (shared RAM)   uint32_t    0..UINT32_MAX        gain x1000, default 1\line
+kd_scaled (shared RAM)   uint32_t    0..UINT32_MAX        gain x1000, default 0\line
+pid_out                  int32_t     ~-4095..+4095        sum of P+I+D in DAC steps\line
+dac_current              uint32_t    0..4095              current DAC register\line
+new_dac (intermediate)   int32_t     may exceed range     clamped before return\line
+return / new dac_value   uint32_t    0..4095              written to DAC7574\line
+\line
+RTC period               uint32_t    ~5000..10000         ticks per 2^19 us\line
+t_start / t_now          uint64_t    48-bit counter       absolute RTC timestamps\line
+elapsed_ticks            uint64_t    0..~4e12             two-timestamp difference\line
+elapsed_us (internal)    uint64_t    0..0xFFFFFFFF        truncated to uint32_t\line
+target_ms_per_rev        uint32_t    1000..120 000        SPR setpoint in ms/rev\cf1\par
+\pard\sb200\f2\fs24\b 12.6  End-to-end numeric example  (17 s/rev, settled running)\b0\par
+\pard\sb80\f1\fs18\cf4 /* Scenario: target 17 s/rev, pump settled, integral built up over 500 s.  */\line
+\line
+target_ms_per_rev = 17 000   /* 17 seconds per revolution                  */\line
+\line
+/* Encoder batch result: 10 pulses took 35 000 us  (pump ~6% too slow)     */\line
+count      = 10\line
+elapsed_us = 35 000\line
+\line
+/* Step 1: target_us                                                        */\line
+target_us = 17 000 * 10 * 1000 / 5184  =  32 793 us\line
+\line
+/* Step 2: error_ms                                                         */\line
+error_ms = (35 000 - 32 793) / 1000  =  2207 / 1000  =  2 ms\line
+\line
+/* Step 3: integral  (500 prior calls, each error_ms = 2)                  */\line
+integral_before = 1000\line
+integral_after  = 1000 + 2  =  1002\line
+\line
+/* Step 4: derivative  (prev_error was also 2, speed stable)               */\line
+derivative_ms = 2 - 2  =  0\line
+\line
+/* Step 5: PID output  (kp=5, ki=1, kd=0)                                 */\line
+P = 5  * 2    / 1000  =  0   (rounds down: P-term weak at small errors)\line
+I = 1  * 1002 / 1000  =  1   (I-term: 1 DAC step after 500 s of 2ms error)\line
+D = 0  * 0    / 1000  =  0\line
+pid_out = 1\line
+\line
+/* Step 6: apply to DAC  (assume dac_current = 1800)                       */\line
+new_dac = 1800 - 1  =  1799\line
+power   = 4095 - 1799  =  2296   (slight increase, more drive)\line
+\line
+/* This demonstrates the deliberate sluggishness:                           */\line
+/* 500 seconds of 2ms error -> just 1 DAC step of correction.              */\line
+/* Tuned for peristaltic pumps where tubing compliance damps oscillation.  */\cf1\par
+\pard\sb200\f2\fs24\b 12.7  How the setpoint enters the PID loop\b0\par
+\pard\sb80\f0\fs20 The SPR setpoint originates in the Python control app (QSpinBox on pump panel). It travels through the following chain before reaching run_pid():\par
+\pard\sb80\f1\fs18\cf4 1. Python / MicroPython (control app):\line
+   spr_seconds = 17                                 # user choice\line
+   target_ms   = spr_seconds * 1000  =  17 000     # convert to ms\line
+   machine.mem32[AC_TARGET_MS_PER_REV] = 17 000    # write to shared variable\line
+\line
+2. ULP shared variable  (uint32_t in RTC slow RAM):\line
+   uint32_t ac_target_ms_per_rev = 17 000;         # read by ULP every tick\line
+\line
+3. ac_tick() reads it each wakeup, passes to regulate_pump():\line
+   regulate_pump(..., ac_target_ms_per_rev, ...);\line
+\line
+4. regulate_pump() uses target_ms_per_rev in two places:\line
+   a) calc_batch_timeout_us(target_ms_per_rev)  -- sets stall detection window\line
+   b) target_us = target_ms_per_rev * count * 1000U / PULSES_PER_REV\line
+      (the reference time passed to run_pid)\line
+\line
+5. target_us (uint32_t) enters run_pid() as the setpoint for error computation.\line
+\line
+/* Live update: the setpoint can be changed at any time while running.     */\line
+/* regulate_pump() reads it fresh every call.                              */\line
+/* A new target takes effect on the very next encoder batch (~33 ms).      */\line
+/* The stall timeout window also updates immediately.                      */\cf1\par
+\pard\sb80\f0\fs20 Changing target_ms_per_rev mid-run produces an immediate step change in target_us. If the step is large (e.g. 17 s to 60 s), error_ms on the next call will be large and negative (motor now appears "faster" than the new slow target), the integral may flip sign, and the PID will reduce power allowing the motor to slow to the new setpoint. The stall timeout window (calc_batch_timeout_us) also updates immediately, so a sudden slow target will not false-trigger stall detection.\par
+\pard\sb200\f0\fs18\cf2 End of document. Generated from main.c on dev branch, April 2026.\cf1\par
+}

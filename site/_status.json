@@ -1,0 +1,102 @@
+{
+ "generated_at": "2026-07-23T16:58:12+00:00",
+ "firmware_version": "0.1.141",
+ "ulp_operational": "1.15.0",
+ "hub_service": null,
+ "requirements": {
+  "doc_version": "1.92",
+  "total": 164
+ },
+ "ci": [
+  {
+   "workflowName": "ci",
+   "headBranch": "dev",
+   "conclusion": "",
+   "status": "in_progress",
+   "updatedAt": "2026-07-23T16:57:59Z"
+  },
+  {
+   "workflowName": "Documentation",
+   "headBranch": "dev",
+   "conclusion": "",
+   "status": "in_progress",
+   "updatedAt": "2026-07-23T16:57:53Z"
+  },
+  {
+   "workflowName": "Documentation",
+   "headBranch": "dev",
+   "conclusion": "failure",
+   "status": "completed",
+   "updatedAt": "2026-07-23T16:48:47Z"
+  },
+  {
+   "workflowName": "ci",
+   "headBranch": "dev",
+   "conclusion": "failure",
+   "status": "completed",
+   "updatedAt": "2026-07-23T16:51:20Z"
+  },
+  {
+   "workflowName": "ci",
+   "headBranch": "dev",
+   "conclusion": "failure",
+   "status": "completed",
+   "updatedAt": "2026-07-23T16:30:44Z"
+  },
+  {
+   "workflowName": "ci",
+   "headBranch": "dev",
+   "conclusion": "failure",
+   "status": "completed",
+   "updatedAt": "2026-07-23T15:08:17Z"
+  },
+  {
+   "workflowName": "ci",
+   "headBranch": "dev",
+   "conclusion": "failure",
+   "status": "completed",
+   "updatedAt": "2026-07-23T15:03:59Z"
+  },
+  {
+   "workflowName": "ci",
+   "headBranch": "dev",
+   "conclusion": "failure",
+   "status": "completed",
+   "updatedAt": "2026-07-23T14:07:19Z"
+  },
+  {
+   "workflowName": "ci",
+   "headBranch": "dev",
+   "conclusion": "failure",
+   "status": "completed",
+   "updatedAt": "2026-07-23T13:54:04Z"
+  },
+  {
+   "workflowName": "ci",
+   "headBranch": "dev",
+   "conclusion": "failure",
+   "status": "completed",
+   "updatedAt": "2026-07-23T12:37:44Z"
+  },
+  {
+   "workflowName": "ci",
+   "headBranch": "dev",
+   "conclusion": "failure",
+   "status": "completed",
+   "updatedAt": "2026-07-23T12:31:31Z"
+  },
+  {
+   "workflowName": "ci",
+   "headBranch": "dev",
+   "conclusion": "failure",
+   "status": "completed",
+   "updatedAt": "2026-07-23T12:19:12Z"
+  }
+ ],
+ "latest_commit": {
+  "hash": "1a223ec25425811ec93bc6979262850ce12ce896",
+  "date": "2026-07-23",
+  "subject": "Merge: SWR-298 + true-green verification fixes",
+  "body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+ }
+}

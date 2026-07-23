@@ -1,0 +1,336 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Fluispotter Control Application — Software Specification</title>
+<style type="text/css">
+body { font: 11.0px Arial; margin: 40px; }
+h1 { font: bold 36.0px Arial; color: #1f4e79; text-align: center; margin: 100px 0 10px 0; }
+h2 { font: bold 16.0px Arial; color: #1f4e79; margin: 30px 0 6px 0; }
+h3 { font: bold 13.0px Arial; color: #2e75b6; margin: 20px 0 4px 0; }
+h4 { font: bold 12.0px Arial; color: #1f4e79; margin: 16px 0 4px 0; }
+p { font: 11.0px Arial; margin: 0 0 4px 0; }
+table { border-collapse: collapse; margin: 4px 0 8px 0; }
+td, th { border: 1.0px solid #bfbfbf; padding: 3px 6px; font: 10.0px Arial; vertical-align: top; }
+th { font-weight: bold; background-color: #eef3f8; }
+pre { font: 9.0px Menlo; margin: 6px 0; padding: 8px; background-color: #f5f5f5; }
+code { font: 9.0px Menlo; }
+.subtitle { font: 20.0px Arial; color: #2e75b6; text-align: center; margin: 0 0 10px 0; }
+.version { font: 12.0px Arial; color: #555555; text-align: center; margin: 15px 0 6px 0; }
+.conf { font: bold 11.0px Arial; color: #cc0000; text-align: center; margin: 0; }
+.company { font: bold 12.0px Arial; color: #1f4e79; text-align: center; margin: 30px 0 6px 0; }
+.email { font: 11.0px Arial; color: #555555; text-align: center; margin: 0; }
+.toc-section { font: bold 10.0px Arial; color: #1f4e79; margin: 8px 0 2px 0; }
+.toc-sub { font: bold 9.0px Arial; color: #333333; margin: 2px 0 2px 18px; }
+.note { font: 10.0px Arial; color: #555555; margin: 4px 0; }
+.label { font: bold 10.0px Arial; }
+.dim { color: #555555; }
+.warn { color: #cc0000; }
+.highlight { font: bold 10.0px Arial; color: #1d6627; }
+</style>
+</head>
+<body>
+
+<p style="min-height: 14px;"><br></p>
+<h1>FLUISPOTTER</h1>
+<p class="subtitle">Control Application &mdash; Software Specification</p>
+<p style="font: 6.0px Arial; text-align: center; min-height: 6px;"><br></p>
+<p class="version">Version 1.4 &nbsp;| &nbsp;2026-06-17</p>
+<p class="conf">CONFIDENTIAL &mdash; Internal Use Only</p>
+<p class="company">Fluispotter ApS</p>
+<p class="email">sten@fluispotter.com</p>
+
+<p style="min-height: 14px;"><br></p>
+<p style="min-height: 14px;"><br></p>
+
+<!-- ============================================================ -->
+<h2>Contents</h2>
+<p style="min-height: 14px;"><br></p>
+
+<p class="toc-section">1. Document Overview</p>
+<p class="toc-sub">1.1 Document Control</p>
+<p class="toc-sub">1.2 Change Log</p>
+<p class="toc-section">2. Purpose &amp; Scope</p>
+<p class="toc-section">3. Software Architecture</p>
+<p class="toc-sub">3.1 Technology Stack &amp; Process Model</p>
+<p class="toc-sub">3.2 Component Map</p>
+<p class="toc-sub">3.3 Threading Model</p>
+<p class="toc-sub">3.4 Three ULP Binaries &amp; Runtime Swap</p>
+<p class="toc-section">4. Data Handling</p>
+<p class="toc-sub">4.1 Serial Transport &mdash; Raw-REPL Injection</p>
+<p class="toc-sub">4.2 board_script.py &mdash; Injected Scripts &amp; Frame Namespaces</p>
+<p class="toc-sub">4.3 Address Resolution by Name + Connect-Time Guard</p>
+<p class="toc-sub">4.4 Application Modes</p>
+<p class="toc-sub">4.5 Inbound Data Flow</p>
+<p class="toc-sub">4.6 Outbound Data Flow (Command / Script Injection)</p>
+<p class="toc-section">5. Hardware Interaction</p>
+<p class="toc-section">6. Tab Reference</p>
+<p class="toc-sub">6.1 Pumps</p>
+<p class="toc-sub">6.2 Resistance Map</p>
+<p class="toc-sub">6.3 Encoder</p>
+<p class="toc-sub">6.4 DAC Sweep</p>
+<p class="toc-sub">6.5 PID Tuner</p>
+<p class="toc-sub">6.6 Parking</p>
+<p class="toc-sub">6.7 Valve-Tape</p>
+<p class="toc-sub">6.8 Sensors</p>
+<p class="toc-sub">6.9 Event Log</p>
+<p class="toc-sub">6.10 Diagnostics</p>
+<p class="toc-sub">6.11 Board Config</p>
+<p class="toc-sub">6.12 Session Log</p>
+<p class="toc-sub">6.13 Fluispotter (Board Registry)</p>
+<p class="toc-sub">6.14 Log</p>
+<p class="toc-section">7. Source Layout &amp; Maintenance Notes</p>
+<p class="toc-sub">7.1 Directory Layout</p>
+<p class="toc-sub">7.2 Orphaned / Dead Code</p>
+<p class="toc-sub">7.3 Safety &amp; Maintenance Caveats</p>
+
+<!-- ============================================================ -->
+<h2>1. Document Overview</h2>
+<p style="min-height: 14px;"><br></p>
+
+<p>This document specifies the <span class="label">Fluispotter Control Application</span> &mdash; a macOS PyQt6 desktop app used during development to actively drive and tune a connected Fluispotter device over USB serial. Unlike the passive Monitor app, the Control app injects MicroPython into the board's raw REPL to command pumps, the valve, the tape reel, LED rails, and the ULP regulator, and to run diagnostic test routines. This document describes its software structure, data handling, hardware interaction, and every tab.</p>
+<p>It is a living document. Per the same discipline as the Device Specification Repository, every change MUST bump the version in the cover page <span class="dim">and</span> the Document Control table below, and add a row to the Change Log.</p>
+
+<h3>1.1 Document Control</h3>
+<table>
+<tr><th>Field</th><th>Value</th></tr>
+<tr><td class="label">Document</td><td>Fluispotter Control Application &mdash; Software Specification</td></tr>
+<tr><td class="label">Version</td><td>1.4</td></tr>
+<tr><td class="label">Date</td><td>2026-06-15</td></tr>
+<tr><td class="label">Status</td><td>Living document</td></tr>
+<tr><td class="label">Applies to</td><td><code>control/</code> in the fluispotter-firmware repository</td></tr>
+<tr><td class="label">Author</td><td>Claude Code</td></tr>
+</table>
+
+<h3>1.2 Change Log</h3>
+<table>
+<tr><th>Version</th><th>Date</th><th>Author</th><th>Change Summary</th></tr>
+<tr><td>1.0</td><td>2026-06-11</td><td>Claude Code</td><td>Initial Control application specification: architecture, threading, three ULP binaries, data handling (raw-REPL injection, board_script frame namespaces, name-resolved addresses + connect-time guard), application modes, hardware interaction, and a per-tab reference for all fourteen tabs including the new Board Config tab.</td></tr>
+<tr><td>1.1</td><td>2026-06-15</td><td>Claude Code</td><td>Sensors tab: (1) new digital ON/OFF sparkline for the reed/Hall power-ON switch on GPIO5 (app v1.1.10); (2) corrected the VEML6035 SPOT/LINE designations &mdash; they were reversed; the injected sensor script now reads spot from 0x3A, line from 0x29 (app v1.1.11).</td></tr>
+<tr><td>1.2</td><td>2026-06-15</td><td>Claude Code</td><td>Sensors tab: new <b>Commit cutoffs &rarr; Board Config</b> button (app v1.1.12) &mdash; writes the tuned fluid thresholds to <code>/board_overrides.json</code> on the board (one-shot raw-REPL write), applied at the next reboot via the firmware-independent overlay (<code>config.py</code>, SWR-224&hellip;229). Confirmation dialog shows the exact keys/values; only <code>BLOOD_SENSOR_BLOOD_THRESHOLD_UV</code> is firmware-active.</td></tr>
+<tr><td>1.4</td><td>2026-06-17</td><td>Claude Code</td><td>PID Tuner (&sect;6.5) collapsed to a <b>single Simple-P tuner</b> on the test2 sandbox (app v1.2.0): removed the legacy positional-PID "Test" mode and the live "Operational" mode (+ "Apply gains") and the mode selector; added runtime controls for <b>N</b> (pulses/measurement) and the <b>skip-ladder VALUES</b> (10-value editor) alongside pwr/1% + bounds + skip max/good; telemetry now in SPR seconds (was RC ticks). Requires ULP&nbsp;Test2&nbsp;&ge;&nbsp;1.3.2 (<code>p_reg_pulse_count</code> + <code>p_reg_skip_table</code>, guarded so the operational binary stays byte-identical) for N + ladder; older builds degrade to baked N=16 + 2<sup>idx</sup>. Removed the now-dead <code>pid_operational_p_regulate_script</code> + <code>pid_regulate_tune_script</code>.</td></tr>
+<tr><td>1.3</td><td>2026-06-16</td><td>Claude Code</td><td>Pumps tab (&sect;6.1) aligned to Simple-P (app v1.1.13): removed the legacy PID Kp/Ki/Kd gain fields + "Apply gains"; stats grid now shows the true hall-interval SPR + error, skip-ladder level, hall revolutions, and motor-stop events, plus a read-only readout of the Simple-P start constants; "Encoder On%"→"Encoder duty %" + a "Measurements/s" row + row tooltips (duty ≠ inverse of skip level at the 1&nbsp;ms wake); MONITOR stream gains <code>ac/bp_skip</code> + <code>ac_revs</code>; "Apply" live-sets target SPR.</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>2. Purpose &amp; Scope</h2>
+<p style="min-height: 14px;"><br></p>
+
+<p>The Control app is the <span class="label">active</span> bench tool for the device. It does everything the Monitor app does (live telemetry display) and adds command and test capabilities: start/stop and tune both pumps, exercise the valve and tape motors, run the regulator tuner, characterise pumps (DAC sweep, resistance map, encoder fidelity), calibrate blood-pump parking, drive the sensor/LED rails, pull on-board logs/diagnostics, and manage a board asset registry.</p>
+<p>Because it drives hardware, its design centres on a single shared serial link that is multiplexed between a default live-monitor stream and on-demand injected test scripts, with strict mode gating so two activities never fight over the board.</p>
+<p class="note">Scope: the macOS Control desktop app only (<code>control/</code>). Firmware, ULP, and the RPi hub are covered by the Device Specification Repository.</p>
+
+<!-- ============================================================ -->
+<h2>3. Software Architecture</h2>
+<p style="min-height: 14px;"><br></p>
+
+<h3>3.1 Technology Stack &amp; Process Model</h3>
+<table>
+<tr><th>Aspect</th><th>Detail</th></tr>
+<tr><td class="label">Language / GUI</td><td>Python 3, PyQt6 (QMainWindow + QTabWidget). Charts use matplotlib; some panels open a PostgreSQL pool (Fluispotter registry).</td></tr>
+<tr><td class="label">Transport</td><td>pyserial speaking the MicroPython <span class="label">raw REPL</span> directly (Ctrl-C/Ctrl-A/Ctrl-D), 115200 baud, read timeout 0.2&nbsp;s, write timeout 2.0&nbsp;s. NOT mpremote (which drops this board).</td></tr>
+<tr><td class="label">Concurrency</td><td>GUI thread + one SerialBridge daemon thread + short-lived inject worker threads; a thread-safe queue plus locks/events coordinate port access.</td></tr>
+<tr><td class="label">Entry point</td><td><code>control/main.py</code> &rarr; <code>main()</code> &rarr; <code>MainWindow(QMainWindow)</code>; a single shared <code>SerialBridge</code>.</td></tr>
+<tr><td class="label">Imports</td><td><code>from panels.X import Y</code> (run from inside <code>control/</code>).</td></tr>
+</table>
+
+<h3>3.2 Component Map</h3>
+<table>
+<tr><th>File</th><th>Role</th></tr>
+<tr><td><code>main.py</code></td><td>MainWindow: toolbar + 14-tab QTabWidget; owns the bridge and the <code>_mode</code> state; 100&nbsp;ms <code>_drain_queue</code> + 2000&nbsp;ms <code>_check_health</code> timers; <code>_handle_frame()</code> routes frames by key + mode; <code>_connect_signals()</code> wires every panel's signals to MainWindow slots; builds and injects scripts; defines the inline <code>_LogPanel</code>.</td></tr>
+<tr><td><code>serial_bridge.py</code></td><td><code>SerialBridge(threading.Thread)</code>: raw-REPL transport. <code>connect/inject/run_command/run_command_with_output/disconnect</code>; reader loop parses JSON; auto-reconnect re-injects the current script.</td></tr>
+<tr><td><code>board_script.py</code></td><td>A thin shim: <code>importlib</code>-loads <code>../monitor/board_script.py</code> and re-exports its script factories. The real script bodies live in the monitor copy.</td></tr>
+<tr><td><code>panels/</code></td><td>One QWidget per tab. Constructed with no args (except <code>BoardRegistryPanel</code>, which receives the bridge via <code>set_bridge()</code>). Panels emit pyqtSignals for intent and receive data via methods MainWindow calls.</td></tr>
+</table>
+
+<h3>3.3 Threading Model</h3>
+<table>
+<tr><th>Thread</th><th>Responsibilities</th></tr>
+<tr><td class="label">GUI thread</td><td>Qt event loop, all widget updates, the 100&nbsp;ms drain + 2000&nbsp;ms health timers.</td></tr>
+<tr><td class="label">SerialBridge daemon</td><td>Owns the pyserial port + raw-REPL reader loop; parses JSON; pushes dicts onto a <code>queue.Queue(2000)</code>. Never touches Qt directly.</td></tr>
+<tr><td class="label">Inject workers</td><td>For blocking injects that involve a raw-REPL handshake or a binary swap on a possibly-wedged board (e.g. PID Tuner start/stop), <code>_inject_async</code> spawns a short-lived daemon thread and marshals any failure back to the UI via a <code>_run_on_ui</code> pyqtSignal &mdash; so the GUI never freezes.</td></tr>
+</table>
+<p>Port access is serialised with <code>_inject_lock</code>; a <code>_pause_reader</code> event lets <code>inject()</code>/<code>run_command()</code> temporarily take the port from the reader (the caller sleeps ~0.3&nbsp;s for an in-flight <code>readline</code> to drain). A custom <code>sys.excepthook</code> keeps the app alive if a slot raises.</p>
+
+<h3>3.4 Three ULP Binaries &amp; Runtime Swap</h3>
+<p>The board carries three ULP binaries that the Control app swaps at runtime via injected snippets:</p>
+<table>
+<tr><th>Binary</th><th>Use</th></tr>
+<tr><td><code>pump_regulator.bin</code></td><td>Operational / default. The live production regulator; loaded at boot and after every test.</td></tr>
+<tr><td><code>pump_test.bin</code></td><td>Diagnostic routines: resistance map, encoder fidelity, fixed-power run, DAC sweep.</td></tr>
+<tr><td><code>pump_test2.bin</code></td><td>Regulator-only test harness for the PID Tuner's <span class="label">Test</span> (kp/ki/kd) and <span class="label">Simple-P</span> (16-tick) modes.</td></tr>
+</table>
+<p>Diagnostic scripts swap in a test binary for the run and reload <code>pump_regulator.bin</code> afterward. The PID Tuner's <span class="label">Operational</span> mode runs on the live binary with <span class="warn">no swap</span>.</p>
+
+<!-- ============================================================ -->
+<h2>4. Data Handling</h2>
+<p style="min-height: 14px;"><br></p>
+
+<h3>4.1 Serial Transport &mdash; Raw-REPL Injection</h3>
+<p><code>SerialBridge</code> speaks MicroPython raw REPL over pyserial using control bytes: Ctrl-C (0x03, interrupt &mdash; sent twice), Ctrl-A (0x01, enter raw REPL), Ctrl-D (0x04, execute). <code>connect(port, script)</code> opens the port, interrupts, enters raw REPL (waits for the banner, up to 5&nbsp;s), and execs the script (UTF-8 + 0x04, written in 64-byte chunks). The reader loop then JSON-parses <code>{...}</code> lines into the queue; non-JSON (REPL echo/prompts) is dropped.</p>
+<table>
+<tr><th>Method</th><th>Behaviour</th></tr>
+<tr><td><code>inject(script)</code></td><td>Stops the current script and runs a new one (interrupt &rarr; raw REPL &rarr; exec); updates <code>_current_script</code>.</td></tr>
+<tr><td><code>run_command(code)</code></td><td>Execs a one-liner, then re-execs <code>_current_script</code> without a second Ctrl-A (board stays in raw REPL). Used for live mem32 pokes (Pumps Start/Stop/Apply).</td></tr>
+<tr><td><code>run_command_with_output(code, timeout)</code></td><td>Execs + reads the raw-REPL stdout framing &mdash; used by the connect-time address probe.</td></tr>
+<tr><td><code>disconnect()</code></td><td>Clears <code>_want_connected</code>, sends Ctrl-C, closes the port.</td></tr>
+</table>
+<p>On a USB drop, the reader keeps <code>_want_connected</code> and <code>_try_reconnect</code> re-opens (last port then <code>find_port()</code>) and <span class="label">re-injects <code>_current_script</code></span>.</p>
+
+<h3>4.2 board_script.py &mdash; Injected Scripts &amp; Frame Namespaces</h3>
+<p>None of <code>board_script.py</code> runs on the Mac. Each factory returns a MicroPython <span class="label">source string</span> that the app injects; the script runs on the board and prints JSON frames. The default stream is <code>MONITOR_SCRIPT</code> (the same telemetry the Monitor app reads, keys <code>t</code>, <code>ac_*</code>, <code>bp_*</code>, actuators, sensors). Test/command scripts emit <span class="label">namespaced</span> frames so the router can dispatch them:</p>
+<table>
+<tr><th>Script factory</th><th>Frames</th><th>Tab</th></tr>
+<tr><td><code>MONITOR_SCRIPT</code></td><td>flat telemetry dict (<code>t</code>, &hellip;)</td><td>Pumps, Valve-Tape, default</td></tr>
+<tr><td><code>sensors_monitor_script</code></td><td><code>{sensor:{...}}</code> (drives LED rails 47/48/43)</td><td>Sensors</td></tr>
+<tr><td><code>resistance_map_script</code></td><td><code>{res_rev,rev,hall,hall_frac,hall_arc}</code> + <code>done:res_map</code></td><td>Resistance Map</td></tr>
+<tr><td><code>encoder_fidelity_script</code></td><td><code>{enc_rev,rev}</code> + <code>done:encoder</code></td><td>Encoder</td></tr>
+<tr><td><code>fixed_power_run_script</code></td><td><code>{fp_start,fp_tick,fp_hall,fp_rev}</code> + <code>done:fixed_power</code></td><td>Encoder (Fixed Power Run)</td></tr>
+<tr><td><code>dac_sweep_spr_script</code></td><td><code>{dac_step:{pwr,reg,ticks,spr}}</code> + <code>done:dac_sweep</code></td><td>DAC Sweep</td></tr>
+<tr><td><code>pid_p_regulate_script</code> (Simple-P, test2 swap)</td><td><code>{pid_enc,pid_point,pid_rev}</code> (+ partial/stall) + <code>done:pid_tuner</code></td><td>PID Tuner</td></tr>
+<tr><td><code>park_pump_script</code></td><td><code>{park_start,park_tick,park_result}</code> + <code>done:parking</code></td><td>Resistance Map (Park BP)</td></tr>
+<tr><td><code>determine_parking_script</code></td><td><code>{park_cal_start,park_cal_result,park_tick,park_result}</code> + <code>done:park_cal</code></td><td>Parking</td></tr>
+<tr><td><code>event_log_script</code></td><td><code>{ev_status,ev,ev_err}</code> + <code>done:event_log</code></td><td>Event Log</td></tr>
+<tr><td><code>diagnostics_script</code></td><td><code>{diag_status,diag,seq}</code> + <code>done:diagnostics</code></td><td>Diagnostics</td></tr>
+</table>
+
+<h3>4.3 Address Resolution by Name + Connect-Time Guard</h3>
+<p>Every ULP shared-memory location is resolved <span class="label">by name</span> from the auto-generated maps <code>fluispotter/variables.py</code> (<code>_ULP</code>, operational), <code>test_variables.py</code> (<code>_ULP_TEST</code>), and <code>test2_variables.py</code> (<code>_ULP_TEST2</code>), loaded standalone via <code>importlib</code> (with a <code>micropython.const</code> shim) so they import on desktop CPython. The resolved integers are embedded as literals at script-build time &mdash; <span class="warn">never hardcoded hex</span> &mdash; which eliminates the stale-address bug class on ULP rebuilds.</p>
+<p>At connect, <code>_verify_board_addresses()</code> probes <code>ULP_VERSION</code> + <code>INITIALIZED</code> (twice) via <code>run_command_with_output</code>; if the loaded map doesn't match the running ULP (e.g. the app wasn't restarted after a deploy), it rejects the connection with a &ldquo;restart the control app (stale addresses)&rdquo; message.</p>
+
+<h3>4.4 Application Modes</h3>
+<p>MainWindow holds a <code>_mode</code> that gates routing and prevents two activities from fighting over the board. The default is <code>_MODE_MONITOR</code> (live telemetry). Starting a test sets the matching mode (e.g. <code>_MODE_DAC_SWEEP</code>, <code>_MODE_PID_TUNER</code>, <code>_MODE_ENCODER</code>, <code>_MODE_PARK_CAL</code>, <code>_MODE_PARKING</code>, <code>_MODE_EVENT_LOG</code>, <code>_MODE_DIAGNOSTICS</code>, <code>_MODE_SENSORS</code>); a terminating <code>done</code>/<code>err</code> frame re-injects <code>MONITOR_SCRIPT</code> and returns to monitor mode. Live pokes (Pumps Start/Stop/Apply) only run while in monitor mode.</p>
+
+<h3>4.5 Inbound Data Flow</h3>
+<pre>board script print(json.dumps(d))  (USB-CDC)
+   -> SerialBridge.run()   readline + json.loads
+   -> bridge.queue         (queue.Queue, max 2000)
+   -> _drain_queue         (QTimer 100 ms, up to 20 frames/tick)
+   -> _handle_frame(data)  route by key + _mode</pre>
+<p><code>_handle_frame</code> always logs the raw dict to the Log tab, then dispatches: <code>err</code>/<code>done</code> &rarr; the active panel's handler + re-inject MONITOR_SCRIPT; <code>ev*</code> &rarr; Event Log; <code>diag*</code> &rarr; Diagnostics; <code>res_rev</code> &rarr; Resistance Map; <code>enc_rev</code>/<code>fp_*</code> &rarr; Encoder; <code>dac_step</code> &rarr; DAC Sweep; <code>pid_*</code> &rarr; PID Tuner; <code>sensor</code> &rarr; Sensors; <code>park_*</code>/<code>park_cal_*</code> &rarr; Parking or Resistance Map (by mode). A normal telemetry frame (<code>t</code> + monitor mode) is pushed to <span class="label">Pumps</span> and <span class="label">Valve-Tape</span>; <code>bp_bracket</code> is forwarded to the Resistance Map and PID Tuner hall-arc helpers.</p>
+
+<h3>4.6 Outbound Data Flow (Command / Script Injection)</h3>
+<p>MainWindow slots build a script via a <code>board_script</code> factory (or an inline snippet) and call <code>bridge.inject()</code> (full script), <code>run_command()</code> (one-liner), or <code>run_command_with_output()</code> (probe). Stop paths typically write ULP RTC memory directly (e.g. <code>mem32[TEST_REQUEST]=0</code>, <code>AC/BP_PUMP_RUNNING=0</code>) then re-inject <code>MONITOR_SCRIPT</code>. The DAC/power convention is inverted throughout: scripts write <code>DAC register = 4095 &minus; power</code>.</p>
+
+<!-- ============================================================ -->
+<h2>5. Hardware Interaction</h2>
+<p style="min-height: 14px;"><br></p>
+
+<p>The Control app both observes and <span class="label">drives</span> hardware (always via injected MicroPython, never direct host GPIO):</p>
+<table>
+<tr><th>Subsystem</th><th>Drives</th><th>Observes</th></tr>
+<tr><td class="label">AC &amp; Blood pumps</td><td>DAC7574 power register, run flag, target SPR, regulator gains/bounds (via ULP shared vars)</td><td>Encoder pulses + elapsed &micro;s &rarr; SPR, hall switch, DAC, state, motor-stop events</td></tr>
+<tr><td class="label">Valve motor</td><td>LEDC PWM @2&nbsp;kHz on GPIO 8 (enable) + GPIO 45 (direction) &mdash; main-CPU, not the ULP</td><td>Open/close limit switches (GPIO 42 / 46, active-low)</td></tr>
+<tr><td class="label">Tape reel motor</td><td>LEDC PWM on GPIO 41</td><td>&mdash;</td></tr>
+<tr><td class="label">Sensor LED rails</td><td>GPIO 47 (fluid emit) + 48 (fluid recv), GPIO 43 (tape emit)</td><td>Blood/AC-air + pressure ADCs, VEML6035 spot 0x3a / line 0x29, SHT4X 0x44</td></tr>
+<tr><td class="label">BP parking</td><td>Arms the ULP BP_PARKING state machine (target, gains, seeded DAC)</td><td>BP hall bracket (encoder ticks), parked flag</td></tr>
+<tr><td class="label">On-board files</td><td>&mdash;</td><td><code>events.db</code>, <code>diagnostics.csv</code> (read-only fetches)</td></tr>
+</table>
+<p class="note">The AC pump has no hall switch in this hardware configuration, so parking and hall-gated routines are blood-pump only.</p>
+
+<!-- ============================================================ -->
+<h2>6. Tab Reference</h2>
+<p style="min-height: 14px;"><br></p>
+<p>Tabs are listed in display order. &ldquo;Drives hardware&rdquo; tabs are flagged; the rest are read-only.</p>
+
+<h3>6.1 Pumps</h3>
+<p><span class="warn">Drives both pumps.</span> <span class="label">Purpose.</span> Side-by-side live control + monitoring of the AC and Blood motors. Each card runs the motor in open-loop <span class="label">Power</span> mode (fixed power, step_per_pct=0) or closed-loop <span class="label">SPR</span> mode (operational <b>Simple-P 16-tick</b> regulation to a target seconds-per-rev).</p>
+<p><span class="label">Displays.</span> Per pump, a Simple-P stats grid: state (●/○ + name), actual power (=4095&minus;DAC), the <b>true hall-interval SPR</b> (wall-clock between hall-revolution increments, which averages out the peristaltic ripple in the encoder-batch sub-sample) + its <b>error vs target</b>, target SPR, <b>skip-ladder level</b>, hall switch, hall revolutions, <b>motor-stop events</b>, pulses/batch, <b>measurements/s</b>, and <b>encoder duty %</b> (Σ batch-µs / wall-second &mdash; not the inverse of skip level: at the 1&nbsp;ms ULP wake even max skip leaves ~30&ndash;50% duty; row tooltips explain it); plus a dual scrolling chart (last 5&nbsp;min + full history) of power + duty with hall-active shading, and a read-only readout of the Simple-P constants the card writes on Start.</p>
+<p><span class="label">Controls.</span> Run-mode radio (Power/SPR); Power (0&ndash;4095); Target SPR; Start power; <span class="label">Apply SPR</span> (live target change + re-assert step, no restart); Start; Stop. The legacy PID <b>Kp/Ki/Kd gains were removed</b> &mdash; Simple-P uses a fixed per-pump <code>step_per_pct</code>, not a tunable PID; arming no longer clobbers the BP dose/park PID's board_config boot gains. <span class="label">Data.</span> Read via <code>update(d)</code> (MONITOR_SCRIPT keys incl. <code>ac/bp_skip</code>, <code>ac/bp_revs</code>, <code>stop_ev</code>); write via <code>command_requested</code> &rarr; inline <code>mem32</code> snippet through <code>run_command()</code> (monitor mode only). Addresses by name from <code>variables.py</code>.</p>
+
+<h3>6.2 Resistance Map</h3>
+<p><span class="warn">Drives one pump.</span> <span class="label">Purpose.</span> A &ldquo;climate-spiral&rdquo; polar visualisation of per-segment rotational resistance: spins a pump at constant DAC power for N revolutions (PID disabled) and plots each revolution as a closed 32-point polygon whose radius is the &micro;s timing of each encoder segment. The same tab doubles as the live BP parking display.</p>
+<p><span class="label">Displays.</span> Viridis-graded per-rev polygons, Mean/Max/Min stat rings, adaptive reference circles, red-x timeout markers, a yellow hall-active rim arc (angle-locked map &rarr; host-sampled fraction &rarr; calibrated bracket), and a colorbar. Parking mode: a rotating needle + hall target line that turns green on success / red on timeout.</p>
+<p><span class="label">Controls.</span> Pump; Revolutions; Power; Run; Stop; Park&nbsp;BP (BP-only). <span class="label">Data.</span> <code>resistance_map_script</code> / <code>park_pump_script</code> frames routed in. Swaps in the test binary for the map run.</p>
+
+<h3>6.3 Encoder</h3>
+<p><span class="warn">Drives one pump.</span> <span class="label">Purpose.</span> Encoder-fidelity bench &mdash; turns a pump a fixed number of hall-gated revolutions and verifies each produces the expected 5184 ticks. A second &ldquo;Fixed Power Run&rdquo; section drives a pump at a raw DAC power for N revs while streaming live encoder/hall telemetry (spin-up / run-in characterisation).</p>
+<p><span class="label">Displays.</span> A bar chart of measured ticks/rev colour-coded by deviation (green &le;1%, amber &le;5%, red otherwise) with a 5184 reference line and tolerance bands; a summary table (Revolution, Ticks, &Delta;, Error%); status labels for both sections.</p>
+<p><span class="label">Controls.</span> Encoder test: Pump, Revolutions (1&ndash;20), Run, Stop. Fixed-Power: Pump, Power (0&ndash;4095), Revolutions (1&ndash;100), Run at power, Stop. <span class="label">Data.</span> <code>encoder_fidelity_script</code> / <code>fixed_power_run_script</code>; swaps in the test binary.</p>
+
+<h3>6.4 DAC Sweep</h3>
+<p><span class="warn">Drives one pump.</span> <span class="label">Purpose.</span> Open-loop power-vs-speed characterisation: sweeps a pump's DAC power and plots resulting SPR, revealing the speed curve and stall point.</p>
+<p><span class="label">Displays.</span> A scatter/line chart (X: motor power 0&ndash;4095, Y: SPR 0&ndash;30&nbsp;s); green data points, amber stall triangles at the 25&nbsp;s cap, a dashed stall line; a per-step status label.</p>
+<p><span class="label">Controls.</span> Pump; Sweep; Stop. <span class="label">Data.</span> <code>dac_sweep_spr_script</code> drives the ULP <code>test_dac_sweep_enc</code> routine (DAC 4095&rarr;0 in steps of 100, 1&nbsp;s settle + 1&nbsp;s count each); SPR&nbsp;=&nbsp;5184/ticks, 0&nbsp;ticks&nbsp;=&nbsp;stall. Swaps in the test binary.</p>
+
+<h3>6.5 PID Tuner</h3>
+<p><span class="warn">Drives one pump.</span> <span class="label">Purpose.</span> A single-purpose tuning workbench for the <b>Simple-P</b> regulator: pick a pump + target SPR, run for a set number of hall revolutions on the <code>pump_test2.bin</code> sandbox, and watch SPR convergence with per-run error statistics. (The legacy positional-PID "Test" mode and the live-"Operational" mode were removed; Simple-P is the only production regulator.)</p>
+<p><span class="label">One mode.</span> Simple-P runs on <code>pump_test2.bin</code> via <code>pid_p_regulate_script</code> (swaps the test2 binary in, restores <code>pump_regulator.bin</code> on Stop). The three tuning levers are <b>pwr/1%</b> (<code>step_per_pct</code>), <b>N</b> (encoder pulses per measurement) and the <b>skip-ladder VALUES</b> (the 10 per-level idle multipliers). N + the ladder values are written only when the deployed ULP&nbsp;Test2&nbsp;&ge;&nbsp;1.3.2 exposes <code>p_reg_pulse_count</code> + <code>p_reg_skip_table</code>; older test2 builds degrade gracefully to the baked N=16 + 2<sup>idx</sup> ladder.</p>
+<p><span class="label">Displays.</span> A polar convergence chart in <b>SPR seconds</b> (live + completed + historical revs, target circle, hall rim arc); measured-SPR and resulting-power histograms; a Run-History log (per-rev mean/err/EncOn%, plus a run summary with a Rev2+ line excluding spin-up); an Enc readout + status (incl. STALL/START-FAIL warnings).</p>
+<p><span class="label">Controls.</span> Pump; Target SPR; Run; Stop; Clear; Start power; Run revolutions; <b>N (pulses)</b>; Simple-P bounds (Kp pwr/1%, Max error%, Min/Max pwr, Max meas, Skip max/good); <b>Skip ladder</b> (10 comma-separated per-level values, validated). <span class="label">Data.</span> The host script writes the test2 addresses by name from <code>test2_variables.py</code>; injects the run off the UI thread.</p>
+
+<h3>6.6 Parking</h3>
+<p><span class="warn">Drives the blood pump.</span> <span class="label">Purpose.</span> Calibrates the BP hall-switch parking position: runs <code>test_determine_parking</code> to measure the magnet-active bracket (in encoder ticks), then arms BP_PARKING to drive to the bracket centre plus an optional offset. BP-only.</p>
+<p><span class="label">Displays.</span> A compass-style polar chart with a rotating needle (colour = live hall state), a filled yellow bracket arc on success, dynamic phase titles, and a status readout (pulses, revolutions, power, hall glyph; on completion: bracket ticks/degrees, elapsed).</p>
+<p><span class="label">Controls.</span> Calibrate Parking; Stop; Offset-from-centre (0&ndash;359&deg;). <span class="label">Data.</span> <code>determine_parking_script(user_offset)</code> frames routed in via <code>_MODE_PARK_CAL</code>.</p>
+
+<h3>6.7 Valve-Tape</h3>
+<p><span class="warn">Drives the valve + tape motors.</span> <span class="label">Purpose.</span> Direct open-loop PWM control of the two main-CPU brushed motors, with live limit-switch indicators. A manual hardware-exercise tool.</p>
+<p><span class="label">Displays.</span> Valve group (Power%, Direction, GPIO label, OPEN/CLOSED limit-switch dots, status); Tape group (Power%, GPIO label, status).</p>
+<p><span class="label">Controls.</span> Valve Power (0&ndash;100%), Direction (open/close), Start, Stop; Tape Power, Start, Stop. <span class="label">Data.</span> Indicators via <code>update(d)</code> (<code>valve_open/close</code>); drive via an <span class="label">inline</span> MicroPython PWM script built in <code>_on_valve_tape_changed</code> (not a board_script factory; LEDC @2&nbsp;kHz, <code>PWM_MAX=65534</code>) injected through <code>bridge.inject()</code>. This script replaces MONITOR_SCRIPT while a motor runs (the monitor sets those pins as inputs).</p>
+
+<h3>6.8 Sensors</h3>
+<p><span class="warn">Drives the LED rails.</span> <span class="label">Purpose.</span> Live bench diagnostics for every sensor: enables the LED emitter rails on demand, streams all sensor outputs as sparklines, and lets the operator tune fluid/tape classification cutoffs against the recent buffer. The only Control tab that actively drives the LED-enable GPIOs.</p>
+<p><span class="label">Displays.</span> A Sensor/LED-enable card (status + 3 LED checkboxes with readback dots; Blood/Air + AC/Air share one rail); 7 sparkline cards (Blood/Air, AC/Air &micro;V&rarr;mV; Spot, Line lux; Pressure; Humidity; Temperature) each with a numeric readout and a ~60&nbsp;s trace; for the 4 classify rows, tinted y-bands + dashed cutoff lines + a live band label and a buffer percentage breakdown.</p>
+<p><span class="label">Controls.</span> 3 LED-enable checkboxes (re-inject <code>sensors_monitor_script</code> with new flags); per-band cutoff spinboxes (host-side only); a <b>Commit cutoffs &rarr; Board Config</b> button that maps the tuned fluid state-band boundaries (midpoints, mV&rarr;&micro;V) to the four <code>BLOOD_SENSOR_*</code>/<code>AC_SENSOR_*</code> thresholds and, after a confirmation dialog showing the exact keys/values, writes them to <code>/board_overrides.json</code> on the board via a one-shot raw-REPL command (pauses + resumes the live stream). The firmware-independent overlay applies at the board's next reboot (config.py; SWR-224&hellip;229) &mdash; no new firmware version. Entering the tab starts the stream; leaving it drives the rails OFF and restores MONITOR_SCRIPT. <span class="label">Data.</span> <code>{sensor:{...}}</code> via <code>update(d)</code>; cutoff defaults from <code>board_config.py</code>.</p>
+
+<h3>6.9 Event Log</h3>
+<p><span class="label">Read-only.</span> <span class="label">Purpose.</span> Pulls the Main-CPU persistent event log (<code>events.db</code> AppendOnlyStore) on demand into a colour-coded table.</p>
+<p><span class="label">Displays.</span> A 4-column table (#, Time local, Type, Message with <code>arguments</code> substituted), row colour by type (log/state/error/recovery/initialization/fatal-error); parse-error rows in red; a progress/result status label.</p>
+<p><span class="label">Controls.</span> Fetch all; + New only (incremental from <code>last_seq+1</code>); Clear (host-side). <span class="label">Data.</span> <code>event_log_script(from_seq)</code> (filesystem read only; no ULP addresses) via <code>_MODE_EVENT_LOG</code>; refuses while another test runs.</p>
+
+<h3>6.10 Diagnostics</h3>
+<p><span class="label">Read-only.</span> <span class="label">Purpose.</span> Cross-session viewer of the board's <code>diagnostics.csv</code> (one summary row per session / fatal error).</p>
+<p><span class="label">Displays.</span> An 11-column table (BP/AC Revs, BP/AC Avg SPR, Stalls, Fatal Error, FW Version, Build Date, Board UID, Session Start/End); fatal-error rows in red; a status label.</p>
+<p><span class="label">Controls.</span> Fetch; Clear (host-side). <span class="label">Data.</span> <code>diagnostics_script()</code> (reads the CSV; touches no ULP memory) via <code>_MODE_DIAGNOSTICS</code>.</p>
+
+<h3>6.11 Board Config</h3>
+<p class="highlight">New in this revision. Read-only.</p>
+<p><span class="label">Purpose.</span> A table of every constant in <code>fluispotter/board_config.py</code> &mdash; the board-type hardware configuration (GPIO pin assignments, DAC registers, I2C addresses, motor physical constants, PWM, motor power/speed, parking, dosing, PID gains, fluid-sensor thresholds, synchronization).</p>
+<p><span class="label">Displays.</span> A two-column (Setting / Value) table with a styled section-header row before each <code>board_config.py</code> section; values shown verbatim (<code>0x3a</code>, <code>800_000</code>, <code>5184</code>).</p>
+<p><span class="label">Data.</span> Parses the <code>board_config.py</code> <span class="label">source text</span> at construction (regex over section headers + <code>NAME = const(value)</code>, preserving order and grouping); never executes the module, so it always reflects the deployed file. <span class="label">Controls.</span> None. <span class="label">Hardware.</span> None (reads a repo file).</p>
+
+<h3>6.12 Session Log</h3>
+<p><span class="label">Read-only (network).</span> <span class="label">Purpose.</span> Reviews a device's historical event stream pulled from the RPi hub's HTTP API, independent of any serial connection.</p>
+<p><span class="label">Displays.</span> A 4-column table (#=last 6 of uid, Time, Type, Message with <code>arguments</code>), row colour by type (incl. warning/sample/command/settings); a status label.</p>
+<p><span class="label">Controls.</span> Fetch; Limit (10&ndash;500); Clear. <span class="label">Data.</span> Blocking <code>urllib</code> GET on a daemon thread to <code>http://fluispotter.internal/synchronize/devices/&lt;uid&gt;/events?limit=N</code>, marshalled back via a signal. The device UID is a module constant; this tab ignores serial connect/disconnect state.</p>
+
+<h3>6.13 Fluispotter (Board Registry)</h3>
+<p><span class="label">Database tool.</span> <span class="label">Purpose.</span> An asset-management tab backed by PostgreSQL: register physical boards (auto-generated <code>FSP-XXXX</code> serial + the board's hardware MAC) and define reusable board types cataloguing features, a GPIO map, and config key/values.</p>
+<p><span class="label">Displays.</span> A DB connection bar; a Boards table (Serial, MAC, Type, Description, Status, First Seen); a Board Types table; and per-type Feature / GPIO-Map / Config detail tables.</p>
+<p><span class="label">Controls.</span> Add/Save/Clear/Refresh boards; Add/Save/Delete types; +/&minus;/C on the feature/GPIO/config detail tables; Connect/Disconnect DB (non-blocking). <span class="label">Data.</span> Raw SQL over a <code>psycopg_pool</code> (opened on a daemon thread). The only hardware touch: when adding a board it reads <code>machine.unique_id()</code> over the bridge (the one panel given the bridge via <code>set_bridge()</code>). Not on the telemetry path.</p>
+
+<h3>6.14 Log</h3>
+<p><span class="label">Read-only.</span> <span class="label">Purpose.</span> A raw scrolling view of every JSON frame received (defined inline in <code>main.py</code> as <code>_LogPanel</code>). Deliberately the last tab. <span class="label">Controls.</span> Scroll/select. <span class="label">Hardware.</span> None.</p>
+
+<!-- ============================================================ -->
+<h2>7. Source Layout &amp; Maintenance Notes</h2>
+<p style="min-height: 14px;"><br></p>
+
+<h3>7.1 Directory Layout</h3>
+<table>
+<tr><th>Path</th><th>Contents</th></tr>
+<tr><td><code>control/main.py</code></td><td>MainWindow, toolbar, 14-tab registration, mode state, frame router, signal wiring, script injection, inline <code>_LogPanel</code>.</td></tr>
+<tr><td><code>control/serial_bridge.py</code></td><td>Raw-REPL SerialBridge + <code>find_port()</code>.</td></tr>
+<tr><td><code>control/board_script.py</code></td><td>Re-export shim of <code>monitor/board_script.py</code>.</td></tr>
+<tr><td><code>control/panels/*.py</code></td><td>Per-tab QWidget panels (see &sect;6).</td></tr>
+<tr><td><code>fluispotter/variables.py</code>, <code>test_variables.py</code>, <code>test2_variables.py</code></td><td>Auto-generated ULP address maps (the single source of truth for shared-var addresses).</td></tr>
+</table>
+
+<h3>7.2 Orphaned / Dead Code</h3>
+<p>&bull; <code>control/panels/min_spr_panel.py</code> (<span class="label">MinSprPanel</span>): fully implemented &ldquo;find minimum sustainable SPR&rdquo; panel, but <span class="warn">not imported or added as a tab</span> by <code>main.py</code>; its backing <code>min_spr_script</code> exists. Not in the shipped UI.</p>
+<p>&bull; <code>encoder_panel.py</code> contains dead <code>dac_sweep_*</code>/<code>_on_dac_sweep</code> methods referencing widgets/signals that no longer exist (DAC Sweep was moved to its own panel); they are never called. The <code>{fp_start}</code>/<code>{fp_hall}</code> frames route to optional hooks the panel does not define, so live hall level is not displayed there.</p>
+
+<h3>7.3 Safety &amp; Maintenance Caveats</h3>
+<p>&bull; <span class="label">Single shared link, mode-gated.</span> Live pokes and test injects are mutually exclusive via <code>_mode</code>; a running test blocks log/diagnostics fetches and pump pokes. Respect this when adding panels.</p>
+<p>&bull; <span class="label">Restart after a deploy.</span> The app caches ULP addresses at launch; the connect-time guard rejects a stale map. Restart the Control app after every ULP deploy.</p>
+<p>&bull; <span class="label">Addresses by name only.</span> Never hardcode ULP hex; resolve from <code>variables.py</code>/<code>test_variables.py</code>/<code>test2_variables.py</code>.</p>
+<p>&bull; <span class="label">5184 pulses/rev</span> is duplicated as a local constant in several panels (Parking, Resistance Map, PID Tuner); keep in sync with the ULP <code>main.c</code>.</p>
+<p>&bull; <span class="label">Inverted power.</span> <code>power = 4095 &minus; dac_register</code> everywhere; scripts write the register, the UI shows power.</p>
+<p>&bull; <span class="label">Static tabs</span> (Board Config) and the Session Log tab are not on the telemetry fan-out and need no <code>set_connected()</code> wiring.</p>
+
+<p style="min-height: 28px;"><br></p>
+<p class="note">&mdash; End of Control Application Specification, Version 1.4 &mdash;</p>
+
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Architecture · Fluispotter</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <a class="brandmark" href="index.html">
+      <svg class="logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#0a6c74"/><path d="M16 6c-3.2 4.2-5.4 7.4-5.4 10.1A5.4 5.4 0 0 0 16 21.5a5.4 5.4 0 0 0 5.4-5.4C21.4 13.4 19.2 10.2 16 6z" fill="#fff"/><circle cx="16" cy="16.4" r="1.8" fill="#0a6c74"/></svg>
+      <span class="brandname">Fluispotter</span>
+    </a>
+    <span class="brandsub">Firmware &amp; Software Documentation</span>
+    <span class="spacer"></span>
+    <span class="topmeta">Project documentation site</span>
+  </header>
+  <aside class="sidebar"><nav><div class="navgroup"><div class="navgroup-title">Project</div><a class="navlink" href="index.html"><svg class="ico" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 9.5 10 4l7 5.5V17a1 1 0 0 1-1 1h-3v-5H7v5H4a1 1 0 0 1-1-1z"/></svg><span>Overview</span></a></div><div class="navgroup"><div class="navgroup-title">Documentation</div><a class="navlink" href="specifications.html"><svg class="ico" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M5 3h7l3 3v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M7 9h6M7 12h6M7 15h4" stroke-width="1.4" fill="none"/></svg><span>Specifications</span></a><a class="navlink" href="requirements.html"><svg class="ico" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 4h12v12H4z" fill="none" stroke-width="1.4"/><path d="M7 8l2 2 4-4" fill="none" stroke-width="1.6"/><path d="M7 13h6" stroke-width="1.4" fill="none"/></svg><span>Requirements</span></a><a class="navlink active" href="architecture.html"><svg class="ico" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="3" y="3" width="5" height="5" rx="1"/><rect x="12" y="3" width="5" height="5" rx="1"/><rect x="7.5" y="12" width="5" height="5" rx="1"/><path d="M5.5 8v2h9V8M10 10v2" fill="none" stroke-width="1.3"/></svg><span>Architecture</span></a><a class="navlink" href="process.html"><svg class="ico" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="10" cy="10" r="6.5" fill="none" stroke-width="1.4"/><path d="M10 6v4l3 2" fill="none" stroke-width="1.5"/></svg><span>Process Notes</span></a></div><div class="navgroup"><div class="navgroup-title">Reference</div><a class="navlink" href="datasheets.html"><svg class="ico" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="5" y="5" width="10" height="10" rx="1.5"/><path d="M8 2v3M12 2v3M8 15v3M12 15v3M2 8h3M2 12h3M15 8h3M15 12h3" stroke-width="1.3"/></svg><span>Datasheets</span></a><a class="navlink" href="history.html"><svg class="ico" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="10" cy="10" r="7" fill="none" stroke-width="1.4"/><path d="M10 5.5V10l3 2" fill="none" stroke-width="1.5"/></svg><span>History</span></a></div></nav></aside>
+  <main class="main">
+    <div class="content wide">
+      
+<div class="pagehead">
+  <div class="eyebrow">Documentation</div>
+  <h1>Architecture</h1>
+  <p class="lead">Firmware architecture: the main-CPU async state machine, the annotated ULP RISC-V pump regulator, the multi-mode ULP design note, and the firmware API reference.</p>
+</div>
+<div class="doc-switcher"><a class="active" href="#view-main-cpu-architecture-rtf" data-target="main-cpu-architecture-rtf">Main CPU Architecture</a><a class="" href="#view-ulp-pid-code-annotated-rtf" data-target="ulp-pid-code-annotated-rtf">ULP RISC-V Pump Regulator — PID Code Annotated Reference</a><a class="" href="#view-multi-mode-ulp-md" data-target="multi-mode-ulp-md">Multi-Mode ULP (Design Note)</a><a class="" href="#view-index-md" data-target="index-md">API Reference</a></div>
+<div class="panel" id="view-main-cpu-architecture-rtf">
+  <span class="card-tag tag-Architecture">RTF document</span>
+  <h3 style="margin-top:10px">Main CPU Architecture</h3>
+  <p style="color:var(--ink-soft)">Architecture note describing the MicroPython main-CPU firmware: its async state machine, the MainController object graph, and how real-time pump regulation is offloaded to the ULP.</p>
+  <p style="color:var(--ink-soft); font-size:13.5px">This is a RTF file and is best opened in its native
+  application. It is not embedded inline; use the link below to open or download the canonical file directly
+  from <code>docs/</code> (relative path <code>../main_cpu_architecture.rtf</code>).</p>
+  <a class="pdf-link" href="../main_cpu_architecture.rtf" target="_blank" rel="noopener"><svg class="pdf-ico" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M5 2h7l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M11 2v4h4" fill="none" stroke="currentColor" stroke-width="1.3"/><text x="10" y="15" font-size="6" font-family="sans-serif" text-anchor="middle" fill="currentColor" font-weight="700">PDF</text></svg> Open / download RTF</a>
+</div><div class="panel" id="view-ulp-pid-code-annotated-rtf">
+  <span class="card-tag tag-Architecture">RTF document</span>
+  <h3 style="margin-top:10px">ULP RISC-V Pump Regulator — PID Code Annotated Reference</h3>
+  <p style="color:var(--ink-soft)">Annotated walkthrough of the ULP RISC-V pump-regulator source, explaining the DAC inversion convention, encoder/PID constants, timing helpers, and adaptive stall detection.</p>
+  <p style="color:var(--ink-soft); font-size:13.5px">This is a RTF file and is best opened in its native
+  application. It is not embedded inline; use the link below to open or download the canonical file directly
+  from <code>docs/</code> (relative path <code>../ulp_pid_code_annotated.rtf</code>).</p>
+  <a class="pdf-link" href="../ulp_pid_code_annotated.rtf" target="_blank" rel="noopener"><svg class="pdf-ico" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M5 2h7l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M11 2v4h4" fill="none" stroke="currentColor" stroke-width="1.3"/><text x="10" y="15" font-size="6" font-family="sans-serif" text-anchor="middle" fill="currentColor" font-weight="700">PDF</text></svg> Open / download RTF</a>
+</div><div class="doc-frame-wrap" id="view-multi-mode-ulp-md">
+  <div class="doc-frame-bar">
+    <span class="doc-title">Multi-Mode ULP (Design Note)</span>
+    <span class="doc-path">../multi_mode_ulp.md</span>
+    <span class="spacer"></span>
+    <a class="openlink" href="../multi_mode_ulp.md" target="_blank" rel="noopener">Open raw Markdown &nearr;</a>
+  </div>
+  <div class="md-body" style="padding:26px 30px"><h1>Multi Mode ULP</h1>
+<p><strong>Status: Not implemented yet — design note only.</strong></p>
+<h2>Concept</h2>
+<p>Keep two separate ULP RISC-V binaries on the MicroPython filesystem and swap them into ULP SRAM on demand, allowing a lean operational binary during normal use and a test-only binary during factory/diagnostic testing.</p>
+<h2>Proposed split</h2>
+<table><thead><tr><th>Binary</th><th>Contents</th></tr></thead><tbody><tr><td><code>pump_regulator.bin</code></td><td><code>ac_tick</code>, <code>bp_tick</code>, PID, dosing, parking — normal operation only</td></tr><tr><td><code>pump_test.bin</code></td><td>All test functions (<code>test_dac_sweep_enc</code>, <code>test_verify_encoder</code>, <code>test_resistance_map</code>, <code>test_determine_parking</code>, <code>test_fixed_power</code>) — no PID loop, no state machines</td></tr></tbody></table>
+<p>Benefit: frees ~2–3 KB from the operational binary; the 8 KB ULP SRAM limit is tight.</p>
+<h2>Swap procedure (from MicroPython)</h2>
+<pre><code># 1. Safe shutdown — ensure pumps are off before swapping
+machine.mem32[AC_PUMP_RUNNING] = 0
+machine.mem32[BP_PUMP_RUNNING] = 0
+time.sleep_ms(200)   # let regulation loop settle
+
+# 2. Stop the ULP timer
+ulp.stop()
+
+# 3. Load new binary into ULP SRAM
+with open(&#x27;pump_test.bin&#x27;, &#x27;rb&#x27;) as f:
+    ulp.load(f.read())
+
+# 4. Switch to the matching address map
+from test_variables import *   # instead of variables.py
+
+# 5. Start ULP
+ulp.run()</code></pre>
+<p>Swap back to the operational binary the same way after tests complete.</p>
+<h2>Key design requirement — fixed shared-variable addresses</h2>
+<p>The biggest pain point is maintaining two <code>variables.py</code>-style address maps and keeping them in sync as the firmware evolves.</p>
+<p><strong>Recommended solution:</strong> use a custom linker script section to pin all shared variables to a fixed base address (e.g. <code>0x50001000</code>) in both binaries.  Both builds then share a single <code>variables.py</code>.  Only the code sections differ in layout; the data interface is stable.</p>
+<p>Example linker fragment:</p>
+<pre><code>SECTIONS {
+  .shared_vars 0x50001000 (NOLOAD) : {
+    KEEP(*(.shared_vars))
+  }
+}</code></pre>
+<p>Mark each shared variable in C:</p>
+<pre><code>volatile uint32_t ac_pump_running __attribute__((section(&quot;.shared_vars&quot;))) = 0;</code></pre>
+<h2>Files that would be added / changed</h2>
+<table><thead><tr><th>File</th><th>Purpose</th></tr></thead><tbody><tr><td><code>esp32/pump_regulator/main/ulp/main_test.c</code></td><td>Test-only ULP entry point (test functions only, no PID/state machines)</td></tr><tr><td><code>esp32/pump_regulator/main/ulp/shared_vars.h</code></td><td>Shared variable declarations with fixed-section attribute</td></tr><tr><td><code>fluispotter/test_variables.py</code></td><td>Address map for test binary (or merged with <code>variables.py</code> if fixed addresses used)</td></tr><tr><td><code>monitor/board_script.py</code></td><td>Add swap logic in test launchers</td></tr><tr><td><code>control/board_script.py</code></td><td>Add swap logic in test launchers</td></tr></tbody></table></div>
+</div><div class="doc-frame-wrap" id="view-index-md">
+  <div class="doc-frame-bar">
+    <span class="doc-title">API Reference</span>
+    <span class="doc-path">../index.md</span>
+    <span class="spacer"></span>
+    <a class="openlink" href="../index.md" target="_blank" rel="noopener">Open raw Markdown &nearr;</a>
+  </div>
+  <div class="md-body" style="padding:26px 30px"><h1>API Reference</h1>
+<p>Fluispotter device firmware for the ESP32-S3 with octal-SPIRAM.</p>
+<h2>Development API</h2>
+<p>The <code>development</code> module contains functions used for R&amp;D and are meant to be run in the MicroPython REPL on the device.</p>
+<p>All the <code>*_sync</code> functions have an async equivalent which require <code>asyncio</code> to run. It is possible to forcibly stop a sync function by issuing a keyboard interrupt with <code>CTRL+C</code> in the REPL. The program will try to cleanup as best as possible on an interrupt but there is no guarantee that it will end in a valid state, in that case soft reboot the device with <code>CTRL+D</code>.</p>
+<p>::: development options: members_order: source show_source: false</p>
+<h2>Pretty print</h2>
+<p>::: development.pretty_print options: members_order: source show_source: false</p></div>
+</div>
+
+<script>
+(function () {
+  var links = document.querySelectorAll('.doc-switcher a');
+  var views = document.querySelectorAll('.doc-frame-wrap, .panel[id^="view-"]');
+  function show(id) {
+    views.forEach(function (v) { v.style.display = (v.id === 'view-' + id) ? '' : 'none'; });
+    links.forEach(function (l) { l.classList.toggle('active', l.dataset.target === id); });
+  }
+  links.forEach(function (l) {
+    l.addEventListener('click', function (e) { e.preventDefault(); show(l.dataset.target); location.hash = l.dataset.target; });
+  });
+  var initial = location.hash.replace('#view-', '');
+  if (initial && document.getElementById('view-' + initial)) { show(initial); }
+  else if (links.length) { show(links[0].dataset.target); }
+})();
+</script>
+
+
+      <footer class="site-footer">
+        Fluispotter project documentation &middot; generated static site &middot;
+        fully offline, no external resources. Canonical specs are embedded live from <code>docs/</code>.
+      </footer>
+    </div>
+  </main>
+</div>
+</body>
+</html>

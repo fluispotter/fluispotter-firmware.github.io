@@ -1,0 +1,255 @@
+{\rtf1\ansi\ansicpg1252\deff0\deflang1033
+{\fonttbl{\f0\froman\fcharset0 Times New Roman;}{\f1\fmodern\fcharset0 Courier New;}}
+{\colortbl;\red0\green70\blue127;\red80\green80\blue80;}
+\widowctrl\hyphauto
+\margl1440\margr1440\margt1440\margb1440
+\pard\qc\sb600\sa60\b\fs56\cf1 Fluispotter Firmware\cf0\b0\par
+\pard\qc\sb40\sa60\b\fs32 Main CPU Architecture\b0\par
+\pard\qc\sa40\fs22\cf2 2 April 2026\cf0\par
+\pard\qc\sa400\fs20 fluispotter/fluispotter.py\par
+\pard\brdrb\brdrs\brdrw10\brsp20\sa40\par
+\pard\sa60\par
+\pard\keepn\sb300\sa80\b\fs36\cf1 1. Overview\cf0\b0\fs22\par
+\pard\sa100\fs22 The Fluispotter main CPU firmware is a MicroPython application running on the ESP32-S3 Xtensa cores. It implements a cooperative async state machine that drives all user-facing hardware: two peristaltic pumps (AC and blood), a valve, a tape reel, optical sensors, humidity/pressure sensing, RTC timekeeping, WiFi connectivity, and event logging with remote synchronisation. Real-time pump regulation is offloaded entirely to the ULP RISC-V coprocessor (see pump_regulator.py), which runs independently of the main event loop.\par
+\pard\sa100\fs22 Entry point: main.py calls main(None) which calls MainController.create() then run_safe(controller.run(TimeTable())). All async work runs inside a single asyncio event loop on the main CPU.\par
+\pard\keepn\sb300\sa80\b\fs36\cf1 2. Object Structure\cf0\b0\fs22\par
+\pard\sa100\fs22 MainController inherits from BaseController. The complete object graph is shown below.\par
+\pard\keepn\sb200\sa60\b\fs28\cf1 2.1 BaseController fields\cf0\b0\fs22\par
+\pard\li360\fi-200\sa50\fs22 \bullet  event_store --- EventStore: persistent append-only event log (8192-event capacity), synced remotely over WiFi\par
+\pard\li360\fi-200\sa50\fs22 \bullet  scheduler --- SleepScheduler: manages up to 3 concurrent async sleeps; triggers machine.lightsleep() when all slots are waiting\par
+\pard\li360\fi-200\sa50\fs22 \bullet  rtc --- RTC: wrapper around MCP79410 real-time clock chip\par
+\pard\li360\fi-200\sa50\fs22 \bullet  led --- Pin: indication LED (GPIO 44)\par
+\pard\li360\fi-200\sa50\fs22 \bullet  reed --- Button: magnetic reed switch (GPIO 5, pull-up)\par
+\pard\li360\fi-200\sa50\fs22 \bullet  power --- Pin: master power rail enable (GPIO 38)\par
+\pard\li360\fi-200\sa50\fs22 \bullet  ac_pump --- ULPACPump: AC pump interface backed by ULP shared variables\par
+\pard\li360\fi-200\sa50\fs22 \bullet  blood_pump --- ULPBloodPump: blood pump interface backed by ULP shared variables\par
+\pard\li360\fi-200\sa50\fs22 \bullet  valve --- ValveMotor: peristaltic valve with open/close hall switches\par
+\pard\li360\fi-200\sa50\fs22 \bullet  tape_reel --- TapeReel: tape advancement motor\par
+\pard\li360\fi-200\sa50\fs22 \bullet  tape_receivers --- TapeReceivers: spot and line optical sensors for tape\par
+\pard\li360\fi-200\sa50\fs22 \bullet  fluid_receivers --- FluidReceivers: AC and blood fluid optical sensors\par
+\pard\li360\fi-200\sa50\fs22 \bullet  humidity --- HumiditySensor: SHT4X temperature/humidity\par
+\pard\li360\fi-200\sa50\fs22 \bullet  pressure --- PressureSensor: ADC-based pressure reading\par
+\pard\li360\fi-200\sa50\fs22 \bullet  state --- int: current state machine state constant\par
+\pard\li360\fi-200\sa50\fs22 \bullet  _tasks --- TaskList: manages background async tasks with cancel-on-exit\par
+\pard\li360\fi-200\sa50\fs22 \bullet  _on_cleanup --- EventListeners: zero-arg callbacks fired on run() exit\par
+\pard\keepn\sb200\sa60\b\fs28\cf1 2.2 MainController-specific fields\cf0\b0\fs22\par
+\pard\li360\fi-200\sa50\fs22 \bullet  time_table --- TimeTable: sampling schedule (set at run() call time)\par
+\pard\li360\fi-200\sa50\fs22 \bullet  blood_pump_revolutions --- int: cumulative revolution count for the session\par
+\pard\li360\fi-200\sa50\fs22 \bullet  ac_pump_revolutions --- int: cumulative revolution count for the session\par
+\pard\li360\fi-200\sa50\fs22 \bullet  _wireless_station_credentials --- WirelessCredentials: cached SSID/BSSID/key from last scan\par
+\pard\li360\fi-200\sa50\fs22 \bullet  _wireless_station --- WirelessNetworkStation: active WiFi connection (None when disconnected)\par
+\pard\li360\fi-200\sa50\fs22 \bullet  _fluid_sampling --- Task: continuous fluid sensor sampling coroutine (500 ms interval)\par
+\pard\li360\fi-200\sa50\fs22 \bullet  _ac_pump_cycle --- Task: AC pump regulation cycle background task\par
+\pard\li360\fi-200\sa50\fs22 \bullet  _blood_pump_cycle --- Task: blood pump regulation cycle background task\par
+\pard\li360\fi-200\sa50\fs22 \bullet  _blood_pump_cycle_state --- int: ACTIVE | IDLE | SUSPENDED\par
+\pard\li360\fi-200\sa50\fs22 \bullet  _blood_pump_cycle_lock --- Lock: asyncio lock coordinating SAMPLE_BLOOD vs normal cycle\par
+\pard\li360\fi-200\sa50\fs22 \bullet  _blood_pump_sample_history --- deque(maxlen=7): timestamps of last 7 hall switch firings\par
+\pard\keepn\sb200\sa60\b\fs28\cf1 2.3 ULP coprocessor ownership note\cf0\b0\fs22\par
+\pard\sa100\fs22 After ULPPumpRegulator.start() is called during create(), the ULP RISC-V core owns the following resources exclusively and they must NOT be accessed by the main CPU:\par
+\pard\li360\fi-200\sa50\fs22 \bullet  GPIO 1 (SDA) and GPIO 2 (SCL) --- routed to the RTC I2C peripheral\par
+\pard\li360\fi-200\sa50\fs22 \bullet  DAC7574 I2C-0 bus --- all writes to DAC channels 0, 1, 3 go through the ULP\par
+\pard\li360\fi-200\sa50\fs22 \bullet  All pump encoder and enable GPIOs (see ulp/main.c for the full list)\par
+\pard\keepn\sb300\sa80\b\fs36\cf1 3. Startup Sequence --- BaseController.create()\cf0\b0\fs22\par
+\pard\sa100\fs22 create() is a classmethod on BaseController (inherited by MainController). It runs synchronously during program startup before the asyncio loop begins. The steps below are in order of execution.\par
+\pard\keepn\sb200\sa60\b\fs28\cf1 Step 1 --- I2C buses\cf0\b0\fs22\par
+\pard\li360\fi-200\sa50\fs22 \bullet  I2C-1: SDA GPIO 39, SCL GPIO 40, 10 kHz --- used for main sensor bus (RTC, VEML, SHT4X)\par
+\pard\li360\fi-200\sa50\fs22 \bullet  I2C-0: SDA GPIO 1,  SCL GPIO 2,  10 kHz --- initially used for DAC7574; handed to ULP at Step 5\par
+\pard\sa100\fs22 After Step 5, I2C-0 must not be used directly by the main CPU for DAC pump channels (0, 1, 3).\par
+\pard\keepn\sb200\sa60\b\fs28\cf1 Step 2 --- GPIO pins\cf0\b0\fs22\par
+\pard\li360\fi-200\sa50\fs22 \bullet  GPIO 44 --- indication LED (output, initial low)\par
+\pard\li360\fi-200\sa50\fs22 \bullet  GPIO 5  --- reed switch (input, pull-up)\par
+\pard\li360\fi-200\sa50\fs22 \bullet  GPIO 38 --- master power rail (output, initial high)\par
+\pard\keepn\sb200\sa60\b\fs28\cf1 Step 3 --- Peripheral sensors\cf0\b0\fs22\par
+\pard\li360\fi-200\sa50\fs22 \bullet  MCP79410 real-time clock --- on I2C-1\par
+\pard\li360\fi-200\sa50\fs22 \bullet  DAC7574 quad DAC --- on I2C-0 at address 0x4C\par
+\pard\li360\fi-200\sa50\fs22 \bullet  VEML6035 spot sensor --- on I2C-1 at address 0x48\par
+\pard\li360\fi-200\sa50\fs22 \bullet  VEML6035 line sensor --- on I2C-1 at address 0x3A\par
+\pard\li360\fi-200\sa50\fs22 \bullet  SHT4X humidity/temperature --- on I2C-1\par
+\pard\keepn\sb200\sa60\b\fs28\cf1 Step 4 --- Core objects\cf0\b0\fs22\par
+\pard\li360\fi-200\sa50\fs22 \bullet  RTC wrapper around MCP79410\par
+\pard\li360\fi-200\sa50\fs22 \bullet  EventStore: 8192-event capacity, opened from flash (events.db / events.db.index)\par
+\pard\li360\fi-200\sa50\fs22 \bullet  Device: HTTP client pointed at http://fluispotter.internal/synchronize\par
+\pard\li360\fi-200\sa50\fs22 \bullet  SleepScheduler: 3-slot capacity, sleeps via machine.lightsleep\par
+\pard\keepn\sb200\sa60\b\fs28\cf1 Step 5 --- ULP RISC-V pump regulator (critical)\cf0\b0\fs22\par
+\pard\sa100\fs22 This step initialises the RISC-V coprocessor. On completion, pump control is entirely owned by the ULP and the main CPU uses shared RTC memory variables to communicate.\par
+\pard\li360\fi-200\sa50\fs22 \bullet  Instantiate ULPPumpRegulator(binary_path="/pump_regulator.bin", sda_gpio=1, scl_gpio=2, clk_hz=100000)\par
+\pard\li360\fi-200\sa50\fs22 \bullet  _init_rtc_i2c(): configure RTC I2C peripheral, route GPIO 1/2 to RTC I2C mux (function 3), enable internal pull-ups\par
+\pard\li360\fi-200\sa50\fs22 \bullet  _load_and_start(): read binary from flash -> write word-by-word to RTC slow memory at 0x50000000 -> zero .bss region (offset 6916..8176) -> RVULP().reset() + RVULP().run()\par
+\pard\li360\fi-200\sa50\fs22 \bullet  Poll machine.mem32[INITIALIZED] until non-zero (up to 5 s timeout); raises RuntimeError on timeout\par
+\pard\li360\fi-200\sa50\fs22 \bullet  Returns ac (ULPACPump) and bp (ULPBloodPump) objects backed by shared RTC memory variables\par
+\pard\keepn\sb200\sa60\b\fs28\cf1 Step 6 --- Actuators and tape/fluid sensors\cf0\b0\fs22\par
+\pard\li360\fi-200\sa50\fs22 \bullet  ValveMotor: enable/direction pins + open and close hall switches\par
+\pard\li360\fi-200\sa50\fs22 \bullet  TapeReel: enable pin\par
+\pard\li360\fi-200\sa50\fs22 \bullet  TapeReceivers: spot and line VEML light sensors with emitter pins\par
+\pard\li360\fi-200\sa50\fs22 \bullet  FluidReceivers: AC and blood fluid presence sensors\par
+\pard\keepn\sb200\sa60\b\fs28\cf1 Step 7 --- Environmental sensors\cf0\b0\fs22\par
+\pard\li360\fi-200\sa50\fs22 \bullet  HumiditySensor: SHT4X on I2C-1\par
+\pard\li360\fi-200\sa50\fs22 \bullet  PressureSensor: raw ADC read\par
+\pard\keepn\sb200\sa60\b\fs28\cf1 Step 8 --- Construction\cf0\b0\fs22\par
+\pard\sa100\fs22 All objects are passed to the MainController constructor, which stores them as instance attributes. create() returns the fully-initialised controller instance.\par
+\pard\keepn\sb300\sa80\b\fs36\cf1 4. Async State Machine\cf0\b0\fs22\par
+\pard\sa100\fs22 MainController implements a linear cooperative state machine. run() dispatches to handler functions stored in the class-level states dict. Each handler is an async function that does work, then returns the next state constant (or a tuple of (next_state, *args) to pass arguments to the next handler).\par
+\pard\keepn\sb200\sa60\b\fs28\cf1 4.1 State table\cf0\b0\fs22\par
+\trowd\trqc\trgaph60
+\clbrdrt\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx2600
+\clbrdrt\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx3200
+\clbrdrt\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx6200
+\clbrdrt\brdrs\brdrw10\clbrdrb\brdrs\brdrw10\clbrdrl\brdrs\brdrw10\clbrdrr\brdrs\brdrw10\cellx11000
+\intbl \b\fs20 Constant\b0\cell \b\fs20 Value\b0\cell \b\fs20 Handler function\b0\cell \b\fs20 Brief description\b0\cell \row
+\trowd\trqc\trgaph60
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx2600
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx3200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx6200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx11000
+\intbl \fs20 _STATE_INITIAL\cell \fs20 1\cell \fs20 _state_initial\cell \fs20 Boot: restore saved state or enter calibration flow\cell \row
+\trowd\trqc\trgaph60
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx2600
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx3200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx6200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx11000
+\intbl \fs20 _STATE_AWAIT_CALIBRATION\cell \fs20 2\cell \fs20 _state_await_calibration\cell \fs20 Idle: scan for RPi AP, wait for setup command\cell \row
+\trowd\trqc\trgaph60
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx2600
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx3200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx6200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx11000
+\intbl \fs20 _STATE_ANTICOAGULANT_PUMP_UPKEEP\cell \fs20 3\cell \fs20 _state_anticoagulant_pump_upkeep\cell \fs20 Periodic AC pump maintenance (30 deg every 5 min)\cell \row
+\trowd\trqc\trgaph60
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx2600
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx3200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx6200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx11000
+\intbl \fs20 _STATE_CALIBRATION\cell \fs20 4\cell \fs20 _state_calibration\cell \fs20 Valve cycle, tape advance, blood pump park\cell \row
+\trowd\trqc\trgaph60
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx2600
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx3200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx6200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx11000
+\intbl \fs20 _STATE_AWAIT_ANTICOAGULANT_BAG\cell \fs20 5\cell \fs20 _state_await_anticoagulant_bag\cell \fs20 Wait for anticoagulant bag puncture command\cell \row
+\trowd\trqc\trgaph60
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx2600
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx3200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx6200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx11000
+\intbl \fs20 _STATE_ANTICOAGULANT_BAG\cell \fs20 6\cell \fs20 _state_anticoagulant_bag\cell \fs20 Run AC pump, wait for ANTICOAGULANT_PRIMED\cell \row
+\trowd\trqc\trgaph60
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx2600
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx3200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx6200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx11000
+\intbl \fs20 _STATE_AWAIT_CATHETER\cell \fs20 7\cell \fs20 _state_await_catheter\cell \fs20 Close valve, start AC cycle, wait for CATHETER_INSERTED\cell \row
+\trowd\trqc\trgaph60
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx2600
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx3200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx6200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx11000
+\intbl \fs20 _STATE_CATHETER\cell \fs20 8\cell \fs20 _state_catheter\cell \fs20 Run blood pump, wait for BLOOD_PRIMED\cell \row
+\trowd\trqc\trgaph60
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx2600
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx3200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx6200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx11000
+\intbl \fs20 _STATE_AWAIT_SESSION\cell \fs20 9\cell \fs20 _state_await_session\cell \fs20 Start BP cycle, wait for START_SESSION\cell \row
+\trowd\trqc\trgaph60
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx2600
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx3200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx6200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx11000
+\intbl \fs20 _STATE_SESSION\cell \fs20 10\cell \fs20 _state_session\cell \fs20 Main operational loop with lightsleep between samples\cell \row
+\trowd\trqc\trgaph60
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx2600
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx3200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx6200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx11000
+\intbl \fs20 _STATE_SAMPLE_BLOOD\cell \fs20 11\cell \fs20 _state_sample_blood\cell \fs20 Suspend BP cycle, collect blood sample, resume\cell \row
+\trowd\trqc\trgaph60
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx2600
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx3200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx6200
+\clbrdrt\brdrs\brdrw5\clbrdrb\brdrs\brdrw5\clbrdrl\brdrs\brdrw5\clbrdrr\brdrs\brdrw5\cellx11000
+\intbl \fs20 _STATE_FINISH\cell \fs20 12\cell \fs20 _state_finish\cell \fs20 Session complete, sleep indefinitely\cell \row
+\pard\sa80\par
+\pard\keepn\sb200\sa60\b\fs28\cf1 4.2 Transition diagram\cf0\b0\fs22\par
+\pard\li360\sb0\sa0\f1\fs20 INITIAL \u9472?(has saved session)\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?> SESSION\f0\par
+\pard\li360\sb0\sa0\f1\fs20         \u9472?(no saved state)\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?> AWAIT_CALIBRATION\f0\par
+\pard\li360\sb0\sa0\f1\fs20         \u9472?(saved state was FINISH)\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?> FINISH\f0\par
+\pard\li360\sb0\sa0\f1\fs20 \f0\par
+\pard\li360\sb0\sa0\f1\fs20 AWAIT_CALIBRATION \u9472?(PREPARE_SESSION command)\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?> CALIBRATION\f0\par
+\pard\li360\sb0\sa0\f1\fs20                   \u9472?(MAINTAIN_ANTICOAGULANT_PUMP)\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?> AC_PUMP_UPKEEP\f0\par
+\pard\li360\sb0\sa0\f1\fs20                   \u9472?(PURGE_CATHETER command)\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?> AWAIT_CALIBRATION (loop)\f0\par
+\pard\li360\sb0\sa0\f1\fs20 \f0\par
+\pard\li360\sb0\sa0\f1\fs20 AC_PUMP_UPKEEP \u9472?(reed switch pressed)\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?> AWAIT_CALIBRATION\f0\par
+\pard\li360\sb0\sa0\f1\fs20 \f0\par
+\pard\li360\sb0\sa0\f1\fs20 CALIBRATION \u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?> AWAIT_ANTICOAGULANT_BAG\f0\par
+\pard\li360\sb0\sa0\f1\fs20 \f0\par
+\pard\li360\sb0\sa0\f1\fs20 AWAIT_ANTICOAGULANT_BAG \u9472?(ANTICOAGULANT_BAG_PUNCTURED)> ANTICOAGULANT_BAG\f0\par
+\pard\li360\sb0\sa0\f1\fs20 \f0\par
+\pard\li360\sb0\sa0\f1\fs20 ANTICOAGULANT_BAG \u9472?(ANTICOAGULANT_PRIMED | monitor)\u9472?\u9472?\u9472?> AWAIT_CATHETER\f0\par
+\pard\li360\sb0\sa0\f1\fs20 \f0\par
+\pard\li360\sb0\sa0\f1\fs20 AWAIT_CATHETER \u9472?(CATHETER_INSERTED command)\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?> CATHETER\f0\par
+\pard\li360\sb0\sa0\f1\fs20 \f0\par
+\pard\li360\sb0\sa0\f1\fs20 CATHETER \u9472?(BLOOD_PRIMED command)\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?> AWAIT_SESSION\f0\par
+\pard\li360\sb0\sa0\f1\fs20 \f0\par
+\pard\li360\sb0\sa0\f1\fs20 AWAIT_SESSION \u9472?(START_SESSION command)\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?> SESSION\f0\par
+\pard\li360\sb0\sa0\f1\fs20 \f0\par
+\pard\li360\sb0\sa0\f1\fs20 SESSION \u9472?(next sample deadline reached)\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?> SAMPLE_BLOOD\f0\par
+\pard\li360\sb0\sa0\f1\fs20         \u9472?(no more pending samples)\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?> FINISH\f0\par
+\pard\li360\sb0\sa0\f1\fs20 \f0\par
+\pard\li360\sb0\sa0\f1\fs20 SAMPLE_BLOOD \u9472?(samples collected)\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?\u9472?> SESSION  [advance_time_table=True]\f0\par
+\pard\li360\sb0\sa0\f1\fs20 \f0\par
+\pard\li360\sb0\sa0\f1\fs20 FINISH \u9472?(sleeps indefinitely; no exit)\f0\par
+\pard\li360\sb0\sa0\f1\fs20 \f0\par
+\pard\keepn\sb200\sa60\b\fs28\cf1 4.3 Per-state detail\cf0\b0\fs22\par
+\pard\keepn\sb160\sa40\b\fs24\cf2 INITIAL (1)\cf0\b0\fs22\par
+\pard\sa100\fs22 Entry: closes valve. Attempts to deserialise saved state from flash (blood_pump_revolutions, ac_pump_revolutions, time_table.index, time_table.started_at). If a valid session is found, establishes WiFi, syncs RTC via NTP, restarts any active pump cycles, and transitions directly to SESSION (with advance_time_table=False). If the saved state was the FINISH state, transitions to FINISH. If no saved state is found, transitions to AWAIT_CALIBRATION.\par
+\pard\keepn\sb160\sa40\b\fs24\cf2 AWAIT_CALIBRATION (2)\cf0\b0\fs22\par
+\pard\sa100\fs22 Scans for a WiFi access point whose SSID matches "Fluispotter RPi". On success, connects and waits up to 60 s for device.acquired_at to be set by the server. Enters a command polling loop: blinks LED, calls synchronise(), and checks for incoming commands. PREPARE_SESSION -> CALIBRATION. MAINTAIN_ANTICOAGULANT_PUMP -> AC_PUMP_UPKEEP. PURGE_CATHETER: runs blood pump briefly, then loops back to AWAIT_CALIBRATION.\par
+\pard\keepn\sb160\sa40\b\fs24\cf2 AC_PUMP_UPKEEP (3)\cf0\b0\fs22\par
+\pard\sa100\fs22 Periodically (every 5 minutes) drives the AC pump 30 degrees to prevent coagulation in the anticoagulant line. Between upkeep cycles the device calls machine.lightsleep(10 s). On each wake it checks the reed switch; if pressed, transitions to AWAIT_CALIBRATION.\par
+\pard\keepn\sb160\sa40\b\fs24\cf2 CALIBRATION (4)\cf0\b0\fs22\par
+\pard\sa100\fs22 Performs hardware calibration: cycles valve open then closed, advances tape reel, and drives the blood pump to its park position (hall-switch detected). No user input required. Transitions immediately to AWAIT_ANTICOAGULANT_BAG on completion.\par
+\pard\keepn\sb160\sa40\b\fs24\cf2 AWAIT_ANTICOAGULANT_BAG (5)\cf0\b0\fs22\par
+\pard\sa100\fs22 Opens valve. Blinks LED (2-pulse pattern) to indicate waiting. Polls for the ANTICOAGULANT_BAG_PUNCTURED command from the server, then transitions to ANTICOAGULANT_BAG.\par
+\pard\keepn\sb160\sa40\b\fs24\cf2 ANTICOAGULANT_BAG (6)\cf0\b0\fs22\par
+\pard\sa100\fs22 Starts fluid sensor sampling at 500 ms intervals. Registers AC pump hall-switch event handler. Runs AC pump at fast speed (7 s/rev) with PID regulation. Waits for the ANTICOAGULANT_PRIMED command or a pump monitor timeout, then transitions to AWAIT_CATHETER.\par
+\pard\keepn\sb160\sa40\b\fs24\cf2 AWAIT_CATHETER (7)\cf0\b0\fs22\par
+\pard\sa100\fs22 Closes valve. Starts the AC pump cycle background task (medium speed). Blinks LED (4-pulse pattern). Polls for CATHETER_INSERTED command, then transitions to CATHETER.\par
+\pard\keepn\sb160\sa40\b\fs24\cf2 CATHETER (8)\cf0\b0\fs22\par
+\pard\sa100\fs22 Registers blood pump hall-switch event handler. Runs blood pump at normal speed with PID regulation. Waits for the BLOOD_PRIMED command from the server, then transitions to AWAIT_SESSION.\par
+\pard\keepn\sb160\sa40\b\fs24\cf2 AWAIT_SESSION (9)\cf0\b0\fs22\par
+\pard\sa100\fs22 Starts the blood pump cycle background task. Blinks LED (6-pulse pattern). Stops fluid sampling if blood pump cycle is not yet active. Disconnects WiFi to conserve power. Waits for START_SESSION command. On receipt: starts time_table at current RTC time, then transitions to SESSION.\par
+\pard\keepn\sb160\sa40\b\fs24\cf2 SESSION (10)\cf0\b0\fs22\par
+\pard\sa100\fs22 Main operational loop. Accepts optional advance_time_table argument (bool). If time_table has pending samples: advances (or peeks) the schedule entry, connects WiFi, syncs event store with server, handles any pending commands, then calculates sleep time until the next sample deadline minus a 2-minute preparation buffer. Calls SleepScheduler.sleep_ms() which may trigger machine.lightsleep() until the deadline. When the deadline arrives, transitions to SAMPLE_BLOOD. If no samples remain, syncs once more and transitions to FINISH.\par
+\pard\keepn\sb160\sa40\b\fs24\cf2 SAMPLE_BLOOD (11)\cf0\b0\fs22\par
+\pard\sa100\fs22 Acquires the blood pump cycle lock, suspending any active background regulation. Waits for the blood pump hall switch to fire, accumulating up to 7 timestamps in a deque. Once the oldest timestamp is at or past the scheduled sample time, calls _collect_blood_sample() N times per the schedule entry. After collection, releases the lock, resumes the blood pump cycle, and transitions back to SESSION with advance_time_table=True.\par
+\pard\keepn\sb160\sa40\b\fs24\cf2 FINISH (12)\cf0\b0\fs22\par
+\pard\sa100\fs22 Session complete. Enters an indefinite 10-minute sleep loop. No further transitions are defined; the device waits to be powered off or reset externally.\par
+\pard\keepn\sb300\sa80\b\fs36\cf1 5. run() and run_safe() Mechanics\cf0\b0\fs22\par
+\pard\keepn\sb200\sa60\b\fs28\cf1 5.1 BaseController.run()\cf0\b0\fs22\par
+\pard\sa100\fs22 run() is an async method. It sets the initial state, starts a background _wait_for_reed_on() task (which monitors the reed switch and cleanly shuts down all tasks when pressed), then enters the dispatch loop:\par
+\pard\li360\fi-200\sa50\fs22 \bullet  Look up handler: fn = self.states[self.state]\par
+\pard\li360\fi-200\sa50\fs22 \bullet  Await handler: result = await fn(self, *args)\par
+\pard\li360\fi-200\sa50\fs22 \bullet  Unpack result: if tuple, first element is next state, rest are args; else just next state\par
+\pard\li360\fi-200\sa50\fs22 \bullet  Set self.state = next_state and loop\par
+\pard\sa100\fs22 The finally block always runs on exit (normal or exception): cancels all background tasks, then fires all _on_cleanup listeners.\par
+\pard\keepn\sb200\sa60\b\fs28\cf1 5.2 MainController.run()\cf0\b0\fs22\par
+\pard\sa100\fs22 Overrides BaseController.run(). Accepts a TimeTable argument (set at call time) and passes initial_state through. Wraps the super() call: on any exception, appends an error event to the event store (with traceback), attempts a final remote sync over WiFi if credentials are available, then re-raises.\par
+\pard\keepn\sb200\sa60\b\fs28\cf1 5.3 run_safe()\cf0\b0\fs22\par
+\pard\sa100\fs22 Top-level wrapper called from main(). Creates an asyncio task, runs it to completion, and handles errors:\par
+\pard\li360\fi-200\sa50\fs22 \bullet  KeyboardInterrupt: silently absorbed (allows clean Ctrl+C from REPL)\par
+\pard\li360\fi-200\sa50\fs22 \bullet  Any other BaseException: logged to fatal-error.txt, then enters a 500 ms LED blink loop\par
+\pard\li360\fi-200\sa50\fs22 \bullet  Reed-switch reset: if the reed switch is held for >= 2 consecutive 500 ms checks during error blink, machine.reset() is called\par
+\pard\sa100\fs22 run_safe() always calls asyncio.new_event_loop() in the finally block to reset the event loop for potential re-entry (e.g. from REPL).\par
+\pard\keepn\sb300\sa80\b\fs36\cf1 6. Key Supporting Classes\cf0\b0\fs22\par
+\pard\keepn\sb200\sa60\b\fs28\cf1 SleepScheduler\cf0\b0\fs22\par
+\pard\sa100\fs22 Manages a fixed pool of concurrent async sleeps (default capacity 3). Each caller awaits scheduler.sleep_ms(duration_ms), which creates an asyncio.Event and records the deadline. When the pool is full, the scheduler determines the soonest deadline, calls machine.lightsleep(delta_ms), then signals all events whose deadlines have passed. This allows the whole device to enter lightsleep while multiple coroutines are waiting for different intervals.\par
+\pard\keepn\sb200\sa60\b\fs28\cf1 TimeTable\cf0\b0\fs22\par
+\pard\sa100\fs22 Stores the sampling schedule as a list of (delta_minutes, sample_count) entries. start(now_ms) records when the session began. peek() returns the absolute timestamp and sample count for the current entry; next() advances the index. any_pending is true while entries remain. Serialised to flash as a compact binary sequence (ushort minutes, ubyte samples per entry) alongside the current index and started_at, enabling session recovery across power cycles.\par
+\pard\keepn\sb200\sa60\b\fs28\cf1 EventStore / Device\cf0\b0\fs22\par
+\pard\sa100\fs22 EventStore is a persistent append-only log backed by two flash files (events.db for payloads, events.db.index for offsets) with a maximum of 8192 events. It delegates remote synchronisation to a Device object, which POSTs to http://fluispotter.internal/synchronize over WiFi. The server responds with pending commands and settings (including a new TimeTable). The Device also exposes acquired_at (set by the server when the device is claimed) and settings.commands (list of pending command strings).\par
+\pard\keepn\sb200\sa60\b\fs28\cf1 ULPPumpRegulator\cf0\b0\fs22\par
+\pard\sa100\fs22 Loads and starts the ULP RISC-V coprocessor binary (/pump_regulator.bin). After start(), the coprocessor runs the full pump regulation loop independently: PID speed control, dosing, parking, encoder sampling, and DAC7574 I2C writes. The main CPU communicates via shared uint32_t variables in RTC slow memory (addresses defined in fluispotter/variables.py). ac and bp attributes provide the ULPACPump and ULPBloodPump objects whose API mirrors the original PumpMotor / BloodPumpMotor classes used elsewhere in the codebase.\par
+\pard\sa60\par
+\pard\brdrb\brdrs\brdrw10\brsp20\sa40\par
+\pard\qc\sa60\fs18\cf2 Generated from fluispotter/fluispotter.py -- 2 April 2026\cf0\par
+}

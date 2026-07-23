@@ -1,0 +1,584 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../prompts/">
+      
+      
+        <link rel="next" href="../summaries/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Requirements Implementation Map — 2026-07-16 (registry 1.69, 148 requirements) - Fluispotter</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#requirements-implementation-map-2026-07-16-registry-169-148-requirements" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Fluispotter" class="md-header__button md-logo" aria-label="Fluispotter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fluispotter
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Requirements Implementation Map — 2026-07-16 (registry 1.69, 148 requirements)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Fluispotter" class="md-nav__button md-logo" aria-label="Fluispotter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fluispotter
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Reference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../battery_test_2026-07-18/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Battery endurance test — run to power failure (2026-07-16 → 2026-07-18)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bench_run_2026-07-18_10x2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bench acceptance — 10 samples × 2 spots (dry run), 2026-07-18
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bench_run_2026-07-19_8h_dry/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8-hour dry run — 1 pre-session sample + 15 triplet samples, 2026-07-19
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ci_release_plan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CI / Release Process Plan — Fluispotter Firmware &amp; Software
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compacting_log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compacting Log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multi_mode_ulp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multi Mode ULP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prompts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    User Prompts Log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Requirements Implementation Map — 2026-07-16 (registry 1.69, 148 requirements)
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Requirements Implementation Map — 2026-07-16 (registry 1.69, 148 requirements)
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#totals" class="md-nav__link">
+    <span class="md-ellipsis">
+      Totals
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#everything-not-in-the-pass-bucket-itemized" class="md-nav__link">
+    <span class="md-ellipsis">
+      Everything not in the PASS bucket — itemized
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hubr-registry-25-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      HUBR registry (25 requirements)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qc-registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      QC registry
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../summaries/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Summaries
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wdt_lightsleep_usb_investigation_2026-07-20/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GitHub #46 — WDT(3) at lightsleep entry: investigation record (WON'T FIX)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="requirements-implementation-map-2026-07-16-registry-169-148-requirements">Requirements Implementation Map — 2026-07-16 (registry 1.69, 148 requirements)</h1>
+<h2 id="totals">Totals</h2>
+<ul>
+<li><strong>125</strong> — IMPLEMENTED + machine-verified (PASS)</li>
+<li><strong>12</strong> — IMPLEMENTED — bench/field-proven (MECH, no auto-test by design)</li>
+<li><strong>4</strong> — IMPLEMENTED — hub-side, live-acceptance covered</li>
+<li><strong>2</strong> — IMPLEMENTED — superseded/absorbed (SWR-245/246 lineage)</li>
+<li><strong>2</strong> — IMPLEMENTED + verified — DEPLOY PENDING (fw 0.1.115)</li>
+<li><strong>3</strong> — PLANNED (not implemented)</li>
+</ul>
+<h2 id="everything-not-in-the-pass-bucket-itemized">Everything not in the PASS bucket — itemized</h2>
+<ul>
+<li><strong>SWR-111</strong> (MECH) No-start kick escalation (adaptive self-tuning) — IMPLEMENTED — bench/field-proven (MECH, no auto-test by design)</li>
+<li><strong>SWR-113</strong> (MECH) Running-stall recovery sequence — IMPLEMENTED — bench/field-proven (MECH, no auto-test by design)</li>
+<li><strong>SWR-120</strong> (MECH) Park position at hall-zone centre — IMPLEMENTED — bench/field-proven (MECH, no auto-test by design)</li>
+<li><strong>SWR-121</strong> (MECH) Dose handshake with coast capture — IMPLEMENTED — bench/field-proven (MECH, no auto-test by design)</li>
+<li><strong>SWR-122</strong> (MECH) AC bench convergence — IMPLEMENTED — bench/field-proven (MECH, no auto-test by design)</li>
+<li><strong>SWR-123</strong> (MECH) BP bench convergence — IMPLEMENTED — bench/field-proven (MECH, no auto-test by design)</li>
+<li><strong>SWR-124</strong> (MECH) AC slow-setpoint stability (no limit cycle) — IMPLEMENTED — bench/field-proven (MECH, no auto-test by design)</li>
+<li><strong>SWR-125</strong> (MECH) Live sensor readings on board — IMPLEMENTED — bench/field-proven (MECH, no auto-test by design)</li>
+<li><strong>SWR-240</strong> (SW) ESP32 SHALL light-sleep when idle in a session (single-owner backstop) — IMPLEMENTED — superseded/absorbed (SWR-245/246 lineage)</li>
+<li><strong>SWR-242</strong> (SW) Live in-session hub sync on every hall-tick wake — IMPLEMENTED — superseded/absorbed (SWR-245/246 lineage)</li>
+<li><strong>SWR-277</strong> (SW) Event store auto-cleans before the capacity cap — IMPLEMENTED + verified — DEPLOY PENDING (fw 0.1.115)</li>
+<li><strong>SWR-278</strong> (SW) Global commands execute during a running session — IMPLEMENTED + verified — DEPLOY PENDING (fw 0.1.115)</li>
+<li><strong>SWR-279</strong> (SW) abort_session — DEVICE HALF IMPLEMENTED fw 0.1.117 undeployed (safe-boundary consumption: dose completes, park BP + stop AC + FINISH; 400 outside SESSION); hub button 1.14.0</li>
+<li><strong>SWR-281</strong> (SW) session metadata — DEVICE HALF IMPLEMENTED fw 0.1.117 undeployed (settings.metadata -&gt; /session_meta.json at anchor + session_meta event + clear at reset); hub form/delivery 1.14.0 (HUBR-314)</li>
+<li><strong>SWR-280</strong> (SW) sample_on_demand — DEVICE HALF IMPLEMENTED fw 0.1.117 undeployed (shared _run_commanded_sample, scheduled_at=receipt, 409 busy/near-schedule guard); hub button 1.14.0</li>
+<li><strong>SWR-401</strong> (SW) Hub REST endpoint set — IMPLEMENTED — hub-side, live-acceptance covered</li>
+<li><strong>SWR-402</strong> (SW) Registration and command acknowledgement — IMPLEMENTED — hub-side, live-acceptance covered</li>
+<li><strong>SWR-403</strong> (SW) Device-field validation — IMPLEMENTED — hub-side, live-acceptance covered</li>
+<li><strong>SWR-404</strong> (SW) Content-addressed file storage — IMPLEMENTED — hub-side, live-acceptance covered</li>
+<li><strong>SWR-504</strong> (MECH) Full-binary deploy verification — IMPLEMENTED — bench/field-proven (MECH, no auto-test by design)</li>
+<li><strong>SWR-282</strong> (SW) Time table immutable after session start — IMPLEMENTED (by design: /time-table.dat anchored at start_session, settings applied during setup states only) — FIELD-PROVEN 2026-07-16..18 (hub table replaced mid-session; device completed its anchored 22-entry schedule exactly)</li>
+<li><strong>SWR-283</strong> (SW) Quantified RTC-vs-NTP offset at session start/end — IMPLEMENTED fw 0.1.116 (_measure_rtc_offset at session-start pre-anchor apply=True + FINISH apply=False; event contract consumed by hub report since 1.9.0)</li>
+<li><strong>SWR-284</strong> (SW) RTC-vs-NTP 30 s in-session deviation limit — IMPLEMENTED (device measurements = SWR-283 fw 0.1.116; report DEVIATION flagging live hub 1.9.0)</li>
+<li><strong>SWR-285</strong> (SW) Time 0 = operator submit — IMPLEMENTED fw 0.1.116 (anchors on arguments.time0, 120 s plausibility guard, logged fallback; hub stamps since 1.10.0)</li>
+<li><strong>SWR-286</strong> (SW) Device session number — IMPLEMENTED fw 0.1.116 (/session_number ++ at anchor, in every status sync; hub storage/display live 1.10.0)</li>
+<li><strong>SWR-288</strong> (SW) intra-set consecutive segments — IMPLEMENTED fw 0.1.116 (final-dose-only restart + per-dose ledger-advance check; owner 3-spot bench acceptance pending)</li>
+<li><strong>SWR-289</strong> (SW) hall crossings counted in every ULP state + ULP crossing ring — IMPLEMENTED ULP 1.13.0 + fw 0.1.116 (single-site edge service, 9-slot ring, ring-fed deque; bench-proven head==revs)</li>
+<li><strong>SWR-290</strong> (SW) spots-vs-timepoints — DEVICE HALF IMPLEMENTED fw 0.1.117 undeployed (time_table_samples ack list; per-dose sample/dose/total/dosed_at); hub rendering 1.14.0</li>
+<li><strong>SWR-291</strong> (SW) pre-session sample — DEVICE HALF IMPLEMENTED fw 0.1.117 undeployed (AWAIT_SESSION stay-in-place via shared routine, guarded time0); hub button + report row 1.14.0 (HUBR-322)</li>
+<li><strong>SWR-505</strong> (MECH) Post-deploy telemetry sanity — IMPLEMENTED — bench/field-proven (MECH, no auto-test by design)</li>
+<li><strong>SWR-506</strong> (MECH) Post-deploy motion proof — IMPLEMENTED — bench/field-proven (MECH, no auto-test by design)</li>
+<li><strong>SWR-507</strong> (MECH) Binary-swap self-test — IMPLEMENTED — bench/field-proven (MECH, no auto-test by design)</li>
+</ul>
+<h2 id="hubr-registry-25-requirements">HUBR registry (25 requirements)</h2>
+<ul>
+<li>HUBR-1xx platform / 2xx network / 3xx service through HUBR-311: implemented; 309/310/311 + 306/307 live-verified (acceptance suite 13/13, 2026-07-13; 1.6.1 live command-queue deployed 2026-07-16)</li>
+<li><strong>HUBR-312</strong> session report (PDF+CSV at FINISH): IMPLEMENTED + LIVE-VERIFIED 2026-07-18 — first real FINISH shook out 5 defects (3x soft-deleted device lookups, session-window aggregation, 422 on every download via DevicePathSchema RAISE); report for FINISH 16723229 regenerated + content-verified (22/22 samples), downloads 200 + PDF structurally validated (service 1.7.5-1.8.0)</li>
+<li><strong>HUBR-313</strong> (HUB) abort_session + sample_on_demand commands — IMPLEMENTED service 1.14.0 + fw 0.1.117 (SESSION-state buttons live)</li>
+<li><strong>HUBR-314</strong> (HUB) session metadata entry/delivery — IMPLEMENTED (form+report header 1.7.x/1.13.x; 1.14.0 settings-dump sidecar on all 4 device GET/POST paths; fw 0.1.117 persists at anchor)</li>
+<li><strong>HUBR-320</strong> detached report signatures: IMPLEMENTED + LIVE-VERIFIED 2026-07-18 — per-hub ed25519 + SHA-256 manifest, round-trip from an independent machine incl. tamper detection (service 1.12.0); verify_report.sh one-command verifier</li>
+<li><strong>HUBR-321</strong> embedded certificate signatures: IMPLEMENTED + LIVE-VERIFIED 2026-07-18 — Fluispotter Root CA (20 y, encrypted root in git) -&gt; hub cert; pyHanko stack sideloaded; intact/trusted/ENTIRE_FILE validated, flipped byte -&gt; False (service 1.13.0); verification material hub-served (1.13.2)</li>
+<li><strong>HUBR-322</strong> (HUB) pre-session sample + multi-spot displays — IMPLEMENTED 1.14.0 (button, Spots X/Y counter, report per-spot + PRE-SESSION rows, runtime footer) EXCEPT overview per-spot sub-rows (1.14.x follow-up)</li>
+<li><strong>HUBR-317</strong> Time 0 recorded at submit + delivered (arguments.time0): IMPLEMENTED + LIVE-VERIFIED 2026-07-18 — report shows 'Time 0 set at' + device-anchor delta + 'Total run time' (arc INITIAL-&gt;FINISH, last-boot-bounded with sane-timestamp fallback; live: 1d 14h 26m 08s) (service 1.10.0)</li>
+<li><strong>HUBR-318</strong> Session number stored/displayed/report header: IMPLEMENTED 1.10.0 (migration v4, optional schema field, device page + report; renders em-dash until fw 0.1.116 reports it)</li>
+<li><strong>HUBR-319</strong> Display timezone (UTC truth + per-point offsets): IMPLEMENTED + LIVE-VERIFIED 2026-07-18 — localtime.py + tzdata bundled, Europe/Copenhagen set, +02:00 suffixes live in UI/report/CSV (epoch+utc+local), October timestamp renders +01:00 (DST rules proven), machine clock line explicit UTC (service 1.11.0)</li>
+<li><strong>HUBR-316</strong> Time Source Verification paragraph: IMPLEMENTED + LIVE-VERIFIED 2026-07-18 — timesource.py SNTP probe (hub self-check: ntpd stratum 2, offset 0.0 ms; upstream pool +9.8 ms), records at session-start/end/manual-clock-set, report paragraph with method + device RTC events (196 sane heartbeats rendered) + DEVIATION flags (service 1.9.0)</li>
+<li><strong>HUBR-315</strong> in-session Sample Overview (read-only schedule): IMPLEMENTED + LIVE-VERIFIED 2026-07-18 — FINISH device renders 22 rows scheduled/taken/delta, editor absent, wipe-safe hidden inputs, SSE-morphed (service 1.8.0)</li>
+</ul>
+<h2 id="qc-registry">QC registry</h2>
+<ul>
+<li>QCR-101 (BP placement centred): defined, bench method — owner-run</li>
+<li><strong>SWR-292</strong> (SW) sample-boundary event durability — IMPLEMENTED fw 0.1.118 (event_store.commit() before the IDLE return; closes the audit-gap from the 2026-07-19 WDT, GitHub #46)</li>
+<li><strong>SWR-293</strong> (SW) RTC-memory breadcrumb — IMPLEMENTED fw 0.1.118 (11 checkpoints, boot event carries breadcrumb=; the GitHub #46 conviction instrument)</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,630 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../summaries/">
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>GitHub #46 — WDT(3) at lightsleep entry: investigation record (WON'T FIX) - Fluispotter</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#github-46-wdt3-at-lightsleep-entry-investigation-record-wont-fix" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Fluispotter" class="md-header__button md-logo" aria-label="Fluispotter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fluispotter
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              GitHub #46 — WDT(3) at lightsleep entry: investigation record (WON'T FIX)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Fluispotter" class="md-nav__button md-logo" aria-label="Fluispotter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fluispotter
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Reference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../battery_test_2026-07-18/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Battery endurance test — run to power failure (2026-07-16 → 2026-07-18)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bench_run_2026-07-18_10x2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bench acceptance — 10 samples × 2 spots (dry run), 2026-07-18
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bench_run_2026-07-19_8h_dry/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8-hour dry run — 1 pre-session sample + 15 triplet samples, 2026-07-19
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ci_release_plan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CI / Release Process Plan — Fluispotter Firmware &amp; Software
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compacting_log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compacting Log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multi_mode_ulp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multi Mode ULP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prompts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    User Prompts Log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../requirements_implementation_map/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Requirements Implementation Map — 2026-07-16 (registry 1.69, 148 requirements)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../summaries/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Summaries
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    GitHub #46 — WDT(3) at lightsleep entry: investigation record (WON'T FIX)
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    GitHub #46 — WDT(3) at lightsleep entry: investigation record (WON'T FIX)
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#mechanism" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mechanism
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#campaign-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Campaign results
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-discriminator" class="md-nav__link">
+    <span class="md-ellipsis">
+      The discriminator
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagnostic-infrastructure-built-retained-permanent" class="md-nav__link">
+    <span class="md-ellipsis">
+      Diagnostic infrastructure built (retained, permanent)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#not-fixed-deliberately" class="md-nav__link">
+    <span class="md-ellipsis">
+      Not fixed, deliberately
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bench-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bench protocol
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reopen-if" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reopen if
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="github-46-wdt3-at-lightsleep-entry-investigation-record-wont-fix">GitHub #46 — WDT(3) at lightsleep entry: investigation record (WON'T FIX)</h1>
+<p>Closed 2026-07-20 by owner decision: <strong>bench-only artifact, requires an
+attached USB-CDC host. Production devices have no USB and are not exposed.</strong></p>
+<h2 id="mechanism">Mechanism</h2>
+<p>ESP-IDF's light-sleep entry flushes the console TX with interrupts
+disabled. With a USB-CDC host attached but not draining (a Mac with no
+terminal on the port — every bench session), the flush cannot complete,
+the interrupts-off window exceeds the 1000 ms IWDT timeout, and the SoC
+resets with cause 3. The firmware's own nap path wrote to that console
+on both sides of the sleep.</p>
+<h2 id="campaign-results">Campaign results</h2>
+<table>
+<thead>
+<tr>
+<th>Campaign</th>
+<th>Firmware</th>
+<th>Sample-ends</th>
+<th>Fires</th>
+<th>Crumbs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0.1.119</td>
+<td>50 (FINISH)</td>
+<td>4</td>
+<td>— (pre-instrument)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.1.120 rev 3</td>
+<td>~20</td>
+<td>2</td>
+<td>10, 7</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.1.121 (radio gating)</td>
+<td>40</td>
+<td>3</td>
+<td>12, 8, 12</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.1.122 rev 4</td>
+<td>2</td>
+<td>1</td>
+<td><strong>22 (inside machine.lightsleep)</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Rate ~1 in 13 sample-ends throughout — the radio-gating fix (0.1.121)
+did <strong>not</strong> change it, which refuted the radio hypothesis honestly.</p>
+<h2 id="the-discriminator">The discriminator</h2>
+<ul>
+<li>44 h battery endurance run, <strong>USB DISCONNECTED</strong>: thousands of naps,
+  <strong>zero</strong> watchdog resets.</li>
+<li>Every USB-attached campaign: ~1 in 13 sample-ends.</li>
+</ul>
+<p>Same firmware family, same nap code, same motors — the attached
+non-draining host is the only variable that tracks the failure.</p>
+<h2 id="diagnostic-infrastructure-built-retained-permanent">Diagnostic infrastructure built (retained, permanent)</h2>
+<ul>
+<li><strong>SWR-293 breadcrumb</strong> (ULP 1.14.0 <code>cpu_breadcrumb</code> + fw 0.1.120+): a
+  CPU-owned word inside the ULP's mapped region, survives WDT resets,
+  captured by the loader before the image reload wipes it, surfaced in
+  the <code>Boot: reset cause</code> event as <code>breadcrumb=&lt;step&gt;</code>. Steps 1–13 name
+  the site; 20–24 walk the nap path line by line.</li>
+<li>Rev 1 (RTC user memory) was WITHDRAWN — it collided with the ULP and
+    froze the parking path. Lesson recorded in the requirement: liveness
+    ticks + canary are NOT sufficient to exonerate a shared-RAM write;
+    the parking path must be exercised.</li>
+<li><strong>SWR-292</strong> commit-before-IDLE: verified across all four campaigns —
+  <strong>zero audit-trail loss</strong> through every reset.</li>
+</ul>
+<h2 id="not-fixed-deliberately">Not fixed, deliberately</h2>
+<p>fw 0.1.123 (commit <code>a76d64f</code>, gate green, <strong>undeployed</strong>) implements the
+console-silent nap path + latched-sink veto. Deploy it only if quieter
+bench runs are wanted; it is not a product fix.</p>
+<h2 id="bench-protocol">Bench protocol</h2>
+<p>Long USB-attached sessions will show ~1-in-13 self-recovered WDT resets.
+Recovery is exact and no data is lost. Detach USB for clean runs, or
+accept them.</p>
+<h2 id="reopen-if">Reopen if</h2>
+<p>A WDT(3) appears on a device with <strong>no USB attached</strong> — then read the
+boot event's <code>breadcrumb</code> and follow the step map.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>

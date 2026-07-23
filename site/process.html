@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Process Notes · Fluispotter</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <a class="brandmark" href="index.html">
+      <svg class="logo" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#0a6c74"/><path d="M16 6c-3.2 4.2-5.4 7.4-5.4 10.1A5.4 5.4 0 0 0 16 21.5a5.4 5.4 0 0 0 5.4-5.4C21.4 13.4 19.2 10.2 16 6z" fill="#fff"/><circle cx="16" cy="16.4" r="1.8" fill="#0a6c74"/></svg>
+      <span class="brandname">Fluispotter</span>
+    </a>
+    <span class="brandsub">Firmware &amp; Software Documentation</span>
+    <span class="spacer"></span>
+    <span class="topmeta">Project documentation site</span>
+  </header>
+  <aside class="sidebar"><nav><div class="navgroup"><div class="navgroup-title">Project</div><a class="navlink" href="index.html"><svg class="ico" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 9.5 10 4l7 5.5V17a1 1 0 0 1-1 1h-3v-5H7v5H4a1 1 0 0 1-1-1z"/></svg><span>Overview</span></a></div><div class="navgroup"><div class="navgroup-title">Documentation</div><a class="navlink" href="specifications.html"><svg class="ico" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M5 3h7l3 3v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M7 9h6M7 12h6M7 15h4" stroke-width="1.4" fill="none"/></svg><span>Specifications</span></a><a class="navlink" href="requirements.html"><svg class="ico" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 4h12v12H4z" fill="none" stroke-width="1.4"/><path d="M7 8l2 2 4-4" fill="none" stroke-width="1.6"/><path d="M7 13h6" stroke-width="1.4" fill="none"/></svg><span>Requirements</span></a><a class="navlink" href="architecture.html"><svg class="ico" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="3" y="3" width="5" height="5" rx="1"/><rect x="12" y="3" width="5" height="5" rx="1"/><rect x="7.5" y="12" width="5" height="5" rx="1"/><path d="M5.5 8v2h9V8M10 10v2" fill="none" stroke-width="1.3"/></svg><span>Architecture</span></a><a class="navlink active" href="process.html"><svg class="ico" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="10" cy="10" r="6.5" fill="none" stroke-width="1.4"/><path d="M10 6v4l3 2" fill="none" stroke-width="1.5"/></svg><span>Process Notes</span></a></div><div class="navgroup"><div class="navgroup-title">Reference</div><a class="navlink" href="datasheets.html"><svg class="ico" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="5" y="5" width="10" height="10" rx="1.5"/><path d="M8 2v3M12 2v3M8 15v3M12 15v3M2 8h3M2 12h3M15 8h3M15 12h3" stroke-width="1.3"/></svg><span>Datasheets</span></a><a class="navlink" href="history.html"><svg class="ico" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="10" cy="10" r="7" fill="none" stroke-width="1.4"/><path d="M10 5.5V10l3 2" fill="none" stroke-width="1.5"/></svg><span>History</span></a></div></nav></aside>
+  <main class="main">
+    <div class="content wide">
+      
+<div class="pagehead">
+  <div class="eyebrow">Documentation</div>
+  <h1>Process Notes</h1>
+  <p class="lead">Engineering process: the staged CI / release plan, and the append-only conversation compacting log.</p>
+</div>
+<div class="doc-switcher"><a class="active" href="#view-ci-release-plan-md" data-target="ci-release-plan-md">CI / Release Process Plan</a><a class="" href="#view-compacting-log-md" data-target="compacting-log-md">Conversation Compacting Log</a></div>
+<div class="doc-frame-wrap" id="view-ci-release-plan-md">
+  <div class="doc-frame-bar">
+    <span class="doc-title">CI / Release Process Plan</span>
+    <span class="doc-path">../ci_release_plan.md</span>
+    <span class="spacer"></span>
+    <a class="openlink" href="../ci_release_plan.md" target="_blank" rel="noopener">Open raw Markdown &nearr;</a>
+  </div>
+  <div class="md-body" style="padding:26px 30px"><h1>CI / Release Process Plan — Fluispotter Firmware &amp; Software</h1>
+<p><strong>Version 1.3 — 2026-06-12 — Status: APPROVED; Stage 0 + Phase 2 IMPLEMENTED</strong></p>
+<p>Stage 0 phase 1 shipped (2026-06-12): <code>.github/workflows/ci.yml</code> — lint (style frozen in <code>.flake8</code>, bug codes active), the SW verification suite (<code>make verify</code> → per-requirement report artifact), Monitor+Control offscreen smoke, and the version-bump discipline gate (<code>.github/scripts/check_version_bump.py</code>). Requirements registry + doc: <code>verification/requirements.py</code> → <code>docs/fluispotter_sw_requirements.html</code> (76 requirements, 64 SW / 12 MECH).</p>
+<p>Phase 2 shipped (2026-06-12): <code>ci.yml</code> job <code>ulp-build</code> in the pinned <code>espressif/idf:v5.3.2</code> container (matching the bench IDF v5.3.2) — <code>idf.py build</code> → <code>output/build_verify_ulp.py</code> (sizes/headroom/libgcc/versions for all three images; tool paths now env/PATH-portable in <code>deploy_ulp.py</code>) → <code>.github/scripts/check_variables_drift.py</code> (committed address maps must match the freshly built ELFs — the stale-address gate). Stage 1: <code>.github/workflows/artifacts.yml</code> (master + dispatch) builds the stamped firmware image + verified ULP binaries and generates <code>release_manifest.json</code> + <code>SHA256SUMS</code> + SBOM via <code>.github/scripts/make_manifest.py</code> (commit/submodule SHAs, every component version, toolchain, artifact hashes; dirty trees flagged unreleasable). KNOWN RED at introduction: the drift gate correctly reports <code>test_variables.py</code>/<code>test2_variables.py</code> stale vs source@HEAD (they predate the <code>retain</code> pinning; the board&#x27;s old test binaries still match them) — cleared by one sanctioned <code>deploy_ulp.py</code> bench run.</p>
+<p>Decisions (2026-06-12, Sten): (a) bench Mac WILL host a self-hosted runner with the board attached — YES; (b) releases move to master-only tagging — YES; (c) app packaging/signing (PyInstaller/notarization) — DEFERRED.</p>
+<p>This plan defines a continuous-integration and release process covering all five shippable components in this repository, grounded in the build tooling that exists today. It is staged so each phase delivers value on its own.</p>
+<hr>
+<h2>1. What we ship (and how it builds today)</h2>
+<table><thead><tr><th>#</th><th>Component</th><th>Built by (today)</th><th>Shipped as</th><th>Version source</th></tr></thead><tbody><tr><td>1</td><td>ESP32-S3 MicroPython firmware image</td><td><code>.github/workflows/build.yml</code> on <code>v*</code> tag (ESP-IDF + <code>runtime/micropython</code> fork, <code>FROZEN_MANIFEST=manifest.py</code>)</td><td><code>fluispotter-&lt;tag&gt;.bin</code> GitHub Release asset</td><td>git tag + <code>version.py</code> (git-derived)</td></tr><tr><td>2</td><td>ULP pump regulator (3 binaries: <code>pump_regulator</code> / <code>pump_test</code> / <code>pump_test2</code>)</td><td><strong>local only</strong> — <code>idf.py build</code> + <code>output/build_verify_ulp.py</code> gates + <code>variables.py</code> regen</td><td>files copied to board via pyserial raw-REPL</td><td><code>ULP_VERSION_MAJOR/MINOR/PATCH</code> in <code>main/ulp/main.c</code> (per-binary <code>#if</code>)</td></tr><tr><td>3</td><td>Monitor &amp; Control desktop apps (PyQt6, macOS arm64)</td><td>not built — <code>.app</code> wrappers run live source via <code>arch -arm64 /usr/local/bin/python3</code></td><td>repo checkout + hand-made <code>launchers/*.app</code></td><td><code>monitor/app_version.py</code>, <code>control/app_version.py</code> (manual bump-per-change) + <code>version.py</code></td></tr><tr><td>4</td><td>RPi synchronize-service</td><td>submodule <code>lib/synchronize-service</code> (own <code>setup.py</code>/Makefile/tests, <strong>no CI</strong>)</td><td>manual deploy to RPi</td><td>submodule SHA</td></tr><tr><td>5</td><td>Docs (mkdocs site + spec repos)</td><td><code>documentation.yml</code> on <code>master</code> push → external Pages repo; spec-repo HTML → <code>.docx</code> via <code>textutil</code> locally</td><td>Pages site, <code>.docx</code> to Google Drive</td><td>spec-repo change logs (e.g. device spec 2.11)</td></tr></tbody></table>
+<h3>Current CI gaps (found by audit, 2026-06-12)</h3>
+<ul><li><strong>No test or lint gate anywhere.</strong> <code>make lint</code> / <code>make test</code> (34 headless unit tests) exist but no workflow runs them. A <code>v*</code> tag releases firmware even if tests fail.</li><li><strong>ULP is not in CI at all</strong> — the safety-relevant pump regulator is built and verified only on a developer machine.</li><li><strong>No version stamping in CI</strong> (<code>make stamp-version</code> never invoked), no checksums, no signing, no SBOM, no record of submodule SHAs/toolchain in the release.</li><li><strong>Reproducibility:</strong> unpinned <code>setup-python</code> version, floating action tags, <code>pip install -r</code> without hashes, <code>ubuntu-latest</code> drift.</li><li><strong>Trigger asymmetry:</strong> docs deploy from <code>master</code>; firmware releases from any <code>v*</code> tag on any commit — releases are not tied to reviewed code.</li><li><strong>Desktop apps:</strong> no packaging, no dependency pinning (<code>&gt;=</code> floors), no tests, stale <code>CFBundleVersion=1.0</code>, launcher depends on the user&#x27;s shell profile + a global Python.</li><li><strong>Hardware-in-the-loop:</strong> all on-device verification is manual; <code>mpremote</code> drops this board (USB-CDC RTS), so any automated deploy must use the repo&#x27;s pyserial raw-REPL tools (<code>output/_serial_io.py</code>, <code>deploy_operational_serial.py</code>, <code>run_operational_convergence.py</code>).</li></ul>
+<hr>
+<h2>2. Target pipeline — four stages</h2>
+<pre><code> Stage 0  PR gate          every push / PR        (headless, GitHub-hosted)
+ Stage 1  Artifact build   merge to master        (headless, GitHub-hosted)
+ Stage 2  Bench HIL        nightly + pre-release  (self-hosted Mac runner + board)
+ Stage 3  Release          v* tag on master       (gated on 0–2 evidence)</code></pre>
+<h3>Stage 0 — PR gate (<code>ci.yml</code>, on every push + PR)</h3>
+<p>Fast, headless, no secrets beyond the submodule SSH key. All jobs required to merge.</p>
+<ol><li><strong>Lint</strong> — <code>make lint</code>; extend <code>.flake8</code> coverage to <code>monitor/</code> and <code>control/</code>.</li><li><strong>Unit tests</strong> — <code>python3 -m unittest -v test/*.py</code> (already passes headless in &lt;1 s). Run the synchronize-service test suite from the submodule too.</li><li><strong>App smoke (offscreen Qt)</strong> — construct both <code>MainWindow</code>s under <code>QT_QPA_PLATFORM=offscreen</code> on a Linux runner with pinned PyQt6/matplotlib/numpy; assert the window title contains <code>APP_VERSION</code>. (Verified feasible — both apps construct headlessly without a board.)</li><li><strong>Injected-script compile check</strong> — build every <code>board_script.py</code> factory output (<code>MONITOR_SCRIPT</code>, the three PID scripts, sensors, etc.) and <code>compile()</code> the emitted MicroPython. This is the static check that already caught splice errors; make it a permanent gate.</li><li><strong>ULP build + verify</strong> — <code>idf.py build</code> for all three binaries inside the pinned ESP-IDF container, then <code>output/build_verify_ulp.py</code> gates: <strong>no new libgcc</strong>, <strong>stack headroom ≥ 768 B</strong>, operational &lt; 8192 B / test binaries ≤ 4592 B (runtime-load ceiling), version readable.</li><li><strong><code>variables.py</code> drift check</strong> — regenerate the address map from the just-built operational ELF and <code>git diff --exit-code</code> against the committed one. Kills the stale-address bug class at PR time.</li><li><strong>Version-discipline check</strong> — if a PR touches <code>monitor/**</code> or <code>control/**</code> Python, require the matching <code>app_version.py</code> to be bumped in the same PR (simple script gate). Same rule for ULP: touching <code>main/ulp/main.c</code> requires a <code>ULP_VERSION_*</code> bump.</li></ol>
+<h3>Stage 1 — Artifact build (<code>artifacts.yml</code>, on merge to <code>master</code>)</h3>
+<p>Everything Stage 0 builds, retained as traceable artifacts:</p>
+<ul><li>Full firmware image (<code>firmware.bin</code>) <strong>with <code>make stamp-version</code> applied first</strong> so the image embeds the git hash/build date.</li><li>The three ULP binaries + the regenerated <code>variables.py</code> / <code>test_variables.py</code> / <code>test2_variables.py</code>.</li><li>The rshell/pyserial-deployable <code>.mpy</code> bundle (<code>make build</code> output).</li><li>A <strong>release manifest</strong> (JSON): git SHA, all submodule SHAs, ESP-IDF + Python + toolchain versions, ULP versions (all three), <code>APP_VERSION</code>s, spec-repo doc versions, SHA-256 of every artifact.</li><li>SBOM (pip freeze of the pinned env + submodule list).</li><li>Upload as a single versioned artifact bundle (retention ≥ 90 days).</li></ul>
+<h3>Stage 2 — Bench hardware-in-the-loop (<code>hil.yml</code>, nightly + manual dispatch)</h3>
+<p>Runs on a <strong>self-hosted macOS runner</strong> (the bench Mac) with a devboard permanently attached. Uses only the repo&#x27;s pyserial tools — never mpremote. Jobs are serialized with a <code>bench-board</code> concurrency group, and the workflow requires the Control/Monitor apps to be closed (check <code>lsof</code> on the port before starting).</p>
+<ol><li>Deploy the Stage-1 operational ULP + firmware bundle (<code>deploy_operational_serial.py</code> pattern: copy, FNV byte-verify, reset).</li><li><strong>Convergence test</strong> — <code>run_operational_convergence.py</code>: AC @ SPR 20 and BP @ SPR 16 must converge (mean within ±5 % of target over the last N revs, <code>motor_stop_events == 0</code>, skip ladder climbing). This is the regression test for the Simple-P regulator.</li><li><strong>Sensor probe</strong> — <code>veml_pressure_probe.py</code>: VEML spot/line return non-zero lux, ADCs in range; flags the known pressure-saturation state.</li><li>Publish a JUnit-style result + raw telemetry log as evidence artifacts; on failure, open a GitHub issue automatically.</li><li>End state: board reset to normal firmware, LED rails off.</li></ol>
+<p>A <strong>pre-release HIL run is mandatory</strong>: the release workflow refuses to publish unless the candidate SHA has a green HIL evidence artifact.</p>
+<h3>Stage 3 — Release (<code>release.yml</code>, on <code>v*</code> tag)</h3>
+<ul><li>Tag must point at a commit <strong>on <code>master</code></strong> (enforced in the workflow) with green Stage 0–2.</li><li>Rebuild (or promote the Stage-1 artifacts of that exact SHA), attach: firmware image, ULP binaries + variables maps, <code>.mpy</code> bundle, release manifest, <code>SHA256SUMS</code>, HIL evidence bundle, and the spec-repo <code>.docx</code> files (generated in CI from the HTML via pandoc/libreoffice instead of macOS-only <code>textutil</code>, or attached from the repo).</li><li>Release notes generated from the manifest: per-component version table (firmware tag, ULP x3, Monitor/Control APP_VERSIONs, sync-service SHA, spec-doc versions) + changelog entries pulled from the <code>app_version.py</code> changelogs and spec change logs.</li><li>Docs: <code>documentation.yml</code> stays, but drop <code>force_orphan: true</code> so the Pages history is preserved, and pin the Python version.</li></ul>
+<hr>
+<h2>3. Versioning &amp; traceability model</h2>
+<p>One release = one <strong>release manifest</strong> that reconciles every independent version source. The git tag (<code>vX.Y.Z</code>) is the <em>release</em> version; component versions stay independent but are recorded:</p>
+<table><thead><tr><th>Source</th><th>File</th><th>Discipline</th></tr></thead><tbody><tr><td>Release</td><td>git tag <code>v*</code></td><td>tagged on <code>master</code> only</td></tr><tr><td>Build stamp</td><td><code>version.py</code></td><td>CI runs <code>make stamp-version</code>; <strong>dirty-tree (<code>*</code>) builds are unreleasable</strong></td></tr><tr><td>ULP (×3)</td><td><code>main/ulp/main.c</code></td><td>bump enforced by Stage-0 gate; deploy checklist stays</td></tr><tr><td>Monitor / Control</td><td><code>app_version.py</code></td><td>bump-per-change enforced by Stage-0 gate</td></tr><tr><td>Sync service</td><td>submodule SHA</td><td>recorded in manifest; its own tests run in Stage 0</td></tr><tr><td>Spec docs</td><td>HTML change logs</td><td>recorded in manifest</td></tr></tbody></table>
+<p>Reproducibility hardening (applies to every workflow): pin <code>python-version</code>, pin action tags to SHAs, <code>pip install --require-hashes</code> from a lock file, record the ESP-IDF tools digest, and verify submodule SHAs against the gitlink (no floating branches).</p>
+<hr>
+<h2>4. Component-specific work items</h2>
+<p><strong>Desktop apps</strong> — make them releasable: pin app dependencies (<code>==</code> like the firmware requirements), add the offscreen smoke + a small unit-test seam for <code>board_script</code> factories and the sensors classify logic; later, package with PyInstaller (arm64) so the <code>.app</code> stops depending on <code>/usr/local/bin/python3</code>, the user&#x27;s shell profile, and the repo path; sync <code>CFBundleVersion</code> from <code>APP_VERSION</code> at package time; sign + notarize when distribution beyond the bench is needed.</p>
+<p><strong>RPi synchronize-service</strong> — add its test suite to Stage 0; build a wheel in Stage 1; deploy to the hub via a tagged release + <code>pip install</code> (replacing the manual update queue) once the bench flow is trusted.</p>
+<p><strong>ULP/firmware</strong> — containerize the ESP-IDF build (image pinned by digest) so PR builds are fast and identical to release builds; keep <code>check_ulp_memory.sh</code> + <code>build_verify_ulp.py</code> as the single source of build gates.</p>
+<hr>
+<h2>5. Rollout phases</h2>
+<table><thead><tr><th>Phase</th><th>Scope</th><th>Effort</th><th>Value</th></tr></thead><tbody><tr><td><strong>1 — Quick wins</strong></td><td><code>ci.yml</code> with lint + unit tests + app smoke + injected-script compile; pin docs workflow; drop <code>force_orphan</code></td><td>~1 day</td><td>A merge gate exists at all</td></tr><tr><td><strong>2 — Build completeness</strong></td><td>ULP build+verify in CI, <code>variables.py</code> drift gate, version-discipline gates, Stage-1 artifacts + manifest + checksums</td><td>~2–3 days</td><td>Releases become traceable &amp; reproducible</td></tr><tr><td><strong>3 — Bench HIL</strong></td><td>Self-hosted Mac runner + convergence/sensor suites, evidence artifacts</td><td>~2–4 days incl. bench setup</td><td>Regulator regressions caught before release</td></tr><tr><td><strong>4 — Release governance</strong></td><td><code>release.yml</code> gating on evidence, release manifest/notes, app packaging + signing, sync-service wheel deploy</td><td>~1 week</td><td>Push-button, audit-ready releases</td></tr></tbody></table>
+<p><strong>Decisions needed from you:</strong> (a) confirm the bench Mac can run a self-hosted runner with the board permanently attached; (b) whether releases should move to <code>master</code>-only tagging now (you currently work on <code>dev</code>); (c) whether app packaging (PyInstaller/signing) is wanted in phase 4 or deferred.</p></div>
+</div><div class="doc-frame-wrap" id="view-compacting-log-md">
+  <div class="doc-frame-bar">
+    <span class="doc-title">Conversation Compacting Log</span>
+    <span class="doc-path">../compacting_log.md</span>
+    <span class="spacer"></span>
+    <a class="openlink" href="../compacting_log.md" target="_blank" rel="noopener">Open raw Markdown &nearr;</a>
+  </div>
+  <div class="md-body" style="padding:26px 30px"><h1>Compacting Log</h1>
+<p>Append-only record of conversation-compaction events for this project. Each entry captures what the compacted (summarized) stretch of work accomplished and what was still open at the moment of compaction, so context survives across the summarizer&#x27;s window. Newest entries at the bottom.</p>
+<hr>
+<h2>2026-06-08 — Compaction #1</h2>
+<p><strong>Span:</strong> ULP 1.2.4 positional-PID bench validation → apps hardening → independent ULP versioning → DAC-sweep re-add → board_config source-of-truth.</p>
+<p><strong>Delivered before compaction:</strong></p>
+<ul><li>ULP <strong>1.2.4</strong> positional integer-tick PID bench-validated (gains kp=300 / ki=120000</li></ul>
+<p>/ kd=0). BUG 1 (AC SPR-20 limit cycle) structurally fixed — no DAC_HALT, no re-init storm, sof=0.</p>
+<ul><li><strong>AutomatedSessionVerification (ASV)</strong> app built + committed: runs/monitors a full</li></ul>
+<p>session, <code>session_history.log</code> append-only START/END rows (SW ver, ULP ver, type, timestamps, pass/fail), read-only continuous serial reader.</p>
+<ul><li>Control <strong>PID Tuner</strong> tab given live kp/ki/kd set+Apply (matching Pumps tab).</li><li><strong>Serial auto-reconnect</strong> added to both Monitor &amp; Control bridges (survives USB</li></ul>
+<p>re-enumeration); <code>sys.excepthook</code> installed in both apps (no more PyQt6 SIGABRT).</p>
+<ul><li><strong>DAC/power audit:</strong> confirmed <code>power = 4095 − DAC</code> everywhere; real BP-not-starting</li></ul>
+<p>cause was an uncalled <code>_set_bp_direction</code> (DAC7574 CH3 latch) — fixed + deployed.</p>
+<ul><li>Resistance-map <strong>per-segment HALL ring</strong> (<code>res_hall</code>) deployed (ULP_Test 1.2.5).</li><li><strong>Independent ULP versioning</strong> (<code>#ifdef ULP_TEST_BUILD</code> selects patch): ULP_Op vs</li></ul>
+<p>ULP_Test versioned separately; deploy reports both live versions.</p>
+<p><strong>Open at compaction:</strong></p>
+<ul><li>DAC-sweep re-add (<code>test_dac_sweep_enc</code>, TEST id 5) to the TEST binary — code done,</li></ul>
+<p>deploy blocked by a serial-port race (auto-reconnect app) + a wedged board.</p>
+<ul><li>PID Tuner tab &quot;no data when running&quot; — suspected <code>pid_tuner_script</code> <code>_BATCH_SIZE=10</code></li></ul>
+<p>vs the ULP&#x27;s N=2 pulses (host-only fix).</p>
+<p><strong>Resolved immediately after compaction (2026-06-08):</strong></p>
+<ul><li>Board was wedged (USB-CDC print-block); power-cycled. <strong>Deployed fw 0.1.57</strong> —</li></ul>
+<p>ULP_Op 1.2.4 / <strong>ULP_Test 1.2.6</strong> (DAC sweep restored), BP self-test PASS.</p>
+<ul><li><strong>board_config.py made the single source of the PID defaults:</strong> holds 300/120000/0,</li></ul>
+<p>pushed to device (persists across reboot); Control <code>pump_panel</code> + <code>pid_tuner_panel</code> now load kp/ki/kd defaults from <code>board_config.py</code> via standalone importlib (micropython.const shim); ULP <code>DEFAULT_*_SCALED</code> documented as a compile-time fallback that mirrors board_config.</p>
+<p><strong>Still open:</strong> PID Tuner no-data fix; commit of the 0.1.57 batch (pending user&#x27;s go).</p>
+<hr>
+<h2>Compaction — 2026-06-15 (Simple-P hall-interval verification metric)</h2>
+<p><strong>Carried in:</strong> full hardware test (prompt 59) had passed 3/3 green — deploy (10 files FNV-verified), SW verification 51/0, MECH 4/4 — then the user redefined the SimpleP verification metric: grade SPR on <strong>time between hall revolutions</strong> (true full-rev time), not the encoder sampling-interval batch (a 1/324-rev sub-sample swamped by peristaltic ripple).</p>
+<p><strong>Done this turn:</strong></p>
+<ul><li><code>output/run_operational_convergence.py</code> — board-side hall-interval SPR (<code>sprh</code>): track</li></ul>
+<p>last-hall <code>_lh</code> + hall-time <code>_ht</code>, <code>sprh = ticks_diff(now,_ht)/1000/dh</code> per hall increment, emit in the op frame at 25 ms poll; summary reports <code>sprh_mean</code> (first/spin-up interval discarded). Encoder-batch <code>spr</code> retained as a diagnostic column only.</p>
+<ul><li><code>verification/tests_mech/test_bench.py</code> — <code>_SUMMARY</code> regex parses <code>sprh_mean</code> +</li></ul>
+<p>hall-interval count; <code>_run_convergence</code> grades <code>sprh_mean</code> within ±5% of target, requiring ≥3 hall intervals, <code>stop==0</code>, <code>hall&gt;0</code>.</p>
+<ul><li><code>verification/requirements.py</code> — SWR-122/123 text now SPECIFIES the hall-interval metric</li></ul>
+<p>(encoder batch called out as diagnostic-only); registry <code>DOC_VERSION</code> 1.1 → 1.2; <code>docs/fluispotter_sw_requirements.html</code> + <code>.docx</code> regenerated.</p>
+<ul><li><strong>Hardware (re-run on the connected board):</strong> AC <code>sprh_mean</code> 19.808 (−0.96%), BP</li></ul>
+<p><code>sprh_mean</code> 16.000 (0.00%), both <code>stop=0</code>, ≥3 hall intervals. Formal MECH suite SWR-122/123/124/125 <strong>4/4 PASS</strong>. Pumps reset idle.</p>
+<p><strong>Still open:</strong> commit/push the prompt-59 batch + this hall-metric batch (pending user&#x27;s go).</p>
+<hr>
+<h2>2026-06-30 — Compaction #2</h2>
+<p><strong>Span:</strong> dose/park bench debugging (post PID-tuner batch) → ULP 1.4.0 rollback baseline → park cold-start investigation.</p>
+<p><strong>Delivered before compaction:</strong></p>
+<ul><li><strong>DOSE fix validated</strong> (ULP 1.4.0 Simple-P <code>bp_drive_window</code>, 20-sample session</li></ul>
+<p>passed clean).</p>
+<ul><li><strong>Park &quot;failures&quot; diagnosed as an INVALID TEST</strong> (user insight): park right after</li></ul>
+<p>determine-parking is a near-no-op (rotor already home). Valid test = move out → stop → park.</p>
+<ul><li>GPIO-contention hypothesis <strong>refuted</strong> (BP fully ULP-owned; <code>ULPBloodPump</code> stub);</li></ul>
+<p>CH3 direction-DAC hypothesis <strong>refuted</strong> (same-session determine-parking turned); DAC-override/master-power/stiction all ruled out. Motor runs when manually nudged → hard cold-start/break-free problem.</p>
+<ul><li><strong>Rolled back to the 1.4.0 kick-gated park</strong> (commit 5b15450, pushed dev) after the</li></ul>
+<p>1.5.0/1.6.0/1.7.0 park attempts; 1.6.0 &quot;determine-parking timeout&quot; = dead board (DAC7574 latch), not a regression.</p>
+<ul><li>Bench USB print-wedge failure mode documented (lightsleep CDC re-enumeration →</li></ul>
+<p>stale drainer → print flood; power-cycle to recover).</p>
+<p><strong>Still open:</strong> implement the park cold-start by CALLING the existing adaptive START_DAC (<code>bp_dose_park_kick</code> → <code>try_kick_start</code>) exactly as the dose does (user: &quot;Fact is we know that this method works for starting the motor from complete standstill&quot;); deploy; bench-test move-out → stop → park. (Resolved post-compaction as ULP 1.8.0.)</p>
+<h2>2026-07-07 — Compaction #3 (flush-cycle + lightsleep arc)</h2>
+<p>Compacted mid-arc after the FINISH fix (0.1.79) and the election-lightsleep incident. Summary carried: SWR-241 FINISH fix bench-validated; 0.1.80 election tape-runaway root-caused and rejected → Option A single-owner rebuild on the 0.1.79 base; fault- inhibit race + clobber fixes; SWR-242 locked (live hall-tick sync); the continuous- pumping bug identified with SWR-243/244 being added+locked and the 2+8 reinstatement in progress (git-archaeology agent findings preserved). Post-compaction the arc completed cleanly through fw 0.1.86 (see prompts 93-95) — no context loss observed; the agent-result handoff (archaeology report arriving after compaction) worked.</p>
+<h2>2026-07-13 ~09:20 — compaction during overnight-alarm follow-up</h2>
+<p>Context compacted while resuming the 07-12 20:40 wedge-alarm investigation (background monitors had been killed by process exit). Summary preserved: v0.1.99/0.1.100/0.1.101 delivery chain, 42-sample endurance PASS, red-team findings, pending tasks (#113/#114/#118, Mac-sleep repro pair, C-level CDC fix). Post-compaction work: full-event-store discovery + board recovery (see prompts.md #119).</p>
+<h2>2026-07-17 ~evening — compaction mid hub-1.7.3 wrap-up</h2>
+<p>Context compacted immediately after the 1.7.3 stale-ONLINE fix went live (footer verified) but before the firmware-repo gitlink commit + prompts entry + user report. Summary preserved: full 0.1.110→0.1.115 chain, ULP 1.12.0, IMG-4, hub 1.6.x→1.7.3, session-report/metadata/command requirements (SWR-277..281, HUBR-312..314), the running ~24h battery session + armed watchers (deploy-on-finish PID 8236, session watch log), PAT-rotation + Mirza.txt reminders. Post- compaction: resumed cleanly — live-verified OFFLINE badge on the napping board, wrote prompts #153, committed the gitlink. No context loss observed.</p>
+<h2>2026-07-23 ~07:20 — compaction mid #48 wedge-recovery</h2>
+<p>Context compacted while diagnosing the second dev.0.5 session wedge (between arming the audit-off discriminator and Sten&#x27;s &quot;Nothing happening on board&quot;). Summary preserved the full #48 chain (conviction, dev.0.1→0.6 trial ladder, stack-canary economics, TestOp track, hub 1.14.1, boot-intercept technique), the deque-audit build (fw 0.1.130), open bugs to file, and the exact next step (confirm wedge, install dev.0.6, run the audit). Post-compaction: resumed seamlessly — canary-evidence read attempted (RTC scrambled by the power-cycle, inconclusive, conviction unaffected), dev.0.6 installed via catch-boot, recovery session 6/6 FINISH, audit run re-armed end-to-end. No context loss observed; the only stale artifact was a pre-compaction monitor whose verdict text still said &quot;dev.0.5&quot; after the dev.0.6 swap (corrected in the transcript).</p></div>
+</div>
+
+<script>
+(function () {
+  var links = document.querySelectorAll('.doc-switcher a');
+  var views = document.querySelectorAll('.doc-frame-wrap, .panel[id^="view-"]');
+  function show(id) {
+    views.forEach(function (v) { v.style.display = (v.id === 'view-' + id) ? '' : 'none'; });
+    links.forEach(function (l) { l.classList.toggle('active', l.dataset.target === id); });
+  }
+  links.forEach(function (l) {
+    l.addEventListener('click', function (e) { e.preventDefault(); show(l.dataset.target); location.hash = l.dataset.target; });
+  });
+  var initial = location.hash.replace('#view-', '');
+  if (initial && document.getElementById('view-' + initial)) { show(initial); }
+  else if (links.length) { show(links[0].dataset.target); }
+})();
+</script>
+
+
+      <footer class="site-footer">
+        Fluispotter project documentation &middot; generated static site &middot;
+        fully offline, no external resources. Canonical specs are embedded live from <code>docs/</code>.
+      </footer>
+    </div>
+  </main>
+</div>
+</body>
+</html>

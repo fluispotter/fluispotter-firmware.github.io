@@ -1,0 +1,1002 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../requirements_implementation_map/">
+      
+      
+        <link rel="next" href="../wdt_lightsleep_usb_investigation_2026-07-20/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Summaries - Fluispotter</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#2026-07-13-store-full-recovery-sync-deep-check-clean_event_store-delivered" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Fluispotter" class="md-header__button md-logo" aria-label="Fluispotter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fluispotter
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Summaries
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Fluispotter" class="md-nav__button md-logo" aria-label="Fluispotter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fluispotter
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Reference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../battery_test_2026-07-18/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Battery endurance test — run to power failure (2026-07-16 → 2026-07-18)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bench_run_2026-07-18_10x2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bench acceptance — 10 samples × 2 spots (dry run), 2026-07-18
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bench_run_2026-07-19_8h_dry/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8-hour dry run — 1 pre-session sample + 15 triplet samples, 2026-07-19
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ci_release_plan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CI / Release Process Plan — Fluispotter Firmware &amp; Software
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compacting_log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compacting Log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multi_mode_ulp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multi Mode ULP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prompts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    User Prompts Log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../requirements_implementation_map/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Requirements Implementation Map — 2026-07-16 (registry 1.69, 148 requirements)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Summaries
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Summaries
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#2026-07-13-store-full-recovery-sync-deep-check-clean_event_store-delivered" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-13 — Store-full recovery, sync deep-check, clean_event_store delivered
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2026-07-13-pm-swr-265-field-proof-pass" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-13 pm — SWR-265 field proof: PASS
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2026-07-13-late-fw-01105-hub-140-hub-not-found-backoff-telemetry-toggle" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-13 late — fw 0.1.105 + hub 1.4.0: hub-not-found backoff + telemetry toggle
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2026-07-13-eve-114-dev-merge-hub-150-img-3-cdc-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-13 eve — #114 + dev merge + hub 1.5.0 + IMG-3 CDC image
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#114-delivered-swr-268-verificationimagespy-img-registry-img-03-boot-config-event-carries" class="md-nav__link">
+    <span class="md-ellipsis">
+      114 DELIVERED (SWR-268): verification/images.py IMG registry (IMG-0..3), boot config event carries
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="114 DELIVERED (SWR-268): verification/images.py IMG registry (IMG-0..3), boot config event carries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2026-07-13-night-coverage-push-hubr-acceptance-suite-10-swr-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-13 night — coverage push: HUBR acceptance suite + 10 SWR tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2026-07-13-late-eve-swr-269-live-fire-proof-pass-both-legs" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-13 late eve — SWR-269 live-fire proof: PASS both legs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2026-07-13-night-img-3-flashed-boot-proven-swr-269-live-fired" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-13 night — IMG-3 flashed + boot-proven; SWR-269 live-fired
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2026-07-13-night-ppk2-sleep-model-proof-task-90-pass" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-13 night — PPK2 sleep-model proof (task #90): PASS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2026-07-13-late-hub-ui-auto-refresh-restored-sse-service-160-hubr-311" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-13 late — hub UI auto-refresh restored (SSE, service 1.6.0, HUBR-311)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2026-07-14-00xx-false-ac-hall-warnings-root-caused-fixed-swr-270-fw-01110" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-14 00:xx — false AC hall warnings root-caused + fixed (SWR-270, fw 0.1.110)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2026-07-14-8h50-sample-dry-ppk2-run-complete-fw-01110-ulp-1110" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-14 — 8h/50-sample dry PPK2 run COMPLETE (fw 0.1.110, ULP 1.11.0)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2026-07-14-residual-ac-hall-warnings-masking-root-cause-confirmed-in-ulp-fix-planned-1120" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-14 — Residual AC-hall warnings: masking root cause CONFIRMED in ULP, fix planned (1.12.0)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2026-07-14-ulp-1120-ac-serviced-through-bp-dosecoastpark-swr-271-built-not-yet-deployed" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-14 — ULP 1.12.0: AC serviced through BP dose/coast/park (SWR-271) — built, not yet deployed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2026-07-14-ulp-1120-deployed-swr-271-bench-proven" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-14 — ULP 1.12.0 DEPLOYED + SWR-271 bench-PROVEN
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2026-07-14-1101-incident-rpi-hub-slot-flip-mid-run-board-crash-loop-20-sample-run-truncated-1320" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-14 ~11:01 INCIDENT — RPi hub slot-flip mid-run + board crash loop (20-sample run truncated 13/20)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2026-07-16-fw-01111-deployed-wdt-serialization-ulp-self-recovery-reed-wake-stack-instrument" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-16 — fw 0.1.111 DEPLOYED: WDT serialization + ULP self-recovery + reed wake + stack instrument
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2026-07-16-critical-fix-deployed-fw-01112-ac-pump-ran-at-power-on-swr-276" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-16 — CRITICAL FIX DEPLOYED (fw 0.1.112): AC pump ran at power-on (SWR-276)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2026-07-16-swr-276-field-verification-05-s-residual-software-floor-reached" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-16 — SWR-276 field verification: 0.5 s residual (software floor reached)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2026-07-16-swr-276-final-field-verification-on-img-4-1-mm-residual-mask-rom-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-16 — SWR-276 FINAL field verification on IMG-4: ~1 mm residual (mask-ROM only)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2026-07-22-rpi-4-vpn-gateway-design-for-remote-access-to-the-work-lan" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-22 — RPi 4 VPN gateway design for remote access to the work LAN
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2026-07-22-paid-options-for-the-vpn-gateway-surveyed" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-22 — Paid options for the VPN gateway surveyed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2026-07-2223-48-motors-wild-root-caused-fixed-and-landed-on-the-testop-track" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-22/23 — #48 "motors wild" root-caused, fixed, and landed on the TestOp track
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2026-07-23-afternoonevening-the-53-chase-my-own-fix-convicted-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-23 (afternoon/evening) — the #53 chase, my own fix convicted, recovery
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5348-48-redesign-now-radio-soak-gated-cpu-side-trigger-site-re-assert-preferred-en" class="md-nav__link">
+    <span class="md-ellipsis">
+      53/#48; #48 redesign now radio-soak-gated (CPU-side trigger-site re-assert preferred). En
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="53/#48; #48 redesign now radio-soak-gated (CPU-side trigger-site re-assert preferred). En">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2026-07-23-swr-295296-clock-first-gates-fw-01139" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-23 (SWR-295/296 clock-first gates — fw 0.1.139)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wdt_lightsleep_usb_investigation_2026-07-20/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GitHub #46 — WDT(3) at lightsleep entry: investigation record (WON'T FIX)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h2 id="2026-07-13-store-full-recovery-sync-deep-check-clean_event_store-delivered">2026-07-13 — Store-full recovery, sync deep-check, clean_event_store delivered</h2>
+<p>Overnight 20:40 alarm was Mac-side (AP drop); board fine. Real find: event store at 8192/8192 cap
+(unconcluded FINISH since 07-11 → nap Wi-Fi drops → 'WiFi disconnected' log 1/min for 37h). Full
+store = hub-mute (SWR-238 degraded) + brick-on-next-boot (unguarded create() append). Recovered:
+REPL wipe, reset, hub row delete + re-acquire (user-approved), reset_session → AWAIT_CALIBRATION.
+Verified all 42 endurance + 20 verify sample events on hub ('complete' missing only for samples 0/5
+= the two WDT resets, cosmetic). Three-agent deep review of sync protocol/hub ingestion/store format:
+uid regression mute mechanics pinned (mint gate + client skip gate + UNIQUE constraint), 'Received'
+column = batch MINT time (device+hub clocks exonerated — poll-counter proof), ack re-delivery loop,
+poison-batch wedge, open() header-repair nuke, no checksums. Delivered: fw 0.1.102 clean_event_store
+(uid-continuous via persisted base, crash-safe two-phase, ack-after-clean) + SWR-264 boot guard;
+fw 0.1.103 idempotency per command uid (live 0.1.102 run cleaned twice); hub service 1.3.0 button.
+Live-proven: single clean, uid continues past high-water on same row, command cleared. Registry 1.55,
+131 reqs 0 FAIL, 206 tests. Next: hub-not-found backoff (Sten's spec, #123).</p>
+<h2 id="2026-07-13-pm-swr-265-field-proof-pass">2026-07-13 pm — SWR-265 field proof: PASS</h2>
+<p>20-sample fast run on fw 0.1.104 (post-dose kick serialized vs flash+WiFi, owner's "do one, then
+the other"): 20/20 exact schedule 15:20-15:53, ZERO reset events during the session — including
+the early cold-kick samples where both 42-run WDT(code 3) resets had fired — zero faults.
+Concluded with reset_session (its HARD/code-2 conclusion reboot is by design). Case on the 42-run
+reboots: strongest-evidence trigger (kick ∥ flash+WiFi in the post-dose window) now fixed and
+field-proven at 20-dose scale; a future long run extends the proof.</p>
+<h2 id="2026-07-13-late-fw-01105-hub-140-hub-not-found-backoff-telemetry-toggle">2026-07-13 late — fw 0.1.105 + hub 1.4.0: hub-not-found backoff + telemetry toggle</h2>
+<p>SWR-266 (owner spec): ONE 'Hub not found' event per outage (scan-classified, fast-fail ~2s during
+known outage vs 30s blind timeout), events cache locally, recovery event on next sync; per-minute
+disconnected-poll append REMOVED (the issue-#41 fill vector — closes task #122 with SWR-264).
+SWR-267 (#118): telemetry_on/off hub commands, /telemetry flag + live task start/stop, default OFF;
+hub 1.4.0 buttons. Live-verified: 0.1.105 boot on hub; telemetry_on→'Telemetry enabled' event,
+telemetry_off→'Telemetry disabled', commands cleared. Hub-off outage path verified structurally
+(214 tests) — full live test needs a deliberate hub power-off (severs remote observation).</p>
+<h2 id="2026-07-13-eve-114-dev-merge-hub-150-img-3-cdc-image">2026-07-13 eve — #114 + dev merge + hub 1.5.0 + IMG-3 CDC image</h2>
+<p>Merged rebuild/v1.25-int-wdt -&gt; dev (twice: 0.1.99..0.1.105 field-proven chain, then 0.1.106 batch).</p>
+<h1 id="114-delivered-swr-268-verificationimagespy-img-registry-img-03-boot-config-event-carries">114 DELIVERED (SWR-268): verification/images.py IMG registry (IMG-0..3), boot config event carries</h1>
+<p>the runtime fork-commit fingerprint (live on hub: v1.25.0-8.g3c8d39092), CI/verify gate pins the
+gitlink to a registered buildable/active image. Hub service 1.5.0 deployed (HUBR-309/310): true
+arrival time in Received, 409 on duplicate uid, NULL-guarded command queries, poison-line
+uid-preserving stub, body buffered before the global DB lock. IMG-3: fork e9d9c06 mp_usbd_cdc_tx_strn
+zero-progress break (the 2026-07-10 freeze line), image branch+tag v0.1.107 building in CI —
+flashing awaits owner Boot1 per §7.9.</p>
+<h2 id="2026-07-13-night-coverage-push-hubr-acceptance-suite-10-swr-tests">2026-07-13 night — coverage push: HUBR acceptance suite + 10 SWR tests</h2>
+<p>verification/hub_acceptance.py (make verify-hub): live 11/11 PASS against the hub with a throwaway
+device row — 409+recovery on duplicate uid, poison-line uid-preserving stub, NULL-command_uid
+survival, 0.0s page load during a stalled upload, Received=arrival-not-mint, 1.5.0 footer,
+State/Samples columns; HUBR-309/310 provenance updated (registry 1.5). Latent hub quirk found:
+first registration 404s unless the claimed MAC is a live hostapd station. SW side: 10 structure
+tests for SWR-132/207/208/213/219/220/221/222/501/503 — NOT-TESTED 28 -&gt; 18 (remaining: 12 MECH
+bench procedures, 2 superseded, SWR-401..404 hub-API-era). 135 reqs, 117 PASS, 0 FAIL, 227 tests.</p>
+<h2 id="2026-07-13-late-eve-swr-269-live-fire-proof-pass-both-legs">2026-07-13 late eve — SWR-269 live-fire proof: PASS both legs</h2>
+<p>fw 0.1.107 calibration failure gate proven live same evening: healthy path (Calibration complete -&gt;
+AWAIT_ANTICOAGULANT_BAG -&gt; reset_session concluded) AND failure injection (BP motor disconnected:
+'Calibration FAILED (1 test(s): [bp-no-start])' at 17:45:32 -&gt; AWAIT_CALIBRATION, anticoagulant
+state never entered). Owner-driven bench experiment; gate + naming + never-proceed all confirmed.</p>
+<h2 id="2026-07-13-night-img-3-flashed-boot-proven-swr-269-live-fired">2026-07-13 night — IMG-3 flashed + boot-proven; SWR-269 live-fired</h2>
+<p>v0.1.107 CDC image (fork e9d9c06, mp_usbd_cdc_tx_strn zero-progress break) flashed via Boot1
+DL-mode (hash verified), plain-cycle boot-proven: blue LED + PID 0x4001 + hub sync + SWR-268
+fingerprint v1.25.0-9.ge9d9c06cd in the boot event. littlefs preserved (fw 0.1.107/ULP 1.9.0
+intact). IMG-3 ACTIVE, IMG-2 SUPERSEDED, mainline gitlink bumped — the provenance gate itself
+caught the mid-transition state (FAIL until the atomic commit). Both halves of the 2026-07-10 CDC
+wedge are now closed: Python sink latch (0.1.100/101) + C-level bound (IMG-3). Earlier same
+evening: SWR-269 calibration failure gate live-fired (bp-no-start -&gt; AWAIT_CALIBRATION).</p>
+<h2 id="2026-07-13-night-ppk2-sleep-model-proof-task-90-pass">2026-07-13 night — PPK2 sleep-model proof (task #90): PASS</h2>
+<p>3-sample dry session (0/5/20 min) on PPK2 source power 3.7 V, logger v1.2.2 uninterrupted 18:00-18:37,
+hub-only drive (board USB disconnected). 3/3 samples on schedule, zero resets. Power phases: awake
+baseline (AWAIT/calibration/priming) 84-93 mA; sample-load windows 55-75 mA avg with 41-45 mA nap
+dips (SWR-247 hall-wake naps); preload gap 0-&gt;5 ~44 mA (naps between revolutions even while pump
+turns); FLUSH-CYCLE GAP 5-&gt;20 avg 31.7 mA with a FLAT 20.0 mA floor for five consecutive minutes
+(18:24-18:28) = the 8-min REST lightsleep window (SWR-245), 4.2x below awake. Total 38.0 mAh/37 min
+(61.7 mAh/h blended incl. calibration+priming). Driver note: two of my driver bugs en route (stale
+watermark; state-blind watermark) — fixed live, session unaffected. Next power frontier: the 20 mA
+sleep floor (board rails/ULP), not the sleep model.</p>
+<h2 id="2026-07-13-late-hub-ui-auto-refresh-restored-sse-service-160-hubr-311">2026-07-13 late — hub UI auto-refresh restored (SSE, service 1.6.0, HUBR-311)</h2>
+<p>Owner: pre-versioning UI auto-updated; sql-refactor needed manual refresh. Restored 2b (SSE):
+http/sse.py in-process broker + GET /ui/stream (keepalive, bounded queue, best-effort); broadcast(uid)
+on event-ingest + status-sync (devices.py) and settings/command/acquire/release/delete (ui.py);
+assets/js/live.js opens EventSource, on a device-uid ping re-fetches its own page and morphs ONLY
+form-free live regions (#device-section, #events-body, #devices-body) — forms/focus/scroll survive —
+with 5s-polling auto-fallback if SSE blocked. No nginx change (proxy_buffering already off). Deployed
+live; acceptance suite 13/13 incl. HUBR-311 (SSE emits 'data: <uid>' on ingest + live.js linked).
+Hub registry 1.6, hub spec 1.6.0 + docx. Note: my data-uid on event <tr> broke HUBR-310's regex —
+selector widened, unrelated to the feature.</p>
+<h2 id="2026-07-14-00xx-false-ac-hall-warnings-root-caused-fixed-swr-270-fw-01110">2026-07-14 00:xx — false AC hall warnings root-caused + fixed (SWR-270, fw 0.1.110)</h2>
+<p>Owner: 'AC hall warnings do not reflect reality, AC runs without stops, masked by a coinciding BP
+event / pump parking.' Traced to fluispotter.py _run_pump_monitor (NOT the ULP): awaited a CPU GPIO
+hall edge via Switch._handle_state which reads pin() at soft-callback time; a coincident BP flush
+RUN/parking hall+encoder IRQ burst delays the AC falling-edge callback -&gt; reads 1, misses the 0 -&gt;
+wait_for_switch(0) times out -&gt; false warning. Evidence: 48 warnings, every one +85..194s into a BP
+RUN/park window, never in quiet REST. Fix: watch the ULP AC/BP_HALL_REVOLUTIONS counter (RTC domain,
+CPU-immune) fail to advance within 2.5x SPR; real stalls still warn, re-arms without spam. Deployed
+0.1.110 (concluded the stale resumed FINISH session with reset_session first to make the board
+REPL-responsive). Next session should show the false warnings gone.</p>
+<h2 id="2026-07-14-8h50-sample-dry-ppk2-run-complete-fw-01110-ulp-1110">2026-07-14 — 8h/50-sample dry PPK2 run COMPLETE (fw 0.1.110, ULP 1.11.0)</h2>
+<p>50/50 samples, exact schedule, 0 motor faults. Truncated once at 4h22m (sample 27) by a PPK2 USB
+re-enumeration (macOS rig quirk — logger auto-stopped on the 10s sample gap + cut power); recovered
+by logger restart -&gt; board resumed session from state.dat -&gt; ran to real FINISH (auto-stop) at 08:26.
+RESETS 4: one intentional (04:44 recovery power-cycle) + three anomalous self-recovered (00:44 PWRON,
+00:55 WDT, 06:28 WDT) — the PPK2 was unstable tonight so &gt;=1 is likely a rig power dip, not firmware.
+SWR-270 VERIFIED: 25 hall-warnings over 8h = ~3.1/h, down ~5x from the old ~15/h (all the new
+counter-based 'did not advance'; the residual warrants a look — may be genuine AC-off phases vs
+lingering masking). POWER: SESSION median 37.8 mA (18.0-47.7 range), lightsleep floor ~18 mA (flush
+REST), SESSION avg ~42.5 mA consistent across both segments; awake baseline 84-97 mA. Board left
+powered-off post-FINISH (logger auto-stop). Rig lesson (PPK2 macOS USB re-enum truncates long runs)
+saved to memory.</p>
+<h2 id="2026-07-14-residual-ac-hall-warnings-masking-root-cause-confirmed-in-ulp-fix-planned-1120">2026-07-14 — Residual AC-hall warnings: masking root cause CONFIRMED in ULP, fix planned (1.12.0)</h2>
+<p>Owner theory (busy dose/park masks AC hall servicing; a real stop would have logged a restart)
+CONFIRMED by source: bp_tick's BP_DOSING (main.c ~1936) and BP_PARKING (~2060) hold blocking while
+loops over bp_drive_window(), a tight GPIO spin on the BP encoder that never yields to ac_tick().
+For an entire dose (~190 batches for 3067 counts) or park, the ULP services ONLY the BP: the AC
+hall counter freezes (SWR-270 warns falsely at &gt;2.5xSPR=50 s) and the AC pump runs open-loop on its
+held DAC. Fix plan ULP 1.12.0 ("mini task scheduler" in dose/park): AC hall polling folded into the
+bp_drive_window spin loop + a decimated, hard-time-capped AC regulation update between BP drive
+batches — AC counted AND regulated through dose/park; BP dose timing/count authority unchanged.
+Risks tracked: dose accuracy proof, ULP stack headroom, AC service must never stall BP (us cap).
+Run reboot codes for the 8h run: WDT(3) x2 at 00:55/06:28 + PWRON(1) x2 at 00:44/04:44 (04:44 =
+intentional recovery power-cycle; BOD off =&gt; code 1 covers true power-on AND brownout dips — PPK2
+rig was glitchy tonight). Awaiting go-ahead before touching the safety-critical dose path.</p>
+<h2 id="2026-07-14-ulp-1120-ac-serviced-through-bp-dosecoastpark-swr-271-built-not-yet-deployed">2026-07-14 — ULP 1.12.0: AC serviced through BP dose/coast/park (SWR-271) — built, not yet deployed</h2>
+<p>Implemented the owner-approved fix for the residual ~3/h false AC hall warnings + AC open-loop
+windows. Design: (a) ac_busy_hall_service() — exact ac_tick hall semantics (level mirror, 1-&gt;0
+count, CPU wake), called inside EVERY blocking BP spin loop and now SHARED by ac_tick itself
+(dedupe); (b) ac_busy_regulate() — AC Simple-P slice between BP drive windows in DOSING+PARKING:
+every 16th window (~0.8 s), hard 150 ms cap, 8 AC intervals, combined poll counts BP edges into the
+caller's ledger (dose volume accounting EXACT), dose-tail guard (no slice in last 160 edges),
+park slice watches BP hall (never overshoots home), never kicks/adapts-ladder/stall-recovers
+(&lt;2 edges = hold DAC, ac_tick handles stalls after the window); (c) ac_busy_slices telemetry.
+Gates: both binaries build, canary present, no libgcc, op headroom 696 B (baseline 1296; LOW band
+accepted — max call depth UNCHANGED vs regulate_pump chain, canary + firmware per-tick check armed,
+184 B above the 512 fail line; recovered 112 B by count-throttle + ac_tick dedupe + dropping slice
+extremes tracking). Registry 1.64 (138 reqs), SWR-271 + 5 structure tests, make verify 120 PASS /
+0 FAIL (also fixed: stale hub-history kind 'verify'-&gt;'process', SWR-109 anchor moved to the shared
+helper). Mishap contained: a <code>git stash</code> misfire popped an ancient master-era stash into
+fluispotter.py — restored from HEAD, zero loss, old stash left parked. DEPLOY + bench proof (dose
+with AC DAC moving + ac_busy_slices&gt;0 + warnings -&gt;~0) pending board-on-USB.</p>
+<h2 id="2026-07-14-ulp-1120-deployed-swr-271-bench-proven">2026-07-14 — ULP 1.12.0 DEPLOYED + SWR-271 bench-PROVEN</h2>
+<p>Deploy (owner power-cycled to USB): full deploy_ulp.py pipeline — ULP_Op 1.12.0 live (mem32-
+verified), maps regenerated, 3 consumers import clean, ULP health PASS, swap-test PASS with P1
+bracket=385 / P3=401 (the old P1=0 dead-point artifact did NOT recur — chip retry satisfied).
+Bench proof (serial mem32, dose/park-debug modality, no session): AC at SPR 20 + one REAL dose
+(3067 edges) + park. Result: ac_busy_slices 0 -&gt; 18 (AC regulated 18x inside windows that
+previously gave it ZERO service), AC DAC moved through 8 distinct values (3659..3719) DURING
+dose/park, dose EXACT (3070 counted vs 3067 target — +3 = normal coast edges), park found home
+(hall_detected=1), AC hall +1 in ~25 s (SPR-20-correct — and counted through the busy windows).
+Dose duration ~11 s, unchanged. VERDICT PASS. Remaining acceptance signal: next real session's
+AC-hall-warning rate ~3/h -&gt; ~0.</p>
+<h2 id="2026-07-14-1101-incident-rpi-hub-slot-flip-mid-run-board-crash-loop-20-sample-run-truncated-1320">2026-07-14 ~11:01 INCIDENT — RPi hub slot-flip mid-run + board crash loop (20-sample run truncated 13/20)</h2>
+<p>One physical event at ~11:01: the RPi hub REBOOTED INTO ITS FALLBACK/OLD A-B SLOT (evidence: SSH
+host key CHANGED + Sten's July-8 key rejected; no service-version footer (pre-1.1.0); /ui/stream
+404 (no 1.6.0 SSE); hub DB reverted to a ~July-3 snapshot — device row fw 0.1.74, event max uid
+16715819, this morning's verified 16717800+ rows gone). The board's 11:01 sync hit the mid-reboot
+hub -&gt; session crash -&gt; run_safe entered an in-process retry loop whose re-imports executed STALE
+BYTECODE (tracebacks show old line numbers + 'TypeError: unexpected keyword argument ulp_version'
+from a pre-1.2.0 client, while EVERY on-disk file hash-matches the repo — flash-cache/import
+inconsistency, resolved by hard reset). Each retry appended a fake 'boot block' (28x) which
+uploaded into the OLD hub DB (its July-3 high-water was below the board's uids). Recovery: hard
+reset (clean re-import), state.dat/time-table cleared, board parked idle in AWAIT_CALIBRATION.
+HUB NEEDS OWNER: power-cycle the RPi (bootcount fallback usually one-shot; if it boots the old
+slot again the primary is damaged -&gt; SD surgery, full-card backup exists in ~/Downloads).
+RUN RESULT (truncated but decisive): 13/20 samples clean before the hub died, ZERO hall-warnings
+(1.11.0 baseline ~0.5/sample =&gt; ~6.5 expected in 13) — SWR-271 CONFIRMED in-session. 1 WDT(3) at
+10:46 self-recovered (21 s).</p>
+<h2 id="2026-07-16-fw-01111-deployed-wdt-serialization-ulp-self-recovery-reed-wake-stack-instrument">2026-07-16 — fw 0.1.111 DEPLOYED: WDT serialization + ULP self-recovery + reed wake + stack instrument</h2>
+<p>"Do all and deploy" delivered. SWR-274 (WDT): idle_lightsleep refuses machine.lightsleep while
+_syncing + 500 ms post-sync inhibit — targets the single checkpoint where all 3 field WDT(3)s died
+(post-dose sync ∥ flush-cycle nap, #108 INT_WDT mechanism); field proof = WDT rate over coming
+sessions (baseline 4-7%/dose). SWR-275 (self-recovery): _verify_ulp_health now attempts ONE
+in-place recovery (ulp.start(force_bus_recovery=True): unconditional I2C bus clear + DAC safe-off +
+binary reload w/ full .bss zero + SWR-257 liveness) then re-verifies; power-cycle demanded only if
+recovery fails. LIVE-PROVEN on the bench: artificial canary trip (flag=1, ULP ticking) -&gt; recovery
+-&gt; flag=0, ticking, v1.12.0 intact. SWR-272 (amended): reed armed as lightsleep wake source around
+every nap (IRQ_FALLING + wake=SLEEP) — magnet power-off now immediate; physical magnet test =
+owner's hands. Stack low-water instrument: loader pattern-fills top 640 B; first reading 228 B idle
+(static worst chain 480 B of 696 B headroom, measured from the linked ELF — ULP stays 1.12.0;
+telemetry cuts could not have reached the 768 B green line, measured-margin + instrument +
+self-recovery is the safety case). Registry 1.66: 142 reqs, 124 PASS, 0 FAIL. Board redeployed +
+verified FWVER 0.1.111. Also this morning: hub-swap to Mirza's RPi (service 1.6.0 deployed there,
+Sten's key authorized, DB on /data) after the old hub's slot-flip.</p>
+<h2 id="2026-07-16-critical-fix-deployed-fw-01112-ac-pump-ran-at-power-on-swr-276">2026-07-16 — CRITICAL FIX DEPLOYED (fw 0.1.112): AC pump ran at power-on (SWR-276)</h2>
+<p>Owner field fault: magnet removal (power-on) -&gt; AC pump spins immediately. Mechanism: DAC7574 POR =
+zero-scale = FULL POWER in the inverted convention (power = 4095 - register) + motor-enable line
+floating until firmware claims it -&gt; AC ran from power application until the ULP's first tick
+(seconds of boot). Pre-existing gap, first observed with eyes on the pump at power-on; the old
+code SKIPPED the DAC safe-off on PWRON boots (backwards POR-is-safe assumption). Fixes: (1)
+main.py _actuators_safe_off() FIRST — enables 9/17/14/18/8/41 LOW + DAC CH0/CH1 HALT via SoftI2C
+~10 ms into software, before USB probe/imports; (2) pump_regulator.start() safe-off + bus recovery
+UNCONDITIONAL. Registry 1.67 (143 reqs, 125 PASS, 0 FAIL). Deployed + FWVER-verified. ACCEPTANCE =
+owner magnet test: multi-second spin must be gone. RESIDUAL (hardware/electronics scope): ROM
+bootloader + VM init window (~0.5-1.5 s) before main.py runs — needs an enable-line pull-down (or
+driver default-off) to reach true zero; if the pump still twitches sub-second, that is the window.</p>
+<h2 id="2026-07-16-swr-276-field-verification-05-s-residual-software-floor-reached">2026-07-16 — SWR-276 field verification: 0.5 s residual (software floor reached)</h2>
+<p>Owner magnet test on fw 0.1.113: AC power-on run &lt;=0.5 s (was several seconds) — the boot.py
+safe-off works; the residual equals the ROM bootloader + MicroPython VM init window, the floor
+for filesystem-level software. Datasheet v1.6 Table 2-1 refutes the chip-pull hypothesis: GPIO9
+and GPIO17 BOTH float at reset — the asymmetry is board-side (AC driver enable biased ON).
+Next rungs: second-stage bootloader before_init hook (image change via the IMG pipeline,
+~10-50 ms residual, defeats driver-side pull-ups by actively driving low) and/or the hardware
+pull-down (zero exposure, covers dead-ESP case — recommended for shipping units regardless).</p>
+<h2 id="2026-07-16-swr-276-final-field-verification-on-img-4-1-mm-residual-mask-rom-only">2026-07-16 — SWR-276 FINAL field verification on IMG-4: ~1 mm residual (mask-ROM only)</h2>
+<p>Owner magnet test on IMG-4: AC movement at power-on is now ~1 mm — the mask-ROM window
+(~10-50 ms) expressing itself, exactly the predicted residual. The defense-in-depth ladder is
+field-measured end to end: several seconds (bare) -&gt; ~0.5 s (boot.py, fw 0.1.113) -&gt; ~1 mm
+(bootloader hook, IMG-4). Software has reached its physical floor; the queued hardware pull-down
+on the AC driver enable (next HW revision) closes the final window and covers the dead-ESP case.
+Clinical note: the residual twitch occurs at unboxing, before any fluid path exists — inert.</p>
+<h2 id="2026-07-22-rpi-4-vpn-gateway-design-for-remote-access-to-the-work-lan">2026-07-22 — RPi 4 VPN gateway design for remote access to the work LAN</h2>
+<p>Recommended layout: the Pi sits wired on the work LAN running a WireGuard server (UDP 51820
+forwarded on the work router), Mac/iPhone dial in with split-tunnel AllowedIPs covering the
+work subnet; Pi does ip_forward + NAT masquerade so no other device needs route changes.
+Fallback if the site has CGNAT or no router access: Tailscale subnet router (no open ports,
+still WireGuard on the data plane). Full configs delivered in chat; setup can be staged and
+verified at home before deploying the box to work. Execution pending Sten imaging the Pi.</p>
+<h2 id="2026-07-22-paid-options-for-the-vpn-gateway-surveyed">2026-07-22 — Paid options for the VPN gateway surveyed</h2>
+<p>Three shapes: (1) paid software on the Pi = OpenVPN Access Server (free for 2 concurrent
+connections — Mac+iPhone fits — then ~$15/connection/yr, web admin UI); (2) managed overlays
+= Tailscale (Apr-2026 repricing: free up to 6 users, Standard $8/user/mo) and Twingate
+(free to 5 users, Teams ~$10/user/mo) where money buys SSO/ACL-audit/posture, not capability;
+(3) pay-once appliance = Firewalla (~$360-590, no subscription) replacing the DIY Pi.
+Consumer VPNs (NordVPN etc.) are internet-privacy exits, not LAN access. Recommendation:
+free tiers fully cover the solo case; revisit paid only for team/SSO/audit needs.</p>
+<h2 id="2026-07-2223-48-motors-wild-root-caused-fixed-and-landed-on-the-testop-track">2026-07-22/23 — #48 "motors wild" root-caused, fixed, and landed on the TestOp track</h2>
+<p>The wild-motors-after-USB-reboot fault (#48) went from symptom to convicted root cause in one
+night: the ULP is blinded when IDF's rtcio_ll_function_select clears SENS_IOMUX_CLK_EN — the
+register clock shared by ALL 22 RTC pads — globally on any machine.Pin() digital route; every
+ULP rtcio write is then silently lost (encoder blind, enables dead) while all pad registers
+read sane, and the next lightsleep's ext1 prepare re-enables it (self-healing + the pent-up
+full-power landing = "wild"). Convicted by ULP-side capture (dev.0.2 SNAP: clock=0 at the
+failed kick). Fix = ULP re-asserts the clock at the tick top (DEFEND_CLOCK); proven dev.0.3
+3/3 vs an 11/12-blind baseline. Deep-chain call shapes are FORBIDDEN: dev.0.4 canary-tripped
+5/5, dev.0.5 intermittently — a canary-tripped (pump-dead) ULP plus the SWR-258 unbounded
+AC-first wait wedged two sessions at sample 0 (issue #49). dev.0.6 (tick-top only, 556 B)
+then ran the recovery session 6/6 samples to FINISH with 2 self-recovered WDT(3)s whose
+recovery boots — the historical trigger scenario — came up clean. En route: hub 1.14.1
+(dev-version schema 422 outage), fw 0.1.128 pad forensics, 0.1.129 digital-residue retire
+(refuted as trigger by trial), 0.1.130 DEQUE_AUDIT instrumentation. Issues #48/#49/#50 filed.
+Operational roll-in (ULP 1.16.0) is code-ready; blocked on op stack headroom 552 B vs the
+768 B build gate (baseline 1.15.0 was already 568 — pre-existing; -Oz buys zero). Deque
+completeness audit session (Sten's standing ask) armed and running on dev.0.6 + audit=1.</p>
+<h2 id="2026-07-23-afternoonevening-the-53-chase-my-own-fix-convicted-recovery">2026-07-23 (afternoon/evening) — the #53 chase, my own fix convicted, recovery</h2>
+<p>Afternoon: deque stamp fix 0.1.131 acceptance-PASSED live (#51 closed); SWR-295/296 registered
+(owner clock-discipline instructions + hub screenshot); #52 filed (recovery on a year-2000
+clock); all 28 open issues version-stamped; spec 2.29 carried the week's learnings. The battery
+campaign aborted twice: the arming walk kept crossing a WDT(3) fire zone, and every USB unplug
+produced a PWRON brownout (pack flat). A five-firmware experiment ladder (0.1.132-0.1.137:
+boot-loop breaker + quiet-console latch + RTC-word breadcrumbs + power-save move + crumb
+kill-switch) "exonerated" console/USB/PS/crumbs/settings — all confounded: every experiment
+held the DEFEND_CLOCK ULP constant. Owner called it ("you are making things worse"): the week
+histogram showed July 21-22 with ZERO WDT boots and the storm starting the hour the defense
+deployed. Owner-ordered adversarial review confirmed and sharpened the mechanism (SENS register
+holds four live gates; CPU writers run inside interrupts-masked critical sections; the ULP's
+own RTC_CNTL RMW since 1.13.0 exonerates generic bus traffic — the SENS write is the delta)
+and found real extra defects: the deploy manifest never shipped bootstat.py (fresh deploys of
+0.1.133+ = bricks), the 0.1.133 main.py fix was never committed, the PS exoneration was unsound
+(PM_PERFORMANCE is the driver default). Recovery per approved plan: board reverted to op ULP
+1.15.0 → 60-min radio-hot soak ZERO fires (vs one per 1.5-4 min); fw 0.1.138 review fix batch
+deployed (manifest, FINISH power-save, unconditional overflow warning, opt-in crumbs, rate-ref
+guard, console restored); op-1.16.0 DEFEND_CLOCK quarantined as a patch; retractions posted on</p>
+<h1 id="5348-48-redesign-now-radio-soak-gated-cpu-side-trigger-site-re-assert-preferred-en">53/#48; #48 redesign now radio-soak-gated (CPU-side trigger-site re-assert preferred). En</h1>
+<p>route the frozen-main.py discovery (#54, IMG-4 never executes /main.py) and the park_wdt bench
+rule (the recurring mid-transfer port deaths were our own 120 s pre-session WDT). Battery
+campaign blocked on a charged pack + the confirmation soak.</p>
+<h2 id="2026-07-23-swr-295296-clock-first-gates-fw-01139">2026-07-23 (SWR-295/296 clock-first gates — fw 0.1.139)</h2>
+<p>Answered the dev-ULP review (dev.0.1 pad probe → dev.0.2 clock-bit conviction →
+dev.0.3 tick-top fix → dev.0.4 poll-loop trips → dev.0.5 window-entry trips/#49
+→ dev.0.6 final shape, later convicted as the #53 cause; all retired, op 1.15.0
+restored).  Confirmation soak completed at ZERO fires (~100 defense-free min).</p>
+<p>Implemented SWR-295/296 as fw 0.1.139 on the stabilized baseline:
+_clock_first_gate() wraps all four AWAIT_CALIBRATION entries (WiFi→NTP→then
+transition, 30 s visible retry, sane-clock no-op); recovery forces NTP with a
+bounded 120 s awake-retry and goes LOUD at the bound; the session IDLE branch
+parks in _session_clock_wait() while pre-epoch (flush protection alive, 60 s
+retry, sampling deferred, on-demand rejected 409); FINISH heartbeat retries
+NTP.  Tests: TestClockFirstGates (@requirement-tagged) + SWR-280 assertions
+updated; make verify 162 req, 140 PASS / 0 FAIL (295+296 flipped to PASS).
+Commit 501367c, pushed + dev-merged (766b1e9).</p>
+<p>Deployed via catch-REPL (park_wdt first, 1 KB chunks, FNV-verified, .mpy
+purge).  BOOT-PROOF EXCEEDED EXPECTATION: the very first boot came up with a
+pre-epoch clock and the gate fired LIVE — warning event → 'RTC synced via NTP'
+→ gate-success → 'Executing state AWAIT_CALIBRATION', rounds=1, zero
+pre-epoch stamps in the new record (the 520 store-wide are historical).  Hub
+devices row: fw 0.1.139 + op ULP 1.15.0, syncing.  Board at AWAIT_CALIBRATION,
+DEQUE_AUDIT overlay still ON, battery still flat (campaign blocked on owner).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>

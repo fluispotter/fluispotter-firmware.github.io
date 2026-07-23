@@ -10,6 +10,8 @@
       
       
       
+        <link rel="next" href="battery_test_2026-07-18/">
+      
       
       <link rel="icon" href="assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
@@ -255,18 +257,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#development.drive_tape_reel_with_spot_receiver_sync" class="md-nav__link">
+  <a href="#development.sample_tape_receiver_sync" class="md-nav__link">
     <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;drive_tape_reel_with_spot_receiver_sync
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#development.sample_spot_receiver_sync" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;sample_spot_receiver_sync
+      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;sample_tape_receiver_sync
     </span>
   </a>
   
@@ -276,15 +269,6 @@
   <a href="#development.drive_pump_by_revolutions_sync" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;drive_pump_by_revolutions_sync
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#development.drive_pump_by_segmented_revolutions_sync" class="md-nav__link">
-    <span class="md-ellipsis">
-      <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;drive_pump_by_segmented_revolutions_sync
     </span>
   </a>
   
@@ -386,6 +370,206 @@
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="battery_test_2026-07-18/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Battery endurance test — run to power failure (2026-07-16 → 2026-07-18)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="bench_run_2026-07-18_10x2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bench acceptance — 10 samples × 2 spots (dry run), 2026-07-18
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="bench_run_2026-07-19_8h_dry/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8-hour dry run — 1 pre-session sample + 15 triplet samples, 2026-07-19
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ci_release_plan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CI / Release Process Plan — Fluispotter Firmware &amp; Software
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="compacting_log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compacting Log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="multi_mode_ulp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multi Mode ULP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="prompts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    User Prompts Log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="requirements_implementation_map/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Requirements Implementation Map — 2026-07-16 (registry 1.69, 148 requirements)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="summaries/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Summaries
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="wdt_lightsleep_usb_investigation_2026-07-20/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GitHub #46 — WDT(3) at lightsleep entry: investigation record (WON'T FIX)
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -809,128 +993,8 @@ using the provided seperator.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="development.drive_tape_reel_with_spot_receiver_sync" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">drive_tape_reel_with_spot_receiver_sync</span><span class="p">(</span><span class="n">pulses</span><span class="p">,</span> <span class="n">spot_sample_interval_ms</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">indexer_circumference_mm</span><span class="o">=</span><span class="mf">15.5</span><span class="p">,</span> <span class="n">spot_receiver_constants</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">writer</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Run the tape reel for provided number of indexer pulses while
-sampling from the blood spot sensor.</p>
-<p>The spot sensor is sampled every specified interval. Every indexer pulse
-the measured spot sensor values and the calculated distances are written to the
-terminal.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td><code>pulses</code></td>
-            <td>
-                  <code>int</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Number of indexer pulses to run the tape reel (<code>0</code> run forever).</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code>spot_sample_interval_ms</code></td>
-            <td>
-                  <code>int</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>How often to sample the spot sensor in millisconds.</p>
-              </div>
-            </td>
-            <td>
-                  <code>100</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code>indexer_circumference_mm</code></td>
-            <td>
-                  <code>int</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Indexer circumference in millimeters used to calculate the distance
-between spot sensor samples.</p>
-              </div>
-            </td>
-            <td>
-                  <code>15.5</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code>spot_receiver_constants</code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="development.SpotReceiverConstants" href="#development.SpotReceiverConstants">SpotReceiverConstants</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Settings for the spot sensor.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code>writer</code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="development.pretty_print.Table" href="#development.pretty_print.Table">Table</a> | <a class="autorefs autorefs-internal" title="development.pretty_print.CSV" href="#development.pretty_print.CSV">CSV</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The formatter for writting the output.
-If none specified <a class="autorefs autorefs-internal" href="#development.pretty_print.Table">Table</a> is used.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-<details class="example" open>
-  <summary>Example</summary>
-  <p>Run the tape reel with custom spot sensor constants and CSV format.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">development</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="n">drive_tape_reel_with_spot_receiver_sync</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">writer</span><span class="o">=</span><span class="n">CSV</span><span class="p">(),</span> <span class="n">spot_receiver_constants</span><span class="o">=</span><span class="n">SpotReceiverConstants</span><span class="p">(</span>
-    <span class="n">CONFIGURATION_INTEGRATION_TIME_100MS</span><span class="p">,</span>
-    <span class="n">CONFIGURATION_GAIN_NORMAL</span><span class="p">,</span>
-    <span class="n">CONFIGURATION_DG_NORMAL</span><span class="p">,</span>
-    <span class="n">CONFIGURATION_SENSITIVITY_LOW</span><span class="p">))</span>
-</code></pre></div>
-</details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="development.sample_spot_receiver_sync" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">sample_spot_receiver_sync</span><span class="p">(</span><span class="n">spot_sample_interval_ms</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">spot_receiver_constants</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">writer</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+<h3 id="development.sample_tape_receiver_sync" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">sample_tape_receiver_sync</span><span class="p">(</span><span class="n">tape_receiver</span><span class="p">,</span> <span class="n">sample_interval_ms</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">receiver_constants</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">writer</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 </h3>
 
@@ -953,7 +1017,7 @@ If none specified <a class="autorefs autorefs-internal" href="#development.prett
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code>spot_sample_interval_ms</code></td>
+            <td><code>sample_interval_ms</code></td>
             <td>
                   <code>int</code>
             </td>
@@ -967,7 +1031,7 @@ If none specified <a class="autorefs autorefs-internal" href="#development.prett
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code>spot_receiver_constants</code></td>
+            <td><code>receiver_constants</code></td>
             <td>
                   <code><a class="autorefs autorefs-internal" title="development.SpotReceiverConstants" href="#development.SpotReceiverConstants">SpotReceiverConstants</a></code>
             </td>
@@ -1003,7 +1067,8 @@ If none specified <a class="autorefs autorefs-internal" href="#development.prett
   <summary>Example</summary>
   <p>Sample the spot sensor and print with CSV format.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">development</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="n">sample_spot_receiver_sync</span><span class="p">(</span><span class="n">spot_sample_interval_ms</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">writer</span><span class="o">=</span><span class="n">CSV</span><span class="p">())</span>
+<span class="n">controller</span> <span class="o">=</span> <span class="n">create_controller</span><span class="p">()</span>
+<span class="n">sample_tape_receiver_sync</span><span class="p">(</span><span class="n">controller</span><span class="o">.</span><span class="n">tape_receivers</span><span class="o">.</span><span class="n">spot</span><span class="p">,</span> <span class="n">sample_interval_ms</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">writer</span><span class="o">=</span><span class="n">CSV</span><span class="p">())</span>
 </code></pre></div>
 </details>
     </div>
@@ -1090,131 +1155,6 @@ are counted using the Hall switch.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">development</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="n">controller</span> <span class="o">=</span> <span class="n">create_controller</span><span class="p">()</span>
 <span class="n">drive_pump_by_revolutions_sync</span><span class="p">(</span><span class="n">controller</span><span class="o">.</span><span class="n">blood_pump</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">PIDConstants</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">1600</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
-</code></pre></div>
-</details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="development.drive_pump_by_segmented_revolutions_sync" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <code class="highlight language-python"><span class="n">drive_pump_by_segmented_revolutions_sync</span><span class="p">(</span><span class="n">pump</span><span class="p">,</span> <span class="n">revolutions</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">pid_constants</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
-
-</h3>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Run the pump for provided number of revolutions while outputting motor statistics
-every segment covered.</p>
-<p>The pump is first calibrated and parked. Then started and run for
-specified number of revolutions using a PID controller.</p>
-<p>If <code>segments</code> is an integer, each revolution is split into
-provided number of segments and for each segment relevant statistics are printed to
-the terminal. The segments are counted using motor encoder pulses while whole revolutions
-are counted using the Hall switch.</p>
-<p>Otherwise <code>segments</code> can be a list of tuples each containing a start and end position in degrees
-and PID settings for that segment. The first segment must start with 0 (park position) and the last
-end with 360. The PID internals are preserved after exiting a segment and restored when entering
-the same segment again.</p>
-
-
-<p><span class="doc-section-title">Parameters:</span></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Default</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr class="doc-section-item">
-            <td><code>pump</code></td>
-            <td>
-                  <code><span title="fluispotter.PumpMotor">PumpMotor</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Pump motor instance.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code>revolutions</code></td>
-            <td>
-                  <code>int</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Number of revolutions to run the pump (<code>0</code> run forever).</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code>segments</code></td>
-            <td>
-                  <code>int | list[tuple[int, int, <a class="autorefs autorefs-internal" title="development.PIDConstants" href="#development.PIDConstants">PIDConstants</a>]]</code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Number of segments in a
-revolution or a list of tuples containing segment start degrees, end degrees and PID settings.</p>
-              </div>
-            </td>
-            <td>
-                <em>required</em>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code>pid_constants</code></td>
-            <td>
-                  <code><a class="autorefs autorefs-internal" title="development.PIDConstants" href="#development.PIDConstants">PIDConstants</a></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>Settings for the PID controller.
-Only applicable if <code>segments</code> is a number.</p>
-              </div>
-            </td>
-            <td>
-                  <code>None</code>
-            </td>
-          </tr>
-      </tbody>
-    </table>
-
-
-<details class="example" open>
-  <summary>Example</summary>
-  <p>Create a controller and run the blood pump for 4 revolutions splitting each
-revolution into 2 segments.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">development</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="n">controller</span> <span class="o">=</span> <span class="n">create_controller</span><span class="p">()</span>
-<span class="n">drive_pump_by_segmented_revolutions_sync</span><span class="p">(</span><span class="n">controller</span><span class="o">.</span><span class="n">blood_pump</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">PIDConstants</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">1600</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
-</code></pre></div>
-</details>
-
-<details class="example" open>
-  <summary>Example</summary>
-  <p>Create a controller and run the blood pump for 4 revolutions splitting each
-revolution into the 3 explicitly provided segments.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">development</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="n">controller</span> <span class="o">=</span> <span class="n">create_controller</span><span class="p">()</span>
-<span class="n">drive_pump_by_segmented_revolutions_sync</span><span class="p">(</span><span class="n">controller</span><span class="o">.</span><span class="n">blood_pump</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">[</span>
-    <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="n">PIDConstants</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">1600</span><span class="p">,</span> <span class="mi">25</span><span class="p">)),</span>
-    <span class="p">(</span><span class="mi">90</span><span class="p">,</span> <span class="mi">270</span><span class="p">,</span> <span class="n">PIDConstants</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1800</span><span class="p">,</span> <span class="mi">25</span><span class="p">)),</span>
-    <span class="p">(</span><span class="mi">270</span><span class="p">,</span> <span class="mi">360</span><span class="p">,</span> <span class="n">PIDConstants</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">1600</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
-<span class="p">])</span>
 </code></pre></div>
 </details>
     </div>

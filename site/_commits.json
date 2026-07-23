@@ -1,0 +1,1802 @@
+[
+{
+"hash": "1a223ec25425811ec93bc6979262850ce12ce896",
+"date": "2026-07-23",
+"subject": "Merge: SWR-298 + true-green verification fixes",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "f1d5a52e1a416be4749b49c6acc9531330728ca0",
+"date": "2026-07-23",
+"subject": "SWR-298 registered + true-green verification (stale assertions + spec table fixed)",
+"body": "- NEW SWR-298 (Open, owner instruction 2026-07-23): the hub-reported AC\n  revolutions counter baselines at AC Bag Punctured (per-bag usage, not\n  since-boot).  DOC 1.92; implementation is a separate step.\n- Two stale test assertions fixed (they never gated make verify locally\n  because only the exit code carries plain unittest failures, and my\n  piped greps masked it): enable_power_save count 2->3 (0.1.138 added\n  FINISH arming), 'if _audit:' count 3->2 (0.1.138 made the ring\n  OVERFLOW warning unconditional per SWR-289).\n- Spec doc 2.29: document-control table Version cell still said 2.28\n  (cover said 2.29) — fixed + docx regenerated; SWR-509 flips to PASS.\n\nmake verify: exit 0 (unmasked), 163 requirements, 142 PASS / 0 FAIL.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "505f74b7e2866d0c46d47aa610507e160eb10dbb",
+"date": "2026-07-23",
+"subject": "Merge: fw 0.1.141 lint-green + self-refreshing docs site + CI runner fix",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "ee53c67d5b618d2b11d724a1476e679405f89b18",
+"date": "2026-07-23",
+"subject": "fw 0.1.141 + docs-site pipeline: lint green, CI runner fix, self-refreshing project site",
+"body": "Owner report 2026-07-23: the published documentation site showed stale\nhistory / CI status / git commits.  Root causes: (a) documentation.yml\npublishes only on master pushes (last: June 17) and BOTH June-17 runs\ndied in the Pages deploy ('git remote rm origin' exit 128 under\nforce_orphan); (b) the site's _commits.json was a June-12 one-off\nsnapshot with no refresh step; (c) no status data existed at all.\n\nSite pipeline:\n- NEW docs/site/_refresh_data.py: regenerates _commits.json (300 commits)\n  + _status.json (fw/ULP/hub versions, requirements registry, CI snapshot\n  via gh, latest commit) from the live repo.\n- _build_site.py renders a Project-status card on the index (versions,\n  registry, per-workflow CI badges, snapshot stamp + live Actions link).\n- documentation.yml: publishes from dev AND master + workflow_dispatch;\n  fetch-depth 0; refresh step before mkdocs; force_orphan dropped (the\n  June-17 failure); permissions narrowed to read.\n\nCI green work (dev was red on 3 jobs, no green run in 30):\n- lint: .flake8 house-style codes extended (E114/E116/E203, documented);\n  real fixes: dead in-function 'import select, sys' (F811/F823) +\n  atomic_file 'sys' (F401), E741 'l' renames, F841 removals, noqa E402 on\n  the design-mandated pre-import bootstat guard.  fw bumped 0.1.141\n  (behavior-neutral; board redeploy optional).\n- SW suite: SWR-297 gate guards moved from setUpClass SkipTest to class\n  skip decorators — a setUpClass SkipTest yields _ErrorHolder and crashed\n  verification/run on CI; core.py now tolerates ErrorHolder entries.\n- ULP job stays red on the KNOWN open owner decision (operational\n  headroom 568 B < 768 B gate) — untouched.\n\nmake verify: 163 requirements, 141 PASS / 0 FAIL.  make lint: green.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "611cfc0bd5e581d4aae8644e8353d520d817c691",
+"date": "2026-07-23",
+"subject": "Merge: fw 0.1.140 hub-contract fix + SWR-297 gate",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "6db61c91e745b312346467c5c8f2c756a6315a4e",
+"date": "2026-07-23",
+"subject": "fw 0.1.140 + SWR-297: hub-contract fix (negative file_system_free 422) + compatibility gate",
+"body": "Battery-run arm outage 2026-07-23: littlefs transiently overcounts used\nblocks during write bursts, statvfs bfree goes NEGATIVE, and the hub's\n(correctly strict) Range(min=0) 422'd every full sync at AWAIT_SESSION.\nConviction via new hub middleware field-detail logging:\n{'file_system_free': ['Must be greater than or equal to 0.']}.\n\n- fluispotter.py: clamp max(0, bsize*bfree) at both statvfs consumers\n  (sync payload + FAULT event).\n- NEW SWR-297 (owner instruction: \"Make a check in future that ensures\n  that hub and fw signals are compatible\"): TestHubFirmwareSyncContract\n  imports the hub's own DeviceRequestSchema from the submodule\n  (production marshmallow 3.23.1) and validates firmware-shaped payloads\n  incl. edges, plus proves the drift classes stay rejected (negative\n  free, non-triplet version, unknown fields).  DOC 1.91.\n- submodule -> hub 1.14.3 (commits 8b080c3 retroactive 1.14.1/1.14.2 +\n  c9aaf8f permanent 422-detail logging), deployed live.\n\nmake verify: 163 requirements, 141 PASS / 0 FAIL.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "003ea49b054ff1a143436c3f16600ae18e9e16b1",
+"date": "2026-07-23",
+"subject": "Merge: summaries for fw 0.1.139",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "fcc6266c43091dbd7d910caaebc8d61c7b416284",
+"date": "2026-07-23",
+"subject": "docs: summaries — dev-ULP review + fw 0.1.139 SWR-295/296 delivery",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "766b1e99701a8f7115e8b49b3a44f0e2b32a9b8a",
+"date": "2026-07-23",
+"subject": "Merge rebuild/v1.25-int-wdt: fw 0.1.139 SWR-295/296 clock-first gates",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "501367c317d87b68b889278713ef002baa1dbacb",
+"date": "2026-07-23",
+"subject": "fw 0.1.139: SWR-295/296 clock-first gates — no pre-epoch scheduling or AWAIT_CALIBRATION entry",
+"body": "SWR-296: _clock_first_gate() forces WiFi->NTP before every\nAWAIT_CALIBRATION transition (all four entry points wrapped); visible\nbounded retry (30 s rounds), no-op on a sane clock; only the\nBoot/INITIAL chain may carry pre-epoch stamps.\n\nSWR-295: recovery forces NTP with a bounded 120 s awake-retry before\nschedule resume and goes LOUD at the bound; the session IDLE branch\nparks in _session_clock_wait() while the RTC is pre-epoch (flush\nprotection alive, 60 s WiFi+NTP cadence, sampling deferred, on-demand\nrejected); the FINISH heartbeat retries NTP while unsynced.\n\nTests: TestClockFirstGates (3 tests, @requirement-tagged) + SWR-280\nguard assertions updated for the widened on-demand condition.\nmake verify: 162 requirements, 140 PASS / 0 FAIL (295/296 now PASS).\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "7204c8344579173572ec0c8b8ad3009f36119026",
+"date": "2026-07-23",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "11abe30994117d00d0c14c7409c74539f0f3fdf3",
+"date": "2026-07-23",
+"subject": "docs: prompts 225-238 + 2026-07-23 afternoon/evening summary",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "e9e6a899937aeca9cf92720d50bf34d349609450",
+"date": "2026-07-23",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "c2aadc62c974f6b75ec7e89d4140d744dd49c504",
+"date": "2026-07-23",
+"subject": "fw 0.1.138: adversarial-review fix batch (owner-ordered review)",
+"body": "- Deploy manifest ships /bootstat.py (finding 2: fresh deploys of\n  fw >= 0.1.133 were ImportError bricks; bench worked only via catch-boot).\n- main.py 0.1.133 top-level-import fix finally COMMITTED (was tree-only).\n- Ring-overflow WARNING unconditional (finding 9, SWR-289 completeness).\n- Power-save armed at FINISH entry (finding 4: recovery-into-FINISH gap;\n  SWR-242 now structural on every napping path).\n- Crumb stamping opt-in via /crumbs_on (finding 7).\n- Rate-calibration reference re-anchors on RTC backward step (finding 10a).\n\nRETRACTIONS per review: the 0.1.136 power-save exoneration was unsound\n(PM_PERFORMANCE == driver default; experiment changed nothing — finding 3);\ncrumbs-as-prime-suspect demoted (finding 6).  Root cause per finding 1 +\nweek histogram + live soak: DEFEND_CLOCK's 1 kHz SENS RMW (four live gates,\nCPU writers under interrupts-masked critical sections; ULP RTC_CNTL RMW\nsince 1.13.0 exonerates generic ULP bus traffic).  op ULP 1.16.0\nQUARANTINED (patch in scratchpad only).\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "4f795535323e2a7c316c60c4ffa0e64e92532b1a",
+"date": "2026-07-23",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "87fc4a95d4e2de500363dc886d7ffc110932a396",
+"date": "2026-07-23",
+"subject": "fw 0.1.137: #53 experiment 2 — /crumbs_off kill-switch (instrument self-suspicion)",
+"body": "0.1.136 fired with power-save OFF and console QUIET (crumb 15, sync POST;\n4th distinct victim line) — both exonerated.  New prime suspect: the\nper-poll crumb stamps themselves — CPU mem32 RTC-slow writes contending on\nthe RTC APB with the ULP's 1 kHz DEFEND_CLOCK RMW; a wedged transaction\nstalls the CPU interrupts-masked = the 1 s INT_WDT signature.  Timeline\nfits (morning hours clean pre-live-crumbs).  /crumbs_off makes crumb() a\nno-op; boot_update's 1/boot writes remain.  Original pre-instrument loop\nstays separately open (possible second mode).\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "e237e06d568550c0a2a5be9b6708f3c7e057b347",
+"date": "2026-07-23",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "be8b22d87a813f19a9181d4203bfbda3a9c3258d",
+"date": "2026-07-23",
+"subject": "fw 0.1.136: #53 one-variable experiment — no pre-session WiFi power-save + refined crumbs",
+"body": "Two reproducible fires with working streak storage: crumb 24 (idle sleep)\nand crumb 13 (inside the 1 Hz GET) — different victim lines, one killer\nbelow Python.  nginx trail forensics: reset arrives SECONDS after the last\nhealthy poll => the image's 1 s INT_WDT (hard interrupts-masked lockup),\nnot our 120 s floor.  Also fired ON USB — the USB-immunity assumption is\ndead.  Prime ingredient: STA power-save, armed at acquire where it buys\nnothing.  Now armed ONLY at session-loop entry + recovery path (SWR-242\ncontract intact: power-save exists for in-session nap association).\nCrumbs: 24/25 split, post-command sync bracketed 26/27, idle sleep = 28.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "96f2c5f392e12243cd675ce172c9d8ebb0643f19",
+"date": "2026-07-23",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "cf07eda2a3b41b7e08db107150aac8f091ba5b1c",
+"date": "2026-07-23",
+"subject": "fw 0.1.135: #53 storage fix — bootstat on raw RTC slow-mem words",
+"body": "Round-3 live data (WDT boots pinned at streak 1 / crumb 0) proved the\nmachine.RTC().memory() blob dies between boots: the fork invalidates its\nuser-mem header at VM init (ULP 8 KB reserve overlap).  bootstat now uses\nthree raw words in the top 16 B of RTC slow memory — above the ULP stack\npointer start, outside the image/.bss/pattern-fill, outside mpy management;\nthe same persistence class as ULP .data (proven across WDT+machine.reset).\ncrumb() becomes a single RTC-RAM word RMW.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "03cbe7d7f42d7f764652ee1902d1fb857b00e9ee",
+"date": "2026-07-23",
+"subject": "Spec 2.29: learnings 2026-07-20..23 entered (owner instruction)",
+"body": "§5.5 #48 clock defense; NEW §5.6.3 deque integrity (registration proof,\nstamp fixes, sampled_at = entered the catheter at the tip); §7.5 watchdog\nmodel corrected (stale no-WDT text replaced) + clock-first ordering +\nNEW §7.5a boot-loop breaker/quiet latch/breadcrumbs; §7.8 CRITICAL #54\nfrozen-main warning; §8.y design log + session-log row.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "3b723359b22bee5bbd7f619e2fec3a6383af15fe",
+"date": "2026-07-23",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "aeae8bca5fa615e67546ae6d449f54d1c0c18195",
+"date": "2026-07-23",
+"subject": "fw 0.1.134: #53/#54 entry-point fix — boot_update runs from fluispotter.py (frozen main.py finding)",
+"body": "DECISIVE: the IMG-4 runtime image freezes its own main.py; /main.py never\nexecutes (proven: firmware boots identically with it renamed away).  All\n/main.py edits since 2026-07-16 were dead code, including the 0.1.132/133\nbreaker.  boot_update now runs at fluispotter.py module level with an\nidempotent guard.  Also proven: RTC user memory persists across\nmachine.reset but a full boot wipes it (suspected overlap with the ULP\nslow-mem region at reload) — tolerated, since per-poll crumbs rewrite the\nblob; machine.reset() reads HARD(2) on this fork.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "5bed3d8a87bb7db2d3b0480add212678f0142b49",
+"date": "2026-07-23",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "e17e11d4b82b537d5976e59bfa6512a515c544b9",
+"date": "2026-07-23",
+"subject": "SWR-296 (owner instruction): AWAIT_CALIBRATION requires completed NTP sync — clock-first boot ordering",
+"body": "DOC 1.90. Owner: 'Device should not go into Await Calibration before NTP\nsync' + hub screenshot showing 'Executing state AWAIT_CALIBRATION' stamped\n2000-01-01 while the NTP sync landed seconds later. Boot-side sibling of\nSWR-295; implementation lands with the #52/#53 clock-ordering firmware.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "ab41d059a7f63487ef99fe564e2da67401aa5d1d",
+"date": "2026-07-23",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "ada1cc3b7d5f1292625d1fae2b7063de79077506",
+"date": "2026-07-23",
+"subject": "fw 0.1.133: #53 instrument repair — bootstat to top level, guard no longer silent",
+"body": "0.1.132's `from fluispotter import bootstat` in main.py ran the package\n__init__, which imports the entire 260 KB .fluispotter module at boot\nline 1; the swallowed failure left the breaker/breadcrumb INERT (live\nproof on the hub: WDT boot with crumb 0 / wdt_streak 0 —\nself-contradictory).  bootstat.py is now a top-level module (os+machine\ndeps only), main.py does `import bootstat`, and any failure writes\n/bootstat_err.txt instead of vanishing.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "2a10b008f88b163a5441a0ccab550289bbe0156a",
+"date": "2026-07-23",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "97caa055e2724f4cb680a2f06668974efbf4cf1e",
+"date": "2026-07-23",
+"subject": "fw 0.1.132: #53 bundle — WDT-boot-loop breaker + quiet-console latch + breadcrumb",
+"body": "Battery AWAIT_CALIBRATION boot loop (WDT(3) every 1.5-4 min): death\nbracketed to _wait_for_command_with_blink; the armed watchdog is the 120 s\npre-session floor, so each death is a 120+ s asyncio freeze — the\ndocumented fast-or-never-return CDC write regime is the lead suspect and\nis invisible to serial_sink's measure-and-latch.\n\n- NEW fluispotter/bootstat.py: RTC-memory streak/crumb protocol (survives\n  WDT/soft reset), quiet-latch engage at >= 3 consecutive WDT boots.\n- main.py: boot_update() immediately after actuator safe-off, before any\n  console write can freeze the boot.\n- serial_sink: born latched when /console_quiet exists; write bracketed\n  crumbs 11/12 (a WDT boot reporting crumb 11 died inside a CDC write).\n- fluispotter: poll-loop death bracket fully stamped (10/13-18/23-24),\n  scan/connect 19-22; Boot event carries crumb + wdt_streak; loud warning\n  event whenever the quiet latch is active.\n\nHealthy-board behavior identical to 0.1.131 (passive stamps; latch only\nengages in the failure pattern). verify 139 PASS / 0 FAIL / 296 tests.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "d383e8b4c73b0fb76b59ec738389fa998ba8157f",
+"date": "2026-07-23",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "0a67cb63c8cb9eb2a7804b5eba61edbb194c9a66",
+"date": "2026-07-23",
+"subject": "SWR-295 (owner instruction): year-2000 RTC forces immediate hub time sync in every state",
+"body": "DOC 1.89 + CHANGE_HISTORY row. Motivated by the live 2026-07-23 #52\nincident: mid-session WDT recovery resumed on a 2000-01-01 clock, samples\nread +26 years away, session silently flush-napped while event sync worked\n— the SWR-237/256 self-heal never fired in-session. New requirement makes\nthe heal mandatory, immediate, state-independent and loud; recovery must\nnot schedule against a pre-build-epoch clock. Open (unlocked), no-drift\nbaseline OK; verify 161 reqs / 139 PASS / 0 FAIL.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "816686fa890bdc8c69364a69690bc20aa7126204",
+"date": "2026-07-23",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "338ad3d447270823b3f0e9c22f7c39dd1f86c88f",
+"date": "2026-07-23",
+"subject": "fw 0.1.131: deque stamp fix — wrap clamp, rate hygiene, seeded rate (#51)",
+"body": "Audit verdict (70/70 crossings registered, stamps corrupt in 3 modes):\n- Mode 2: half-range clamp (delta > 0x80000000 -> stamp at poll time).\n  Closure: observed 105,703,256 ms == 2^32/40.617 exactly.\n- Mode 3: calibration moved after the batch, gated on clamp-free, reference\n  reset on clamp (kills the undershoot AND the stored-ref overshoot echo);\n  band tightened 30-400 -> 110-170 ticks/ms (RC_SLOW nominal 136 +/-25%).\n- Mode 1: rate seeds at 136.0 so first post-boot/recovery batch back-dates\n  within clock tolerance; -1 sentinel retired.\nDEQUE_AUDIT batch events carry the per-batch clamped count.\nNo ULP change; SWR-289 contract unchanged; verify 139 PASS / 0 FAIL.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "266e1bdca69075fd3d2fb073620db4bfa175753c",
+"date": "2026-07-23",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "d3d7a1801693930e1652f0f4ae6d0752fc16b60d",
+"date": "2026-07-23",
+"subject": "CI: skip hub-client structure tests when the submodule is absent",
+"body": "SWR-281/286 tests read lib/synchronize-service/.../client/http.py directly;\nCI checks out no submodules (SSH URLs, no credentials) so both errored with\nFileNotFoundError on every dev run since 2026-07-20. Same loud-skip pattern\nas the existing SWR-261 guard — local make verify still enforces them\n(139 PASS / 0 FAIL with the submodule present).\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "7a40777a12f914de99d3658a3c7905cc705eb173",
+"date": "2026-07-23",
+"subject": "docs: prompts 193-224, #48 night summary, compaction log entry",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "1101e682dad712cc6247702b9ee275e185256330",
+"date": "2026-07-23",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "6475f9d509fac350514008e721ee3d9602822156",
+"date": "2026-07-23",
+"subject": "ULP TestOp dev.0.6: #48 defense final shape — tick-top only (dev.0.3 profile)",
+"body": "Every variant calling DEFEND_CLOCK from the deep chain was stack-unsafe:\ndev.0.4 (per iteration) tripped 5/5 overnight; dev.0.5 (window entries +\nwrite sites) tripped intermittently and wedged two sessions at sample 0\n(pump-dead ULP + the SWR-258 AC-first wait hangs the CPU silently —\nunbounded-wait bug filed separately).  Mechanism: a call added to\nleaf-optimized functions forces +16 B frames at max depth, invisible to\nthe static headroom number.  dev.0.6 = tick-top call only, 556 B\nheadroom, the accepted mid-window residual documented in #48.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "ca5bf56a5cb71bb15cbed6f410fd906814aff205",
+"date": "2026-07-23",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "73933730c26db359baeddfc0c3c2203001433c77",
+"date": "2026-07-23",
+"subject": "fw 0.1.130 + ULP dev.0.5: deque completeness audit + sustainable clock defense",
+"body": "DEQUE_AUDIT overlay tunable (default 0): per-entry events (raw tick,\ndelta_ms, stamp), per-batch completeness line (ring head vs ULP\nbp_hall_revolutions vs CPU consumed vs deque len), and a WARNING when\nthe ring-overflow cap silently drops crossings (>9 revs between polls\n— silent-loss site #1, found by inspection; the filed tick->wall\nunderflow shows as far-past stamps in the per-entry events).\nULP dev.0.5: DEFEND_CLOCK at window ENTRY only — dev.0.4's\nper-iteration calls canary-tripped 5/5 overnight recovery boots (RTC\nAPB hammering; fw safety net refused resume, zero motor events).\nHeadroom 532 B (fail line 512); verify 139 PASS / 0 FAIL.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "a2bd9d6a34a4be20a798397c1dc828f9f4fc65e2",
+"date": "2026-07-23",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "e138a8998741f129db263de1e05afeb4b9ba917f",
+"date": "2026-07-23",
+"subject": "fw 0.1.130 + ULP dev.0.5: deque completeness audit + sustainable clock defense",
+"body": "DEQUE_AUDIT overlay tunable (default 0): per-entry events (raw tick,\ndelta_ms, stamp), per-batch completeness line (ring head vs ULP\nbp_hall_revolutions vs CPU consumed vs deque len), and a WARNING when\nthe ring-overflow cap silently drops crossings (>9 revs between polls\n— silent-loss site #1, found by inspection; the filed tick->wall\nunderflow shows as far-past stamps in the per-entry events).\nULP dev.0.5: DEFEND_CLOCK at window ENTRY only — dev.0.4's\nper-iteration calls canary-tripped 5/5 overnight recovery boots (RTC\nAPB hammering; fw safety net refused resume, zero motor events).\nHeadroom 532 B (fail line 512); verify 139 PASS / 0 FAIL.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "16f3f266f9702dc911a6e0bf2cb68d2921b84a70",
+"date": "2026-07-23",
+"subject": "ULP TestOp dev.0.4: #48 completion — DEFEND_CLOCK() six-site coverage",
+"body": "Frameless-leaf defend_clock() (zero added worst-case stack, ~14 B body,\n4 B/site) called at: tick top, try_kick_start entry, regulate_pump's\nenable writes, and EVERY iteration of the three busy-poll loops\n(sample window, dose/park drive window, AC slice).  A CPU clock gate\nnow costs microseconds anywhere — including mid-DOSE, closing the\nedge-accounting exposure.  dev.0.2 snap capture retired (conviction\ncomplete: SNAP 0xa0000000); its bytes buy the margin: headroom 524 B\n(fail line 512).  Trial-2 residual class (single-step kick on a\nmid-window gate) should now vanish entirely.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "dbf79094eda5445c1fee663a75ea1b6d3e44de02",
+"date": "2026-07-23",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "0b8f34173754b8506002a982baff9602a6b9aa74",
+"date": "2026-07-22",
+"subject": "ULP TestOp dev.0.3: #48 FIX — ULP defends its own RTC pad register clock",
+"body": "SET_PERI_REG_MASK(SENS_SAR_PERI_CLK_GATE_CONF_REG, SENS_IOMUX_CLK_EN)\nat the top of every 1 ms tick: any CPU-side gating (machine.Pin /\nrtc_gpio_deinit clears the clock GLOBALLY for all 22 RTC pads) now\nheals within one tick.  Conviction: dev.0.2 SNAP 0xa0000000 — clock\nread 0 at the failed kick, measured by the ULP at the failure instant.\nPump-pad ownership enforced at silicon level (owner principle: pumps\nentirely under ULP control).  Capture word stays armed for the trials;\npump-identity bit dropped to hold headroom at 524 B (fail line 512).\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "dd1223dce1f4088c408d69039bdd3f9f6ebaebb3",
+"date": "2026-07-22",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "9a67a64fab551df44c2c52bd08fc6bd6a8ca1d12",
+"date": "2026-07-22",
+"subject": "ULP TestOp dev.0.2: #48 clock-gate conviction probe",
+"body": "Workflow-verified mechanism: SENS.sar_peri_clk_gate_conf.iomux_clk_en\n(0x60008904 bit31) is the register clock SHARED by all 22 RTC pads;\nIDF's rtcio_ll_function_select clears it GLOBALLY when any pin routes\nto digital (machine.Pin -> rtc_gpio_deinit), and the next lightsleep's\nEXT1 prepare re-enables it (= the self-healing).  Gated clock = every\nULP pad write silently lost.\ndev.0.2 latches ONE word at the first failed kick: 0xA0|pump + bit3 =\nSENS_IOMUX_CLK_EN at that instant (0 = GATED = conviction).  dev.0.1's\npad-readback + counter dropped: headroom 524 B (fail line 512; dev.0.1\nsat at 480 and canary-tripped, blocking session resume).\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "90987e1a71b8dbd348ccff43246c32f9c00b9b18",
+"date": "2026-07-22",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "d5c800caa26ad7b8192401a1af757995de2f0f44",
+"date": "2026-07-22",
+"subject": "fw 0.1.129: #48 candidate trigger fix — retire digital pad claims on ULP pins",
+"body": "The 2026-07-16 safe-off (machine.Pin(N, OUT) on 9/14/17/18 — stays,\nit closes the power-on window) leaves dig_oe + IO_MUX SLP_SEL armed;\nSLP_SEL re-configures the pad on EVERY CPU lightsleep while the ULP\ndrives the pumps through those sleeps.  Forensic FAULTs 16739704/10\nshow both bits set during the transient encoder-blind episodes.\nAfter ulp.start(): GPIO_ENABLE_W1TC + clear SLP_SEL on the four pads.\nPre-declared reading: 3 consecutive clean USB reboots = confirmed\n(prior rate 8/9); any blind episode = pivot to sleep-state capture.\nverify 160 reqs, 139 PASS / 0 FAIL; locks clean.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "5366fc006c8543d1f173804fed6dbba72c420fe2",
+"date": "2026-07-22",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "395a0ebd8cbc63aa9f30a33887937241a1bd8057",
+"date": "2026-07-22",
+"subject": "HUBR DOC 1.16: HUBR-308 admits the dev ULP series (hub 1.14.1 outage fix)",
+"body": "fw 0.1.127+ reports TestOp ULPs as dev.MINOR.PATCH (owner naming); the\nhub's numeric-only ulp_version regex 422'd every synchronize POST from\nsuch a board — ~90 min of total event-sync loss on the bench 2026-07-22,\ndiagnosed from the device's local event store.  Service 1.14.1 (commit\n92e1cbb, deployed + restart-verified) accepts both series; verification\nwidened to absent/1.13.0/dev.0.1 -> 200.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "9b66dcd6cd73fdfb762ffed283aea3000de40102",
+"date": "2026-07-22",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "b806c27146d565dc9a4e751c7ec61a52d9197dfc",
+"date": "2026-07-22",
+"subject": "fw 0.1.128: #48 pad forensics in every FAULT event",
+"body": "Raw ESP32-S3 pad-config words for the encoder-ENABLE pins (AC GPIO14,\nBP GPIO18) captured at fault time: RTC_CNTL_PAD_HOLD, RTCIO pad words\n(MUX_SEL = RTC mux ownership), IO_MUX words, digital GPIO_ENABLE/IN.\nAnswers WHY the enable pad reads LOW while the ULP writes HIGH (dev.0.1\nprobe, SNAP 0xa1000000): hold latched -> release-at-boot fix; MUX stolen\n-> digital matrix theft; sane -> dig deeper.  Hub-visible, reboot-proof.\nHost decoder: output/decode_pad_forensics.py (self-tested).\nAddresses verified against esp-idf esp32s3 soc headers.\nverify 160 reqs, 139 PASS / 0 FAIL; locks clean.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "b0419c254af699dcf48de7755796dbb6d401068a",
+"date": "2026-07-22",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "cdcac4db68fd5a20d5578a24ea8d9bd6e236c5ea",
+"date": "2026-07-22",
+"subject": "fw 0.1.127: DEV ULP version series 'dev.MINOR.PATCH' (owner naming)",
+"body": "Wire MAJOR 9 encodes the 'dev.' prefix; ulp_version_str() renders it in\nevery human-visible field (telemetry, sync body, FAULT event, verified-\nhealthy event).  Deployed probe build now reads 'dev.0.1' everywhere.\nFixes the reporting hole the old major==1-only sync gate created: a\nTestOp board sent NO ulp_version at all (hub em-dash).  An operational\nboard can never render 'dev.' — seeing it means a bench build.\nStructure test: renderer + all four sites routed, no raw renders left.\nverify 160 reqs, 139 PASS / 0 FAIL; locks clean.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "70f785913479c786fc0bb00c0348fca6df331b53",
+"date": "2026-07-22",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "4c4a28f1b966746e703b1d6e2fd4d9076143baca",
+"date": "2026-07-22",
+"subject": "ULP TestOp DEV track (9.0.1) + fw 0.1.126: encoder-blind probe, op binary frozen",
+"body": "Owner instruction: iterate on the ULP WITHOUT touching the operational\nbinary until a fix is proven — pump_regulator.bin stays the best known\nworking version.  New fourth image pump_testop.bin (ULP_TESTOP_BUILD =\noperational code + read-only instrumentation, NO test harness, MAJOR 9\nso a dev image is unmistakable).  fw 0.1.126 prefers /pump_testop.bin\nwhen present and REFUSES a binary/map mismatch (ULP_VARIANT stamp) —\na wrong address map is the class that ends in blind full-power motors.\n\nFirst payload (#48): dbg_fail_snap latches the encoder-ENABLE pad\nreadback at the FIRST failed kick — the USB-reboot wild-motor bursts\n(uptime 17-36 s, FINISH recovery, flags 13/8/5, kick reg -> 0) are\nmotor-turning + zero encoder edges = regulating BLIND; the probe asks\nthe one decisive question: is the enable pad actually driven?\n\nHeadroom: 480 B = exactly the documented worst-case line (+136 B over\nthe measured 344 B max excursion); canary + firmware per-tick check\narmed; supervised bench only.  SWR-114 amended (locked; owner-authorized),\nDOC 1.88, verify 160 reqs / 139 PASS / 0 FAIL.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "7dc86b038fc5630a2cedf3e3efb49078f727f57b",
+"date": "2026-07-20",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "a96f166650e73420132b3966dfa110c86a37cd16",
+"date": "2026-07-20",
+"subject": "ULP 1.15.0: gate the hall wake to BP_RUNNING (counting unchanged) — #46 A/B",
+"body": "Version-diff of the aborted 40 h run against the 44 h reference found the\nprime suspect: ULP 1.13.0's centralized bp_hall_edge_service() calls\nwakeup_main_cpu() UNCONDITIONALLY from four sites — BP_RUNNING plus the\ndose/park drive windows, the AC busy slice and BP_PARKING entry.  In\n1.12.0 the BP hall wake existed ONLY inside BP_RUNNING.  So since 1.13.0\nevery dose pokes the main CPU while it is awake (dosing polls on plain\nasyncio), leaving the RTC SW-CPU interrupt latched for the next\nmachine.lightsleep() to enter against — precisely where #46 kills the\nboard (breadcrumb 22), and precisely when the resets cluster.\n\nRates: 0 resets / 22 sample-ends on fw 0.1.114 + ULP 1.12.0, versus 3 /\n10 on fw 0.1.125 + ULP 1.13.0.  Fisher exact p~0.02 — a real regression,\nnot chance.\n\nFix keeps what SWR-289 actually needed: crossings are still counted and\ntimestamped in EVERY state (the multi-spot ledger depends on that), only\nthe wake is gated.  Nothing in the firmware depends on a mid-dose wake.\n\nDeliberately one variable: firmware stays 0.1.125; the ULP deploy\ncarries the regenerated map (binary 7268 B, headroom 568 B LOW-accepted,\ncanary armed).  1.14.0 is burned by the withdrawn breadcrumb build.\nRegistry DOC 1.87; verify 160 reqs, 139 PASS / 0 FAIL.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "32f36ff7697e469651df0548d0e63a0952d2639d",
+"date": "2026-07-20",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "ebd6499264ba9a96942c7483fa671085cfa3d33f",
+"date": "2026-07-20",
+"subject": "CORRECTION: #46 reopened — WDT(3) fires on battery with USB DETACHED",
+"body": "The won't-fix premise is falsified.  A WDT(3) fired 2026-07-20 10:57 UTC\nduring the 40 h verification run (session 8, fw 0.1.125), USB physically\ndetached, in the same post-sample flush-restart window — 1 reset in the\nfirst 4 sample-ends.\n\nMy closing argument rested on the 44 h battery run showing zero resets.\nThat run held only ~22 sample-ends where ~1.7 events were expected, so\nzero had probability ~0.18: ordinary chance, not evidence of absence.  I\ntreated a small-sample null as proof and paired it with a mechanism\nstory (console flush at sleep entry) that fit crumb 22 but was never\ntested by removing USB.\n\nSTILL STANDS (instrumented): death is inside machine.lightsleep.\nDOES NOT STAND: that an attached USB-CDC host is required.\n\nRegistry DOC 1.86 records the correction.  Also caught while fixing it:\nthe 1.82 statement edit never applied — my replace-based edit reported\nsuccess without matching, so SWR-274 still carries only its correct\npre-chase text and no false claim ever reached the requirement.  Same\nclass of mistake as today's version.py truncation; edits of this kind\nnow assert on match.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "b12d520d860281d1bdee0f2cb36c13ebe84109a4",
+"date": "2026-07-20",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "831e2ce7c2136938b6e586966d3b1980d4503f72",
+"date": "2026-07-20",
+"subject": "prompts log 189 (deploy hardening + #47 legibility)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "b11ca7bdfeec7ce7fac138a0317ecb8b1d45e64d",
+"date": "2026-07-20",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "9a25d9584577dba2be995b093fd1271eb1e96292",
+"date": "2026-07-20",
+"subject": "fw 0.1.125: GitHub #47 legibility — a parking timeout now names the fault class",
+"body": "Diagnosis only, no behaviour change.  A calibration parking timeout with\nZERO encoder ticks while the ULP core loop is still ADVANCING is now\nreported as what it is: the ULP runs but its DAC writes are not reaching\nthe motor (DAC7574 latch class), a soft/WDT reset cannot clear it, and\nin-place ULP recovery will report success without fixing it — a TRUE\npower-off (USB *and* battery/magnet) is required.  Tagged\n'dac-latch-suspected'.  Zero ticks with a STOPPED loop points at the ULP\ninstead.\n\nOwner bench 2026-07-19/20: three identical 'parking calibration timed\nout' errors, each preceded by 'ULP verified healthy', cost an hour — the\ndiscriminating evidence (0 ticks + live loop) was on the board the whole\ntime and unsaid.\n\nPhase-A experiment recorded in #47: the in-place recovery path is NOT\nbroken — start(force_bus_recovery=True) mid-run revives the loop fine —\nso the reload escalation the issue originally proposed is unnecessary.\nThe real gap was that liveness alone cannot prove the ULP can drive a\npump.  Registry DOC 1.85; verify 160 reqs, 139 PASS / 0 FAIL.\n\nDeployed via the new transactional path (staged 12, committed, smoke\nOK) and verified: FWVER 0.1.125.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "81c5f6c9ce1ca668361e0d1d820cb19d500ffac7",
+"date": "2026-07-20",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "20860ef19fd3e791fe451ca2620676386187c420",
+"date": "2026-07-20",
+"subject": "SWR-294: transactional, import-proven firmware deploy (rollback bench-proven)",
+"body": "A deploy can no longer leave the board unbootable.  Files stage as\n<dest>.new and are length+FNV verified before ANY live path is touched\n(an interruption there leaves the board wholly on the previous\nfirmware); they then flip together with the outgoing copies kept as\n<dest>.bak; the deploy then IMPORTS the shipped surface on-board\n(fluispotter + synchronize.http + version read-back) and restores the\n.bak set on any failure.  Plus a free-space pre-flight that aborts with\nthe board untouched.\n\nBench-proven both ways today: a normal deploy staged 12 files, flipped,\nsmoked OK; then a DELIBERATELY broken version.py (the exact 2026-07-20\nfailure) was caught by the smoke test, 12 files rolled back, and the\nboard came up on the previous firmware with no replug.\n\nverify 160 reqs, 139 PASS / 0 FAIL (288 tests); locks clean.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "2017877a19f262392af697e7a7463031b8648f09",
+"date": "2026-07-20",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "910c39070a2c855c3e02a9983cb5c7660d09a920",
+"date": "2026-07-20",
+"subject": "fw 0.1.124 version.py repaired + shipped-module parse gate (SWR-304)",
+"body": "version.py had been left malformed by an index-based edit: the previous\nchangelog contained an inner double quote, so the replacement truncated\nthere and left a fragment behind (four quotes on the line).  The deploy\ncopied and fnv-verified it happily — fnv proves the bytes arrived, not\nthat they are valid Python — and the board could not import ANYTHING,\nbecause every module path goes through version.py.  Rewrote the file\nwhole.\n\nNew gate closes the class: test_every_shipped_python_file_parses walks\nevery fluispotter/*.py the deploy ships and ast.parse()s it.  Both of\ntoday's board-bricking incidents (interrupted deploy, malformed edit)\nwould have been caught before touching hardware.  verify 159 reqs,\n138 PASS / 0 FAIL (285 tests).\n\nBoard now verified live: FWVER 0.1.124, ULP 1.13.0, clean boot to\nAWAIT_CALIBRATION, hub online.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "b29d9e6c417e815af7a81bc390f0120d12508415",
+"date": "2026-07-20",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "aab92c3f8e417384b105412c653fd1bcf0c2a1a5",
+"date": "2026-07-20",
+"subject": "prompts log 188 (baseline reset)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "354d940f9c85df29fb950b03da3090a82fe1717b",
+"date": "2026-07-20",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "1d71ceaad276b02e49acbcd321e56fd92a8a0e54",
+"date": "2026-07-20",
+"subject": "fw 0.1.124 + ULP 1.13.0: POST-CHASE BASELINE RESET to the proven 0.1.117 code + SWR-292",
+"body": "Owner directive: work from the pre-chase release, without the\nbreadcrumbs.  Code returns to commit 83347c8 (fw 0.1.117 — the build\nthat passed the 8 h dry run: 45/45 doses + pre-session sample, every\nledger line = 1, signed report verified), paired with ULP 1.13.0.\n\nREMOVED with the closed GitHub #46 (USB-attached bench artifact, never\na field defect): the SWR-293 breadcrumb in all revisions (fw _crumb(),\nthe loader capture, and the ULP 1.14.0 cpu_breadcrumb word — whose\nremoval restores the 1.13.0 shared-variable addresses), the SWR-274\nchase clauses (10 s post-sync quiesce, no-nap-during-rejoin,\nconsole-silent nap, latched-sink veto, pre-nap watchdog feed) and the\nfluid-measurement sync guard.\n\nKEPT: SWR-292 commit-before-IDLE — field-validated across 11 resets\nwith zero audit loss, the one durable gain of the investigation.\n\nRegistry DOC 1.83: SWR-274 back to its pre-chase text + a scope note,\nSWR-293 WITHDRAWN (method preserved in docs/), SWR-292 unchanged.\nRebuilt ULP is byte-identical to the bench-proven binary\n(7248 B, fnv 0x1e36fe3e) and variables.py matches the pre-chase map.\nverify 159 reqs, 138 PASS / 0 FAIL; locks clean.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "88e0b52801663a1d492540c0627df8df69a9920b",
+"date": "2026-07-20",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "507b8b46a12df834191c5b48c2b4b37a0e6faa6d",
+"date": "2026-07-20",
+"subject": "GitHub #46 closed WON'T FIX: bench-only USB-CDC artifact — investigation record + registry scope note",
+"body": "Owner decision 2026-07-20: the lightsleep-entry WDT class requires an\nattached, non-draining USB-CDC host, which production devices never\nhave.  Discriminator: 44 h battery run USB-disconnected = zero resets\nover thousands of naps vs ~1-in-13 sample-ends on every USB-attached\ncampaign; line-level crumb 22 = death inside machine.lightsleep.\n\nSWR-274 gains the scope note (DOC 1.82) so the console-silent + latch\nclauses are not mistaken for an open field defect — fw 0.1.123\nimplements them, undeployed, bench-comfort only.  Full record in\ndocs/wdt_lightsleep_usb_investigation_2026-07-20.md incl. the campaign\ntable, the retained SWR-293 breadcrumb infrastructure and the rev-1\nwithdrawal lesson.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "6c0955f23e3e533a41edbec87da9c010b10f2694",
+"date": "2026-07-20",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "a76d64f61f2c3e8f8f092e8fd07a06ecd83a087c",
+"date": "2026-07-20",
+"subject": "fw 0.1.123: #46 CAUSAL FIX — console-silent nap path + latched-sink veto (crumb 22 conviction)",
+"body": "Campaign 4 fired at sample 2 with breadcrumb 22: the CPU died INSIDE\nmachine.lightsleep, watchdog fed one line earlier, crumb 23 never\nwritten.  The ESP-IDF sleep-entry path flushes the console TX with\ninterrupts OFF — and a USB-CDC host that stopped draining turns that\nflush into a multi-second interrupts-off window (IWDT, #108 class).\nThe nap path was writing to that console on BOTH sides of the sleep.\n\nFix: (a) nap path is console-silent — 'Entering'/'Woke' markers retired,\ncrumbs 22/23 carry the identical wedge signal as RTC-memory writes with\nzero I/O; (b) never lightsleep while serial_sink.is_latched() — the\nsink's own 'host stopped draining' flag, never previously consulted.\n\nCorroboration for scope: the 44 h battery run (USB DISCONNECTED) napped\nthousands of times with ZERO watchdog resets vs ~1-in-13 sample-ends on\nevery USB-attached campaign — #46 is likely a bench exposure field\ndevices never had.  SWR-274 amended (DOC 1.81); SWR-245's wake-marker\ntest re-anchored to crumb 23.  verify 159 reqs, 139 PASS / 0 FAIL.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "50672707f89ef621ee5a79bae586802cbaf2fd98",
+"date": "2026-07-20",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "1804be17661a67d70529675c258779f09ba53eea",
+"date": "2026-07-20",
+"subject": "prompts log 186 (rev 4 nap-path instrumentation + campaign 4)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "768756dc85a9d0eb63b407abfb950624e7b729c3",
+"date": "2026-07-20",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "1a9a6c9ac9eb327acdbb3e2fadb562ca19fd30cb",
+"date": "2026-07-20",
+"subject": "fw 0.1.122: SWR-293 rev 4 — line-level nap-path crumbs (20-24) + watchdog feed on nap entry",
+"body": "Campaign 3 fired at sample 23 with breadcrumb 12 (TRIGGER-nap-enter):\nthe 0.1.121 radio gating did NOT close #46.  Three crumbs now (10, 7,\n12) name three different nap SITES sharing one doorway, so rev 4\ninstruments the doorway: 20 gates-passed / 21 hall-EXT1-armed / 22\nabout-to-machine.lightsleep / 23 sleep-returned / 24 disarms-done.  The\nnext fire names the LINE — 22 convicts the sleep-entry critical section\n(IWDT class, #108); 21/23 convict the RTC-GPIO arm/disarm around it.\nAlso feeds the session watchdog immediately before the nap (the feeder\ntask and its ticks_ms deadline both freeze for the sleep), removing\nwatchdog starvation as a competing explanation.  Registry DOC 1.80;\nverify 159 reqs, 139 PASS / 0 FAIL.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "fe5972ca80394e3264a0d4333e0f405ab1dafed2",
+"date": "2026-07-19",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "44cba0c1ec51c25d1bf07e0314d72fc721b874cb",
+"date": "2026-07-19",
+"subject": "prompts log 185 (causal fix + campaign 3)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "2901842aee0468cd1a6532876aae54b1745637cc",
+"date": "2026-07-19",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "76644a01b4e4e72ef41e9e14f8e35573adb963db",
+"date": "2026-07-19",
+"subject": "fw 0.1.121: causal fix from breadcrumb conviction — radio-aware nap gating (SWR-274 widened) + TRIGGER-nap crumbs",
+"body": "Crumbs 10 + 7 (both lightsleep-entry deaths during a degraded-radio\nstretch; I2C starvation 0-for-2) convict the nap∥radio collision.  Fix:\n(a) 10 s nap quiesce after EVERY sync return, success or failure\n(_SYNC_RADIO_QUIESCE_MS, was 500 ms success-only); (b) no lightsleep\nwhile the Wi-Fi driver is in autonomous rejoin (station configured but\nnot associated — the silent-2h stretch's kill window); documented power\ntrade during hub outages.  SWR-293 gains checkpoints 12/13 (TRIGGER\nnap).  Registry DOC 1.79; verify 159 reqs, 139 PASS / 0 FAIL.\nAcceptance: rerun 50x1 @ 8 min — baseline 4 fires / 50 sample-ends,\ntarget zero.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "2f4db772dd509cbec8671f56beaa81be765207c2",
+"date": "2026-07-19",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "a7b5f12fd4ce3369cb2f7877fb74c340304d3150",
+"date": "2026-07-19",
+"subject": "prompts log 184 (diagnostic rev 3)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "7b104192c006fd252e4216c799f3fc4f3d6cf3d3",
+"date": "2026-07-19",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "c3f6a5f941d8a90045ec6d962b3926d864b10044",
+"date": "2026-07-19",
+"subject": "SWR-293 rev 3: cpu_breadcrumb in the ULP's own region (ULP 1.14.0 + fw 0.1.120)",
+"body": "Store = a CPU-owned word inside the ULP binary's mapped region — immune\nby construction to the rev-1 RTC-user-memory collision.  Loader captures\nthe word before the reload wipes it (LAST_BREADCRUMB, magic 0xB5); the\nBoot reset-cause event reports breadcrumb=<step>.  All 11 checkpoints\nlive.  Trust gate before campaign use: parking write-test + boot\nreadout test (the SWR-293 lesson).  Registry DOC 1.78; verify 159 reqs,\n139 PASS / 0 FAIL.  Campaign context: 50x1 stress run FINISHED 50/50\nsamples with 4 self-recovered WDT(3) (burst of 3 in the sample-3/4\nrecovery window + 1 late), zero errors, zero audit loss (SWR-292 held).\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "4039b477eb4188865ad037d5fbef06234f67fa2c",
+"date": "2026-07-19",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "6d27787153440670419a3f77732921901a24526a",
+"date": "2026-07-19",
+"subject": "prompts log 181-183 (50x1 stress run + parking-freeze incident)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "c77426a4481a7181444bb4fe78c9310dc0985072",
+"date": "2026-07-19",
+"subject": "fw 0.1.119 HOTFIX: withdraw the RTC.memory breadcrumb store — it corrupted the ULP parking path (owner-diagnosed)",
+"body": "The 0.1.118 SWR-293 store shares RTC slow memory with the ULP; every\npost-boot calibration froze the ULP mid-parking with the motor left at\ndrive power.  A TRUE cold boot did not clear it — the fault was\nsoftware-recreated each boot.  Ticks + canary stayed intact, so the\nexoneration tests (idle writes, boot tick checks) missed it: the\nparking path was never exercised after a write.  All RTC user-memory\nusage removed; _crumb() is a documented no-op with call sites kept for\nthe future safe store (dedicated ULP shared variable, parking-path\nwrite-tested, next ULP build).  Registry DOC 1.77 (SWR-293 store\nWITHDRAWN + lesson); verify 159 reqs, 139 PASS / 0 FAIL.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "f785e16d5e9415b9949a11e4e300c06f2f6051f0",
+"date": "2026-07-19",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "f26c2a535259108b83ce2fa7beb78df2c6557f05",
+"date": "2026-07-19",
+"subject": "fw 0.1.118: WDT hardening — I2C collision element (SWR-274 owner amendment), sample-boundary commit (SWR-292), RTC breadcrumb (SWR-293); GitHub #46 filed UNSOLVED",
+"body": "Owner adversarial-review outcome codified: motor starts are ULP-driven\nand can never bind the main CPU — the collision set is exactly flash /\nWi-Fi / lightsleep-entry / .py I2C R/W.  Fluid measurements skip while\na sync is in flight.  Sample-complete + schedule-advance events commit\nto flash before the IDLE return.  Rolling RTC-memory breadcrumb at 11\ncheckpoints surfaces in the Boot event so the next occurrence convicts\npost-sync-radio-tail vs hung-I2C (playbook in issue #46).  Registry DOC\n1.76 (+SWR-292/293, SWR-274 amended); make verify 159 reqs, 139 PASS /\n0 FAIL; locks clean.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "f82816d3b30f84fc6a51bd17793f64e0efe8b97f",
+"date": "2026-07-19",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "1fcf3097ff803f83d3ab8bcc1a4dd5a6cc29965c",
+"date": "2026-07-19",
+"subject": "Bench record: 8h dry run PASSED (pre-session + 15x3, all ledger lines =1, report full-stack verified; 1 self-recovered WDT in the flush-restart window, follow-up tracked)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "f911e071bcded17be8baef09de3e1c1b1cd780d3",
+"date": "2026-07-19",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "8cd241a8441fc7351c36ab44668058371a1d0306",
+"date": "2026-07-19",
+"subject": "HUBR DOC 1.15: HUBR-313/314/322 PLANNED -> Implemented (service 1.14.0 live); map rows; hub spec pointer",
+"body": "Overview per-spot sub-rows recorded OPEN inside HUBR-322 (1.14.x).\nmake verify green; SW+hub lock baselines clean.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "8e96ca583e18fe298ca9edaa2e505c9a468bbd3d",
+"date": "2026-07-18",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "18950cca2d25eaf7c12cef4db5ef5cf4ef379427",
+"date": "2026-07-18",
+"subject": "hub 1.14.0 deployed + live-verified (submodule pointer); prompts log",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "3d89a5c14d6ff4445f343b569b4450ede1f72f5f",
+"date": "2026-07-18",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "c2ca3a8484f5ec747042d83a572d4e59a97398ac",
+"date": "2026-07-18",
+"subject": "Bench record: 10x2 dry-run acceptance PASSED on fw 0.1.116 (20/20 doses, uniform revs=2, dual-sig report verified)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "83347c8f63eed314fde5f90bfa1f284b85d544f9",
+"date": "2026-07-18",
+"subject": "0.1.117: ledger-advance baseline at PARK_1 completion (dose-1 'advanced 2' artifact)",
+"body": "Bench 2026-07-18 (two 3-spot sets on 0.1.116): every dose-3 gap advanced\nexactly 1 rev — head-to-tail confirmed — but every first inter-dose line\nread 'advanced 2' because the init-time rev0 baseline counted dose 1's\nown park-in crossing from the continuous preload.  Baseline moved to the\nPARK_1-complete branch of _dosing_tick: every dose window (first\nincluded) is prepare+collect+PARK_2 = exactly one crossing, so the != 1\nwarning threshold is now artifact-free.  SWR-288 test extended.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "19843e1002a9e24495f3cb3de951257d12c021f8",
+"date": "2026-07-18",
+"subject": "fw 0.1.117 (undeployed): operator commands + session metadata + multi-spot data",
+"body": "SWR-279 abort_session (pending-until-safe-boundary in the session loop:\ndose completes, then park BP + stop AC + FINISH; 400 outside SESSION).\nSWR-280 sample_on_demand + SWR-291 pre_session_sample via the new shared\n_run_commanded_sample routine (identical deque gate on the ULP crossing\nring, per-rev fluid sensing, dose set with sample=-1 events; 409 busy /\nschedule-integrity guard; AWAIT_SESSION stay-in-place with guarded\ntime0).  SWR-281 session metadata (client parses settings.metadata;\npersisted at the anchor; session_meta event; cleared at reset_session).\nSWR-290 multi-spot machine-readability (time_table_samples ack list;\nper-dose sample/dose/total/dosed_at with per-completion timestamps).\nGate caught a real bug en route: the routine was first inserted between\n@set(states, _STATE_AWAIT_SESSION) and its state fn, hijacking the state\nregistration — relocated below the state.  Registry DOC 1.75; make\nverify 157 reqs, PASS 137 / FAIL 0 (283 tests); locks clean.  Board\ndeliberately stays on 0.1.116 for the 10x2 bench acceptance run.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "16792a8f5278d06c5cbc9706aa782d89d5f5f34a",
+"date": "2026-07-18",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "5e619040d9ba07dcc84c8e3f31f495c5bf76eb94",
+"date": "2026-07-18",
+"subject": "Registry DOC 1.74: SWR-283..289 fw/ULP halves PLANNED -> Implemented + dedicated tests",
+"body": "Statement status flips only (obligations unchanged) + CHANGE_HISTORY row;\nnew structure tests: TestBpHallCrossingRing (SWR-289 ULP side — single\nincrement site, ring-before-head publish, every-state call sites, real-pin\nrun-entry reset, now-ticks publish) and TestSessionCore0116 (SWR-283/285/\n286/288 + SWR-289 fw half).  make verify: 157 reqs, PASS 132, FAIL 0\n(272 tests); lock baseline clean.  Map rows updated; generated HTML DOC\n1.74; submodule pointer -> client session_number commit.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "c6db891b1d73f664162dd563f1dd22ac01643c10",
+"date": "2026-07-18",
+"subject": "fw 0.1.116: ring-fed deque, intra-set dose fixes, Time 0, session number, RTC offsets",
+"body": "SWR-289 CPU half: _on_hall_tick consumes the ULP crossing ring (every\nstate, per-crossing timestamps, self-calibrated tick->wall conversion;\nring resync on purge-reset and ULP recovery).  SWR-288: final-dose-only\npump restart + one-rev ledger-advance check between set doses.  SWR-285:\nschedule anchored on the operator-submit time0 (guarded 120 s window,\nfallback logged).  SWR-283: signed RTC-vs-NTP offset events at session\nstart (before the correcting sync) and FINISH (measurement-only), via\nthe new ntp_query() split (SWR-256 window preserved inside).  SWR-286:\npersistent session_number, incremented at the anchor, carried in the\nstatus sync (client payload field added).  Six structure tests updated\nto the new code with intent preserved or strengthened; make verify\n127 PASS / 0 FAIL.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "f062f55bc36243bfc16a304a2e28112464924093",
+"date": "2026-07-18",
+"subject": "ULP 1.13.0: hall crossings counted + ring-timestamped in EVERY state (SWR-289); probe-fill clamp",
+"body": "One centralized detector (bp_hall_edge_service, inline, shared\nbp_hall_prev) replaces the BP_RUNNING-only block and runs in\nbp_drive_window (dose+park windows), ac_busy_regulate's BP-watch poll and\nthe BP_PARKING entry check: every physical crossing increments\nbp_hall_revolutions, stamps rtc_ticks (low-32) into the 9-entry\nbp_hall_ring (head published last), and wakes the CPU.  The run-entry\nedge-tracker reset (= 1) fabricated a PHANTOM crossing on start-from-park\n- which had been silently compensating the uncounted park arrivals -\nreplaced with a real pin-level init.  ulp_now_ticks published every pass\nfor tick->wall conversion.  Headroom 592 B (LOW accepted: helper inline,\nmax depth unchanged, canary armed).\n\nFOUND+FIXED live: the firmware's stack-probe pattern-fill (fixed top-640\nbytes) overlapped the top 48 B of the grown BSS and clobbered the canary\nsentinel - the ULP latched a false stack-overflow and halted both DACs.\npump_regulator.py now clamps the fill above ULP_STACK_CANARY (top-of-BSS\nsentinel) so layout drift can only shrink the probe, never corrupt the\nULP.  variables.py regenerated via mapgen from the shipped ELF (the make\ncopy target was bypassed by the direct builder - first deploy shipped a\nstale table).\n\nBench-proven on the board: canary 0xC0FFEE5A intact, overflow 0, ticks\nadvancing (~141 kHz), 40 s spin -> head=2/revs=2 with ring deltas 15.7 s\nagainst the 16 s/rev target.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "a0ad88b901e42e38e5678cb904b1d0d0ce2d2cde",
+"date": "2026-07-18",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "666abe07be9c0ad28bbf690d9f35fd16ded94f5c",
+"date": "2026-07-18",
+"subject": "spec repos current: hub spec 1.13.2 (was 7 versions stale), device spec 2.27; SWR-288..291 + HUBR-322 registered",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "df592a0b98c7a6362c917839be68df9cb6ead39f",
+"date": "2026-07-18",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "35065ef229b4e6463bd7dee23c4852f0e80927db",
+"date": "2026-07-18",
+"subject": "milestone: successful battery-session campaign complete; analysis log #170-174",
+"body": "Proven state at this tag: fw 0.1.115 + ULP 1.12.0 + IMG-4 runtime + hub\nsynchronize-service 1.13.2.  The July 16-18 campaign: 22/22 samples (avg\ndelta +10.9 s, zero warnings/errors/reboots over 38.4 h), then battery\nrun-to-death at 44 h 10 m / ~24.9 mA — silent lightsleep stop in the\nsafe parked posture, zero data loss, forensics archived and documented\n(docs/battery_test_2026-07-18.md).  Session reports are dual-signed\n(embedded certificate + detached OpenSSH) with verification material\nserved from the hub.\n\nPrompts #170-173 record the analyses queued for the next batch: intra-set\ndose fixes, ULP-owned hall-crossing ledger, multi-spot reporting, and the\npre-session sample feature.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "ca1eb820779ff46c2a959c67f95d38b61f6ed589",
+"date": "2026-07-18",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "586f00fd01ad8b993784490470c900965e8409bb",
+"date": "2026-07-18",
+"subject": "battery run-to-death forensics: 44h10m/24.9mA, silent lightsleep death, zero loss, zero resets",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "e9e7e9f61f2ba314f90301d3db1241d8a1db3d59",
+"date": "2026-07-18",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "2114051d0b64cdb62c64ca9cfbc98e67fbb49f66",
+"date": "2026-07-18",
+"subject": "security/verify_report.sh: one-command report verification (tested PASS + tamper-FAIL)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "ef355c2e8782499fd2258c719965ef03e9d1a0ce",
+"date": "2026-07-18",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "ecdb065054eca3c20252253b2bae25b77858d91a",
+"date": "2026-07-18",
+"subject": "hub 1.13.2: verification material served from device page; prompts #167",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "2732e8e5835f253bbd67671e7a63747404e86c35",
+"date": "2026-07-18",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "319e2c612c5d020a84c4c85e99816c0beff574f2",
+"date": "2026-07-18",
+"subject": "hub 1.13.1: PDF Title/Creator metadata; prompts #166",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "3d44a0884d51f3dcdcaf4b31d483d303de25b059",
+"date": "2026-07-18",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "ce7136db7def8d3a379f322074033e54e3310bcc",
+"date": "2026-07-18",
+"subject": "hub 1.13.0: embedded certificate signatures live; root CA ceremony; HUBR-321",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "f007d1f523718496d91848d67c18f3d4be1171a6",
+"date": "2026-07-18",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "1495e7e5196596d898070c88901fea6c836fc682",
+"date": "2026-07-18",
+"subject": "hub 1.12.0 deployed: detached report signatures live-proven; HUBR-320",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "90ac505e66eb33aadc2255533942f06102394e0b",
+"date": "2026-07-18",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "d1861bfe325baf0186bc88c3e725a31d6cc690a5",
+"date": "2026-07-18",
+"subject": "hub 1.11.1 deployed: VERSIONS traceability footer; HUBR-312 amended",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "8c6d841409ceef53b52b3176c3d08dc9d0e52e8b",
+"date": "2026-07-18",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "5a90033194a4094dee3379249e469551ab5b38e9",
+"date": "2026-07-18",
+"subject": "hub 1.10.2 + 1.11.0 deployed: SSE starvation fix + display timezone; HUBR-319",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "1c6d049d2fe98e21d32bc3733a7c0e8fc68c9ead",
+"date": "2026-07-18",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "a3a0c013ce105c92869fe918c9cc2eb2c78b24e8",
+"date": "2026-07-18",
+"subject": "hub 1.10.1 deployed: PDF wrap + Latin-1; prompts #161 (timezone plan drafted)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "545c56fd1dc3401efecd12f6294d294c3dd60f04",
+"date": "2026-07-18",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "040995f2198727b0b6543af01eb66a904293da93",
+"date": "2026-07-18",
+"subject": "hub 1.10.0: Time 0 at submit + Total run time + session number; SWR-285/286 + HUBR-317/318",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "fe17ce07c76c02d74a92313b979f795e741f1456",
+"date": "2026-07-18",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "09a623d66c0e81edfa0944dbc46a07e0284794ba",
+"date": "2026-07-18",
+"subject": "hub 1.9.0: Time Source Verification live; SWR-283/284 + HUBR-316 registered",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "a4d7e4691bc946e036e7ae12ae3ce19a34059ffe",
+"date": "2026-07-18",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "d252df040439c1aa078aee5219cc07809ee28c95",
+"date": "2026-07-18",
+"subject": "prompts #158: battery run-to-power-fail test — deploy watcher disarmed, post-mortem protocol",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "1b1bfe04b798848d3886eaae452147f16ba0a5f5",
+"date": "2026-07-18",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "2c06bd46eb6e4fa1f6720b05588116ed7caa7682",
+"date": "2026-07-18",
+"subject": "hub 1.8.0: report-download 422 fix + HUBR-315 Sample Overview; SWR-282 + HUBR-315 registered",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "88aaa60d3328e97a411cdec51cb7ec0fc9a97e8e",
+"date": "2026-07-18",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "470c057b7866b23895316ed1ad756f24e72cce98",
+"date": "2026-07-18",
+"subject": "prompts #156: 22/24 provenance nailed — morning 24-entry table vs 5x-acked 22-entry session config",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "f2e515f91f238190ac335c2460c3a83361a5da08",
+"date": "2026-07-18",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "034e28bc918b5148cfe6c48d0d1914bfb5404da0",
+"date": "2026-07-18",
+"subject": "hub 1.7.5-1.7.8 deployed: first live session report shakeout (4 bugs) + 22/24 root cause",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "110ade2f4b209348d113095db2c6eb4c69e49a2b",
+"date": "2026-07-17",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "419b18deb0a5187f4d1caaffb50f361fb45e0781",
+"date": "2026-07-17",
+"subject": "hub 1.7.4 deployed: 1.7.3 watcher was dead (three-dot import) + ticking relative times",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "665f7d783888457e42d495a11223bdc5218775d7",
+"date": "2026-07-17",
+"subject": "Merge branch 'rebuild/v1.25-int-wdt' into dev",
+"body": ""
+},
+{
+"hash": "3199d288b8490d6e7cc5d3a187604be9efb52aa1",
+"date": "2026-07-17",
+"subject": "hub 1.7.3 deployed: live OFFLINE badge — service-side connectivity watcher (HUBR-311)",
+"body": "The hostapd (dis)associate handler is a shell script writing sqlite directly,\nso the service never saw connectivity flips and never SSE-broadcast them:\nopen pages kept a stale ONLINE badge until manual refresh. 1.7.3 adds an\n8 s station-list watcher in http/server.py that set-diffs MACs and\nbroadcasts joined/left devices. Live-verified: napping board renders\nOFFLINE on the v1.7.3 footer.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "88bce6535450feea812d2e90120b74b47f4ff37c",
+"date": "2026-07-17",
+"subject": "Merge: hub 1.7.x session reports + metadata + hardening",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "a33b4cff874a26ccfa0e52469a5548372d754198",
+"date": "2026-07-17",
+"subject": "hub 1.7.1+1.7.2 deployed: session-metadata entry (HUBR-314) + settings-wipe hardening",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "72f8e26d94852a9e904d6dbf9529ab80562d94cd",
+"date": "2026-07-17",
+"subject": "hub 1.7.0 deployed (session reports live) + deploy-on-finish queue armed",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "dfae1c517957b4ac9daccf3426ada6c864639b7e",
+"date": "2026-07-17",
+"subject": "SWR-281 + HUBR-314: session metadata (Animal ID, Study Number, Session ID) as PLANNED requirements",
+"body": "Entered on the hub before session start, delivered with settings, persisted\non the DEVICE with the session (power-loss survivable, audit-trail event,\ncleared at reset_session), and rendered as the HUBR-312 session report\nheader. Registry 1.69 (148 SWR reqs), hub registry 24 rows.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "7680600f454b56750919f4c1a9250d115b88ba58",
+"date": "2026-07-17",
+"subject": "SWR-279/280 (abort_session, sample_on_demand) as PLANNED requirements + HUBR-312/313 + full implementation map",
+"body": "147 SWR requirements mapped: 127 machine-verified PASS, 12 MECH bench-proven,\n4 hub-side live-acceptance covered, 2 superseded-absorbed, 2 implemented\npending deploy (fw 0.1.115), 2 PLANNED (the new commands, fw target 0.1.116).\nMap: docs/requirements_implementation_map.md. Registry 1.68, hub registry 23\nrows (HUBR-312 session report IN PROGRESS, HUBR-313 PLANNED).\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "9a2254c1eec87337fbf0082e510b63a215eded0b",
+"date": "2026-07-17",
+"subject": "Merge: fw 0.1.115 event-store longevity (SWR-277/278)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "2d774f858b47cedb5bf8dfe6994311987b9fc80c",
+"date": "2026-07-17",
+"subject": "fw 0.1.115: event-store auto-clean (SWR-277) + in-session global commands (SWR-278)",
+"body": "SWR-277: after every successful sync, a store at >=7000 entries whose latest\nuid equals the hub high-water self-cleans via the proven SWR-263 two-phase\n(uid-continuous, marker event in the fresh store). Unsynced events are never\ndiscarded — hub outages consume headroom instead of losing data. Closes the\n8192-cap-mid-session hole (a 5-day session crosses the cap around day 2-3;\ntoday the relief valve was manual AND unreachable mid-session).\n\nSWR-278: _sync() now processes commands after each successful sync — global\ncommands (clean_event_store, telemetry, upload_file, ping) execute mid-\nsession; state-transition commands stay deferred to the state machine's own\nhandlers (a queued reset_session cannot kill a running session). Field gap\n2026-07-16: a queued command sat pending through an entire running session.\n\nRegistry 1.67: 145 reqs, 127 PASS, 0 FAIL. Deploy deferred until the board\nreturns to USB after the running ~24h session.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "705b723fe7a15207e96f729cf405194ba0aad7a7",
+"date": "2026-07-16",
+"subject": "docs: in-session command consumption gap found (proposal fw 0.1.115) + settings-post hazard defused",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "3202ecacd0a61cff98cb117ae8fa103745ffcdbe",
+"date": "2026-07-16",
+"subject": "hub 1.6.1: queued commands clear live on ack (own morph tbody, delegated deletes, stale re-queue fixed)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "ba7441109ac03bfc90244d375f3eb2a0573ab498",
+"date": "2026-07-16",
+"subject": "IMG-4 field verification: ~1 mm residual at power-on (mask-ROM window) — SWR-276 software floor reached",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "a9a5e874fd0d362e8a9267b126b37803c04180d6",
+"date": "2026-07-16",
+"subject": "Merge: spec repo 2.26",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "95d5c16a5955cf48602ff6f46bae77082e7f5160",
+"date": "2026-07-16",
+"subject": "Spec repo 2.26: SWR-270..276 batch — actuator power-on safety, ULP 1.12.0 AC service, reed power-off, restore gate, WDT serialization, ULP self-recovery, IMG-4 + reproducibility rule",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "2fceab30f19a6040ac4673776a300cf66fa5cbb9",
+"date": "2026-07-16",
+"subject": "Merge: IMG-4 bootloader-hook actuator safety, boot-proven",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "72cfdcdf6fd8288ab7afa52c8ea32c65bb979766",
+"date": "2026-07-16",
+"subject": "IMG-4 BOOT-PROVEN + ACTIVE (fingerprint v1.25.0-12.ga83202261); IMG-3 superseded",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "3e1d5c065c47ef6be0b506d74dcaea824ef5b5da",
+"date": "2026-07-16",
+"subject": "IMG-4: boot-hook component REQUIRES hal/soc/esp_rom (bootloader build fix)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "950ae4ec318126f6d5ecc495739d9815bf55a23b",
+"date": "2026-07-16",
+"subject": "images.py: fix string-quoting break in the IMG-4 config_delta note",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "84501dcfa65e69f701115c2c1c5ad0e39b52d158",
+"date": "2026-07-16",
+"subject": "IMG-4: pin tinyusb 0.19.0~3 (IMG-3's exact resolution) — fixes the CI break",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "98cec026fb94bfde8999dfa9bda953c8997956c9",
+"date": "2026-07-16",
+"subject": "IMG-4 (v0.1.114): bootloader hook drives actuator enables LOW at power-on (SWR-276)",
+"body": "Gitlink runtime/micropython e9d9c06 -> e4fd14a: ONE change on the IMG-3 base\n— bootloader_components/fluispotter_boot_hooks with bootloader_before_init()\ndriving GPIO 9/17/8/41 LOW (+ internal pull-downs) ~tens of ms after\npower-on. Closes the power-on actuator window from ~0.5 s (boot.py,\nfield-measured today) to the mask-ROM window. IMG-4 registered BUILDING;\nfw 0.1.114 is the image-carrier version (no Python deltas vs 0.1.113).\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "a0e0f7889a6444f1f541c54cbb8b169ef3f6b118",
+"date": "2026-07-16",
+"subject": "Merge: fw 0.1.112/0.1.113 actuator power-on safety + field verification",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "1582e40387f19a7f4770f200bf462b739ed05c86",
+"date": "2026-07-16",
+"subject": "docs: magnet-test field result 0.5 s (SWR-276 software floor verified) + datasheet correction",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "bd19b90eb3fb850f52fa39644b1a626192fbd07b",
+"date": "2026-07-16",
+"subject": "fw 0.1.113: safe-off moved to boot.py (earliest software moment) + AC/BP asymmetry answered (SWR-276)",
+"body": "Why only the AC: both DAC channels power up at zero-scale (full power in the\ninverted convention), but the AC enable line (GPIO 9) rests ON through reset\nwhile the BP enable (GPIO 17) rests OFF — the pumps differ ONLY in the\nenable line's resting state. boot.py now performs the safe-off a few hundred\nms before main.py (which repeats it); the deploy set ships boot.py. The\nremaining pre-boot.py window (ROM + VM init, ~0.5-1 s) is closable only in\nhardware: pull the AC enable down so it rests OFF like the BP's.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "768a153b32e0f1b503c2db8dac2bd0b203efaa44",
+"date": "2026-07-16",
+"subject": "docs: correct hardware-item attribution (Mirza is not the hw engineer)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "9af520cd2709b4e99cddf758640c99c0eff665f0",
+"date": "2026-07-16",
+"subject": "Merge: fw 0.1.112 CRITICAL actuator power-on safety (SWR-276)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "a4156c1ab7ee1790c849765dbe88f415dcf8964b",
+"date": "2026-07-16",
+"subject": "docs: 0.1.112 critical deploy summary",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "e91e6843538a773e87f9be1a0a607c4efffbfe92",
+"date": "2026-07-16",
+"subject": "fw 0.1.112 CRITICAL: actuator power-on safety — AC pump span at magnet-removal power-on (SWR-276)",
+"body": "The DAC7574 powers up at ZERO-SCALE, which is FULL POWER in this board's\ninverted signal convention (power = 4095 - register); with the motor-enable\nline floating until firmware claims it, the AC pump ran from power\napplication until the ULP's first tick — several seconds. The old code even\nskipped the DAC safe-off on power-on boots on the assumption that the POR\nvalue was safe: backwards for this convention.\n\nFix 1: main.py _actuators_safe_off() as the FIRST statements of the entry\npoint — motor enables (AC 9, BP 17, encoders 14/18, valve 8, tape reel 41)\ndriven LOW and DAC CH0/CH1 commanded HALT via SoftI2C within ~10 ms of\nsoftware start, before USB probing or any import.\nFix 2: pump_regulator.start() DAC safe-off + I2C bus recovery unconditional.\n\nResidual pre-main.py window (ROM bootloader + VM init) is hardware scope —\nenable-line pull-down tracked with electronics.\n\nRegistry 1.67: SWR-276 + 4 structure tests (+2 stale anchors updated to the\nstronger unconditional behavior). 143 reqs, 125 PASS, 0 FAIL.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "21fa2f3ac5bfe395b0b8421765cdca6b11f78aaf",
+"date": "2026-07-16",
+"subject": "Merge: fw 0.1.111 battery-hardening batch (SWR-272/274/275)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "1d1d4506e285f1b9fa9742285090de71b8c321a9",
+"date": "2026-07-16",
+"subject": "docs: 0.1.111 deploy + SWR-275 live proof (canary self-recovery PASS, low-water 228 B idle)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "e9ebdeb0040d3e664a925bf11950863e420b2b3b",
+"date": "2026-07-16",
+"subject": "fw 0.1.111: WDT sync/nap serialization + ULP self-recovery + reed sleep-wake + stack low-water (SWR-274/275, SWR-272)",
+"body": "SWR-274: all three field WDT(3) resets died at the same checkpoint — the\npost-dose window where the restarted flush cycle's nap ran concurrent with\n_sync()'s Wi-Fi TX + flash I/O (the live-reproduced INT_WDT trigger, #108).\nidle_lightsleep now degrades to a plain asyncio sleep while _syncing, and\n_sync inhibits naps for 500 ms after completion ('do one, then the other',\nsame doctrine as SWR-265).\n\nSWR-275: a tripped #36 stack canary or stuck ULP core self-recovers in place\n— _verify_ulp_health attempts ulp.start(force_bus_recovery=True) (I2C bus\nclear + DAC safe-off unconditionally, fresh binary load with full .bss zero,\nSWR-257 liveness proof) once and re-verifies; POWER-CYCLE is demanded only if\nthe recovery fails. Customer battery devices cannot be power-cycled — the\n2026-07-16 canary trip becomes a self-healing event.\n\nSWR-272: the shipping-magnet reed is armed as a lightsleep wake source around\nevery nap (IRQ_FALLING + wake=machine.SLEEP -> LOW-level GPIO wake), so\nre-packaging the device powers it off immediately instead of after the nap\nbackstop.\n\nInstrument: the ULP loader pattern-fills the top 640 B of the stack gap;\nstack_low_water() measures the true deepest excursion (static worst chain:\n480 B of 696 B headroom — measured, from the linked ELF). ULP stays 1.12.0.\n\nRegistry 1.66: 142 reqs, 124 PASS, 0 FAIL (9 new structure tests).\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "abb1fd38bd56507fe1856bea988f8ee41398e780",
+"date": "2026-07-16",
+"subject": "SWR-272/273: lock magnet-reed complete power-off + no-pre-session-restore (owner reqs 2026-07-16)",
+"body": "Both behaviors verified PRE-EXISTING in fw 0.1.110: (272) master-power latch\nhigh at boot, _wait_for_reed_on -> power.off() armed from run() in all states,\nfatal handler honours the reed; (273) state.dat restore gate is\nstate >= _STATE_SESSION, so ANY pre-session power loss (in particular before\nanticoagulant_bag_punctured) boots from the top. Registry 1.65 (140 reqs) + 5\nstructure tests.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "53c1ca865e9bd284e384485de0e0c3bcab582f25",
+"date": "2026-07-14",
+"subject": "docs: 11:01 hub slot-flip incident + truncated acceptance run (13/20, 0 hall-warnings)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "a09f26ee2384660c1e67ca7c74da8acea910195d",
+"date": "2026-07-14",
+"subject": "Merge: ULP 1.12.0 deploy + SWR-271 bench proof",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "6872176266a3a6002de642b8082461eb026c8c49",
+"date": "2026-07-14",
+"subject": "ULP 1.12.0 deployed: regenerated address maps + SWR-271 bench proof PASS",
+"body": "Deploy pipeline green (swap-test P1 bracket=385/P3=401 — the P1 dead-point\nartifact did not recur). Bench proof, dose/park-debug modality: AC at SPR 20\nthrough one real 3067-edge dose + park — ac_busy_slices 0->18, AC DAC moved\nthrough 8 values during the busy windows, dose exact (3070 counted, +3 coast),\npark found home. The AC is now counted AND regulated through BP dose/coast/\npark. fw 0.1.110 / ULP 1.12.0 live on d0cf131edbe4.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "246116f194a148497ad9fb828c4f44e39df31302",
+"date": "2026-07-14",
+"subject": "Merge: ULP 1.12.0 cooperative AC service (SWR-271)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "ab389f19f545e0c170e5a4e8e44adc0a37124124",
+"date": "2026-07-14",
+"subject": "ULP 1.12.0: cooperative AC service through BP dose/coast/park busy loops (SWR-271)",
+"body": "Root cause of the 8h run's residual ~3/h false AC hall warnings: BP_DOSING /\nBP_DOSE_COAST / BP_PARKING hold the ULP inside blocking loops for the whole\ndose (~10 s), coast (5 s) and park (<=30 s) — ac_tick() never runs there, so\nan AC hall pass falling inside such a window was LOST outright (a lost pass\nreads as a 2x-SPR counter gap on the CPU monitor => false 'did not advance'\nwarning) and the AC ran open-loop on its held DAC — the owner's masking\ndiagnosis, confirmed in source and fixed per his 'task scheduler in the ULP\nDose/Park' direction.\n\nac_busy_hall_service(): ac_tick's exact hall block (level mirror, 1->0 count,\nCPU wake), now shared by ac_tick and called inside every blocking BP spin\n(bp_drive_window, coast, park centre-offset) — no AC revolution can be lost\nto a BP busy window. ac_busy_regulate(): every-16th-window (~0.8 s), 150 ms-\ncapped, 8-interval AC Simple-P slice between BP drive windows in DOSING and\nPARKING; its combined poll keeps counting BP encoder edges into the caller's\nledger so dose/park tick accounting stays EXACT; dose-tail guard (160 edges)\nkeeps target-crossing out of any slice; the park slice watches the BP hall so\nhome is never overshot; no kick/ladder/stall-recovery coupling. ac_busy_slices\ntelemetry proves regulation ran.\n\nGates: canary linked, no libgcc, op headroom 696 B (was 1296; LOW accepted —\nmax call depth unchanged vs the existing regulate_pump->run_simple_p chain,\n.stack_canary + firmware per-tick check armed, 184 B above the 512 fail\nline). Registry 1.64: SWR-271 + 5 structure tests; 138 reqs, 120 PASS, 0\nFAIL. Deploy pending board-on-USB.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "723121917806a4ce50592082902326323420ff72",
+"date": "2026-07-14",
+"subject": "Merge: 8h run results + SWR-270 field proof + AC-hall masking plan docs",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "c2d0d7f28f9666f23767f406e55aa92ecff03e53",
+"date": "2026-07-14",
+"subject": "docs: run reboot codes + AC-hall masking root cause confirmed in ULP, 1.12.0 fix plan",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "c2036cc812e5a7e11f3a511655a5dcbb188fdb80",
+"date": "2026-07-14",
+"subject": "docs: 8h/50-sample dry PPK2 run complete — 50/50, SWR-270 verified (~5x fewer hall warnings)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "630e43565564665301187a72434891ec819f4b57",
+"date": "2026-07-14",
+"subject": "docs: SWR-270 summary",
+"body": ""
+},
+{
+"hash": "32f91f2fd9ee9cf4bb8a986c6636fed344c65a92",
+"date": "2026-07-14",
+"subject": "Merge: pump run-monitor -> ULP hall counter (SWR-270, fw 0.1.110)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "ff5235c6e30f565dd96a89439574abb0105ae982",
+"date": "2026-07-13",
+"subject": "Pump run-monitor keys off the ULP hall counter, not the CPU edge (0.1.110, SWR-270)",
+"body": "Owner diagnosis: the 'AC pump hall switch did not trigger' warnings are\nfalse — the AC pump runs continuously; they coincide with the BP flush\nRUN/parking. Traced to fluispotter.py _run_pump_monitor (NOT the ULP):\nit awaited a CPU GPIO hall edge via Switch._handle_state, which reads\npin() at soft-callback time. A coincident BP hall/encoder IRQ burst\ndelays the AC falling-edge callback so it reads 1 and never observes the\n0 state -> wait_for_switch(0) times out -> false stall warning (48 of\nthem 2026-07-13, every one inside a BP RUN/park window; correlation\n+85..194s into RUN).\n\nFix: watch the ULP AC/BP_HALL_REVOLUTIONS counter (RTC domain,\nULP-maintained, immune to CPU scheduling) fail to advance within 2.5x\nSPR. Real stalls still warn (counter static while awake); warning\nre-arms without spamming. Registry 1.63, 137 reqs, 119 PASS, 0 FAIL.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "34e29cc0eada2746232e4b8dde270a74b8560f94",
+"date": "2026-07-13",
+"subject": "Merge: hub UI live auto-refresh (SSE, HUBR-311, service 1.6.0)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "67a86a3be48af5725e1807319b9db8d42be6cf02",
+"date": "2026-07-13",
+"subject": "docs: HUBR-311 live UI (hub registry 1.6, prompts/summaries, acceptance)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "252e264603a28539626bf008aa5dcc2524f011b9",
+"date": "2026-07-13",
+"subject": "docs: prompt 130 (hub UI auto-refresh plan)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "631450c0a36ad0d7abca6644d9e01b0147611872",
+"date": "2026-07-13",
+"subject": "Merge: BP+AC Simple-P bench defaults (ULP 1.11.0, fw 0.1.109)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "87dc916942d3fb901257883b73349199244f7c14",
+"date": "2026-07-13",
+"subject": "AC Simple-P bench defaults (ULP 1.11.0, fw 0.1.109, SWR-102..108)",
+"body": "Owner PID-Tuner values as AC build defaults: kp 6 (was 7), max-err 30\n(was 25), min-pwr 20 (was POWER_FLOOR 64 — integral-windup rationale\nretired with the incremental Simple-P law), skip max 9 / good 2 (was\n6/4), ladder {0,2,8,16,32,64,128,256,512,1024}, SPR fallback 20000.\nPer-phase AC start presets (700 medium / 4050 fast) unchanged — the\ntuner's start-power field is a run parameter, not a build default.\n\nSwap-test note: P1 bracket=0 on two consecutive deploys = dead-point\nhard-spot start artifact (P3 parks the rotor AT the hall zone; next P1\nstarts determine_parking there at fixed PARK_CAL_DAC). P2/P3 passed\nboth times; manual rerun on deployed 1.11.0: bracket 400, enc 5181.\nTool retry improvement filed.\n\nRegistry 1.62 (locks re-snapshotted); 136 reqs, 118 PASS, 0 FAIL.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "2de4a869fdfe9b02830f2b176933db23e4f934bd",
+"date": "2026-07-13",
+"subject": "BP Simple-P bench defaults (ULP 1.10.0, fw 0.1.108, SWR-102..108)",
+"body": "Owner PID-Tuner values as BP build defaults: kp 10, max-err 50%,\nmin-pwr 20, skip max 9 / good 2, ladder {0,4,8,16,24,64,128,256,512,\n1024}; bp SPR fallback 16000. Shared op_p_* knobs SPLIT per-pump —\nAC keeps POWER_FLOOR=64 + 2^idx pacing (SWR-124 guard). run_simple_p +\nregulate_pump + dose/park drive threaded; 3 binaries rebuilt (headroom\n1296B ok), variables.py regenerated, swap self-test PASS on-board.\n\nAlso: deploy_ulp.py no longer overwrites fluispotter/version.py (its\nlegacy auto-stamp put 0.1.73 over 0.1.107 on the board — found live,\n0.1.108 repairs the identity; tool now reads the version, never writes).\n\nRegistry 1.61 (SWR-102..108 rewritten on owner instruction, locks\nre-snapshotted); spec 2.25; 136 reqs, 118 PASS, 0 FAIL, 229 tests.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "a6ed7e4af53d46ac67439b18be6301806984cb2e",
+"date": "2026-07-13",
+"subject": "docs: PPK2 sleep-model proof (task #90 PASS)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "f731a3ede0858d0740fba35c206ce0077f05a6ba",
+"date": "2026-07-13",
+"subject": "docs: IMG-3 boot-proof summary",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "2ef16ddd9d80e6fb3d605951ea0ccf87f48dc161",
+"date": "2026-07-13",
+"subject": "Merge: SWR-269 calibration gate + IMG-3 (v0.1.107) active",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "5f906bc4439195db1c9461e5db88a5dbcfb32247",
+"date": "2026-07-13",
+"subject": "IMG-3 (v0.1.107) BOOT_PROVEN -> ACTIVE; mainline runtime gitlink -> e9d9c06",
+"body": "Boot-proof 2026-07-13: Boot1 DL-mode flash (1793248 B at 0x0, hash\nverified), plain power-cycle, blue LED + PID 0x4001 + hub sync 17:56:22,\nSWR-268 boot fingerprint v1.25.0-9.ge9d9c06cd on the hub. littlefs\npreserved (fw 0.1.107 + ULP 1.9.0 intact). IMG-2 SUPERSEDED. The\nC-level CDC zero-progress break is now live on the board.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "6f001987703373d5253ea3cc57d3ff12a321da3b",
+"date": "2026-07-13",
+"subject": "docs: SWR-269 live-fire proof (bp-no-start -> AWAIT_CALIBRATION)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "42befe18488b57eae364d58edd65e88910891e72",
+"date": "2026-07-13",
+"subject": "Calibration failure gate (0.1.107, SWR-269, owner requirement)",
+"body": "Previously every calibration failure was logged but the state machine\nALWAYS fell through to 'Calibration complete.' -> AWAIT_ANTICOAGULANT_BAG.\nNow 11 instrumented failure sites (valve-close-1/open/close-2 timeouts;\nparking-implausible/partial-rev/bp-no-start/bp-no-full-rev/\nhall-not-detected/parking-timeout; bp-park-failed/timeout) feed a\ncal_failed list; any entry -> 'Calibration FAILED (n: [tests])' error\nevent, sync, return to AWAIT_CALIBRATION. Tape reel noted as a\nfixed-duration exercise with no failure detection (outside the gate).\nRegistry 1.60; 136 reqs, 118 PASS, 0 FAIL, 229 tests.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "0ea048f689dff5c2643ee4c65dddfb404c04c558",
+"date": "2026-07-13",
+"subject": "Merge: HUBR acceptance suite + SWR coverage push",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "d41c2b95fe48a848b00ed05ddc51e66ca5250294",
+"date": "2026-07-13",
+"subject": "HUBR acceptance suite (make verify-hub, 11/11 live PASS) + 10 SWR structure tests",
+"body": "- verification/hub_acceptance.py: throwaway-device live scenarios for\n  HUBR-309 (409+recovery, poison stub, NULL command_uid, stalled-upload\n  non-blocking) and HUBR-310 (Received = arrival, not batch mint), plus\n  306/307 page checks. Registry 1.5 provenance rows; latent quirk noted\n  (first registration 404s for non-station MACs).\n- 10 structure tests: SWR-132/207/208/213/219/220/221/222/501/503.\n  NOT-TESTED 28 -> 18 (remaining: 12 MECH bench, 2 superseded, 401-404).\n- 135 reqs, 117 PASS, 0 FAIL, 227 tests.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "3abf1fad148788734eec6609c9f33496db60eab8",
+"date": "2026-07-13",
+"subject": "IMG-3 BUILT: v0.1.107 CI success, pre-flash gates pass (v1.25.0-9.ge9d9c06cd)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "17a7a34b97d5cda50db6ad7f274d552f9fc4b81a",
+"date": "2026-07-13",
+"subject": "Device spec 2.24: fw 0.1.102-0.1.106 batch, 13 commands, new §7.10 versioning & image provenance; hub spec 1.5.0 gitlink",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "37b98ec6c8e49664877d70c4b89022329f844279",
+"date": "2026-07-13",
+"subject": "docs: summaries for #114/hub-1.5.0/IMG-3",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "59007e3ad8acd823f9226382693821baa5ac47ac",
+"date": "2026-07-13",
+"subject": "Merge rebuild/v1.25-int-wdt: 0.1.106 + hub 1.5.0 + IMG registry",
+"body": "Image provenance scheme (SWR-268, task #114), hub ingestion hardening\n(HUBR-309/310, service 1.5.0 deployed), IMG-3 CDC image registered\n(building as v0.1.107).\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "a6bce1020b130e3c026c6c01342ad0cbad8a946e",
+"date": "2026-07-13",
+"subject": "IMG registry + boot fingerprint + provenance gate (0.1.106, SWR-268); hub 1.5.0 (HUBR-309/310); IMG-3 CDC image registered",
+"body": "- verification/images.py: IMG-0..3 (incl. the v0.1.98 brick-era lesson),\n  one ACTIVE image, validate() invariants; runtime gitlink must match a\n  registered buildable/active image (CI/verify gate).\n- Boot config event carries os.uname().version = the fork-commit\n  fingerprint; live-verified on the hub (v1.25.0-8.g3c8d39092).\n- HUBR-309/310 + hub registry 1.4; service 1.5.0 deployed live.\n- IMG-3 = fork e9d9c06 (mp_usbd_cdc_tx_strn zero-progress break),\n  status BUILDING; image branch/tag v0.1.107 builds it.\n- Registry 1.59; 135 reqs 0 FAIL, 217 tests. Closes task #114.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "67c6826a5cd7e15dde20ad90745c3639b3048596",
+"date": "2026-07-13",
+"subject": "Merge rebuild/v1.25-int-wdt: fw 0.1.99..0.1.105, field-proven",
+"body": "Carries: v0.1.99 INT_WDT image chain (brick root-cause + verified build\nmethod), CDC-wedge serial_sink + run-wide WDT (0.1.100/101, 42-sample\nendurance proof), clean_event_store uid-continuous command (0.1.102/103),\npost-dose kick serialization SWR-265 (0.1.104, 20/20 zero-reset proof),\nhub-not-found backoff + telemetry toggle (0.1.105). Registry 1.58,\n134 reqs 0 FAIL, 214 tests. Hub service submodule at 1.4.0.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "9456d193368264ea6b7e7a9b8c390c10e910d1e6",
+"date": "2026-07-13",
+"subject": "docs: prompt log 124",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "1ded410f7f3094589abdb1aabf020729dd5bcc85",
+"date": "2026-07-13",
+"subject": "docs: prompt log 123",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "156c8e4696ef5d6a491e447465b9658c7c7bc54b",
+"date": "2026-07-13",
+"subject": "docs: summaries entry for 0.1.105/hub 1.4.0",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "de186c4d276e7d7c042f042b689086877a480b37",
+"date": "2026-07-13",
+"subject": "hub-not-found backoff + telemetry toggle commands (0.1.105, SWR-266/267)",
+"body": "SWR-266 (owner spec: try once, log 'Hub not found', cache, continue):\n- HubNotFoundError + scan-classified connect: healthy path pays no scan;\n  a timeout is classified post-hoc; a known-absent hub fast-fails ~2s\n  instead of the 30s blind association timeout.\n- _note_hub_outage/_note_hub_recovered latch: exactly ONE stored event\n  per outage + one on recovery; retries serial-only. The per-minute\n  disconnected-poll append (filled the 8192 store in ~4.5 idle days,\n  issue #41 second occurrence) is REMOVED. FINISH heartbeat, flush-cycle\n  sync and in-session reconnect all latch.\n\nSWR-267 (#118): telemetry_on/telemetry_off hub commands — /telemetry\nflag (persists across boots) + live task start/stop; default stays OFF.\nHub service 1.4.0 adds the command buttons (deployed).\n\nRegistry 1.58; 134 reqs 0 FAIL, 214 tests. SWR-246/241 test anchors\nupdated to the new try/except shape (semantics unchanged).\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "7f7c03a829341cd10df0b7dae90c71e626c5300c",
+"date": "2026-07-13",
+"subject": "docs: SWR-265 field proof PASS (20/20, zero WDT resets on 0.1.104)",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "a053b66e1624dcf3d1441bb674e3687f1ce9a08f",
+"date": "2026-07-13",
+"subject": "Serialize post-dose kick vs flash+WiFi (0.1.104, SWR-265)",
+"body": "Owner directive: 'Can we serialise the WIFI and Flash writes to prevent\nthe reboot/WDT trigger? Do one, then the other.'\n\nArchive forensics placed BOTH 42-run WDT(code 3) resets in the post-dose\nwindow: after the last dose, _start_blood_pump() (dead-point kick,\nescalating-to-max power) deliberately ran CONCURRENTLY with _sync()\n(event-store flash commit + Wi-Fi TX) — pump-first so a hung hub cannot\nkeep the pump parked. That rationale is kept; the sync now waits for the\nkick to settle first:\n\n- _await_bp_spinup(cap_ms=3000): RAM-only polling of ULP shared vars\n  (BP_PUMP_RUNNING + per-batch BP_LAST_ELAPSED_US/PULSE_COUNT changing\n  between polls = motor turning, kick over). No flash, no radio. On cap\n  expiry the sync proceeds (a no-start pump is the fault path's problem).\n- Flush-cycle boundaries audited: RUN->REST already syncs with the pump\n  disabled; RUN start has no sync. The dose-done site was the only\n  kick-concurrent sync.\n- Also explains 'first 2h only': three BP start-FAIL escalations that\n  morning made kicks LONG; once adaptive start settled, kicks dropped to\n  ms and the overlap vanished (36 clean samples).\n\nRegistry 1.56 (SWR-265 added), 132 reqs 0 FAIL, 208 tests.\nNOTE: verified off-device; deploy pending — board currently detached\nfrom USB (alive on 0.1.103 via hub).\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "c7bbbcd649979892c68ba1ea377448c7131d0f21",
+"date": "2026-07-13",
+"subject": "docs: prompts/summaries log entries 2026-07-13",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "e7c6cb2a99fab5113a2e18669ab7f0e243b3c7db",
+"date": "2026-07-13",
+"subject": "clean_event_store idempotency per command uid (0.1.103, SWR-263)",
+"body": "Live 0.1.102 proof run: the command executed TWICE (base 27->30) —\nfast polls re-deliver until the ack uploads, and each re-execution\nwipes the previous ack. A repeated command uid now re-acks without\nre-cleaning. Live 0.1.103 proof: exactly one clean (purged 10,\nbase 30->40), single cleaned event uid 16711720 continuing past the\npre-clean high-water, command cleared. Registry 1.55, 206 tests 0 FAIL.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "336c15c3978b90ef53ebd7d47a279f011a4a56fc",
+"date": "2026-07-13",
+"subject": "clean_event_store command + boot append guard (0.1.102, SWR-263/264)",
+"body": "Store-full incident 2026-07-13 (8192 cap via 37h of FINISH-state\nWiFi-disconnect logging; device hub-mute, brick-on-next-boot):\n\n- clean_event_store hub command: wipes + re-initializes the event store,\n  uid-continuous via persisted uid_base (event_uid_base file) so the hub\n  mint gate/dedupe keep working with NO hub-row delete. Crash-safe\n  two-phase (index removal = commit point; boot finishes/rolls back an\n  interrupted clean). Ack lands in the FRESH store (ack-before-clean\n  would re-deliver forever). SWR-238 degraded latch resets.\n- Boot config append guarded (SWR-264): a full store degrades to a log\n  line instead of bricking every boot in create().\n- EventStore grows uid_base; synchronize() claims base+length and\n  resumes uploads at unmask(server_uid)-base+1, clamped at 0.\n- deploy scripts: event_store.py added to FILES (was missing - the\n  0.1.100 lesson again).\n- 8 host-run behavioral tests (real sync math vs fakes) + 5 structure\n  tests; registry 1.54, 131 reqs 0 FAIL, 205 tests.\n- Submodule: hub service 1.3.0 surfaces the command button (deployed).\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "be3a353f756efecd51e266324e02027b4eb5ef51",
+"date": "2026-07-11",
+"subject": "docs: prompts 117-118 (24.5h endurance PASS + 0.1.101 deploy)",
+"body": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "52397df2380e6feb047022e75eb57ff24847f584",
+"date": "2026-07-11",
+"subject": "deploy scripts: ship main.py (the resume-aware gate lives there — caught during the 0.1.101 deploy)",
+"body": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "a38854ca0c0710bbcf288e65c1b16138e13c836e",
+"date": "2026-07-10",
+"subject": "docs: prompts 113-116 (20-sample proof, wedge fix, boot-loop, red team, 0.1.101)",
+"body": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "29f39e7671f4e5e2cdb142005b791853321015f6",
+"date": "2026-07-10",
+"subject": "tooling: WDT park discipline + deploy-skew fixes (red-team findings 1/4/5)",
+"body": "* output/_serial_io.py RawRepl.enter: parks any armed WDT immediately\n  after the raw prompt — single choke point for all deploy scripts (an\n  unparked deploy against fw 0.1.100+ would be reset mid-copy).\n* control/serial_bridge.py: _maybe_reconnect now uses the parked entry\n  (auto-reconnect after lightsleep CDC re-enumeration no longer resets an\n  armed session); app 1.6.1.\n* deploy_firmware_serial.py + deploy_firmware_catch_boot.py: serial_sink/\n  atomic_file/synchronize client in FILES (catch_boot omission bricked\n  0.1.100 upgrades); EXPECT_VER parsed from version.py (can never skew);\n  shadow-clean extended; stale /telemetry removed on deploy (retroactive\n  off-by-default).\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "234aff1fe68b95803246d040e07a911abd273425",
+"date": "2026-07-10",
+"subject": "verification 1.53: SWR-215/235 rewritten (owner-authorized) + SWR-262 + behavioral sink tests",
+"body": "* SWR-215: no-WDT -> run()-wide 120s floor + 30s in-session + park\n  discipline + resume-aware boot gate (two owner-authorized modifies,\n  CHANGE_HISTORY rows 1.52 + 1.53, lock re-snapshotted).\n* SWR-235: dead POLLOUT gate -> serial_sink measure-and-latch contract.\n* SWR-262 (Open): sink total coverage — CI source scan forbids unrouted\n  console writers (immediately caught atomic_file's bare print_exception).\n* NEW tests_sw/test_serial_sink.py: the sink EXECUTED under CPython\n  (latch trip, one-way, bounded ring, unlatch, write_exception, bypass) —\n  closes the regex-only verification gap that let SWR-235 ship dead.\n* SWR-261 test skips when the private submodule isn't checked out (CI).\n* make verify: 129 requirements, 0 FAIL, 192 tests.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "644fc9fb0e59de83a4d50125af122852d28bdd42",
+"date": "2026-07-10",
+"subject": "fw 0.1.100+0.1.101: CDC-wedge fix + red-team hardening (SWR-215/235/262)",
+"body": "0.1.100 — the wedge fix (owner-authorized after the 5h43m overnight freeze):\n* fluispotter/serial_sink.py (NEW): measure-and-latch console sink — every\n  write timed, first >=200ms write trips a one-way latch, CDC never touched\n  again until unlatch/reboot. The old select.poll(POLLOUT) gate was\n  structurally dead (esp32 port hardwires POLLOUT true).\n* ALL console writers routed: log_message/log_error, telemetry frames,\n  TaskList.cancel, run_safe, asyncio default exception handler (replaced),\n  pump_regulator boot prints (_p), atomic_file cleanup.\n* Session-scoped machine.WDT(30s) + 1s asyncio feeder + park_wdt() hatch.\n* /telemetry auto-create at boot REMOVED (owner: off by default).\n\n0.1.101 — the adversarial challenge fixes (verdict: 6 blocking, all closed):\n* run()-wide 120s WDT floor — the suspend+DTR freeze is invisible to the\n  sink latch (writes are fast-or-never-return), so EVERY state gets the\n  reset backstop; session entry tightens to 30s (_arm_wdt refactor).\n* main.py: resume-aware TEST-MODE gate — /state.dat present => resume the\n  session even with an awake USB host attached (WDT-reset recovery contract).\n* run_safe fatal handler parks the WDT first (no deterministic-fatal\n  reset storm).\n* lib/synchronize-service gitlink -> 62bdc40 (the client half of SWR-261,\n  previously uncommitted — the 2026-07-10 boot-loop root cause).\n\nField evidence: the session WDT fired twice in a live session (08:14,\n10:12) and both times the session resumed and the next sample landed on\nschedule. Lightsleep-pause claim verified at source (MWDT0 APB-only).\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "0723a9d5f3b58e97aaa60910e0a6ed74dcba445c",
+"date": "2026-07-09",
+"subject": "docs: spec 2.23 — §7.9 Building a New Firmware Image (the verified method)",
+"body": "The exact 9-step build→gate→flash→boot-proof procedure executed and\nboot-proven today (v0.1.99-base + v0.1.99, the #44 INT_WDT fix), incl.\nthe pre-flash runtime-version gate that would have stopped v0.1.98,\nand the confirmed v0.1.98 root cause (fork-tip runtime swap to\nv1.26.0-preview, config lines exonerated).\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "406f0d842d5bff51c269e3710b38a2c70124b722",
+"date": "2026-07-09",
+"subject": "fw: INT_WDT 300->1000ms on the boot-proven v1.25.0 base (#44)",
+"body": "Image 1 of the incremental rebuild. Exactly ONE change vs the boot-proven\nv0.1.99-base: runtime/micropython moves 1d140090 -> 3c8d3909 (fork branch\nfluispotter-v1.25-int-wdt-1000ms), whose single commit appends\nCONFIG_ESP_INT_WDT_TIMEOUT_MS=1000 to ESP32_GENERIC_S3/sdkconfig.board\n(+5/-0, no brownout). This is the interrupt-watchdog margin fix for the\nintermittent post-dose WDT(3) reboots. Brownout deferred per the\none-change-per-image discipline.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "34a9ee3195337c4e5235e5b4b33f475cb8a505b1",
+"date": "2026-07-09",
+"subject": "Revert runtime/micropython to known-good v1.25.0-7 pin 1d140090 (#44 no-boot fix)",
+"body": "v0.1.98 bricked because bumping the submodule to the fork tip (7902ff1)\nwholesale-swapped the runtime to MicroPython v1.26.0-preview.151, which\nhard-hangs in early C startup before USB (evidence-first diagnosis; both\nsdkconfig lines exonerated). This restores the exact pre-bump pin — the\nv1.25.0-esp32 branch tip, b10038aff (the runtime the proven-boot flash\nbackup reports) + the riscv ulp.reset() commit the firmware requires\n(pump_regulator.py:277). runtime/esp-idf stays at 57fa26be (constant\nacross good->bad).\n\nImage 0 of the incremental rebuild: NO config change — proves the CI\npipeline produces a bootable v1.25 image before INT_WDT is added.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "74125a7b1b6ab54a49a9943761a8da765ba48bed",
+"date": "2026-07-09",
+"subject": "docs: spec 2.21+2.22 (§7.8 flashing method; correct the PPK2/power claim) + prompts 103-110",
+"body": "Spec 2.21 added §7.8 Flashing the Firmware Image; 2.22 corrects it after the\nv0.1.98 no-boot: the failure was a non-booting rebuilt image (runtime swap),\nnot inadequate supply and not hardware. Verified Boot1 download-mode entry +\nhand power-cycle documented; sdkconfig changes now one-per-image, boot-proven.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "3630d5f64628e34f95794c73e2c239fadea19f0e",
+"date": "2026-07-09",
+"subject": "fix(manifest): drop stale frozen fluispotter/dac7574.py (moved to submodule)",
+"body": "The DAC driver moved to lib/MicroPython-DAC7574 long ago (8e96a18) and is\nfrozen from there (dac7574/*.py); the code imports `from dac7574 import\nDAC7574`. The leftover 'fluispotter/dac7574.py' freeze entry pointed at a\nnon-existent file, failing the frozen-manifest build step\n(\"Cannot stat .../fluispotter/dac7574.py\").\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "3708c967372321cd1eead21049a3e6f880f3adb2",
+"date": "2026-07-09",
+"subject": "ci(build): clone submodules via PAT over HTTPS (SUBMODULE_TOKEN)",
+"body": "The fluispotter-bot SSH deploy key is no longer valid on GitHub (rejected\nfor every repo incl. public ones). Switch submodule init to a classic PAT\nwith repo scope, mapped onto the git@github.com: URLs via a global\ninsteadOf rewrite (also covers the nested submodules from `make\nsubmodules`).\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "8d1682a8158ea4ac2146247bbd49df8c3f204dfa",
+"date": "2026-07-09",
+"subject": "ci(build): setup SSH agent + clone submodules in one step (fix publickey failure)",
+"body": "The v0.1.98 build failed at submodule init with \"Permission denied\n(publickey)\" on every submodule (incl. the public simple-pid) — the\nssh-agent started in the separate \"Setup SSH key\" step didn't carry its\nkey to the \"Initialize submodules\" step. Merge them so the agent is live\nfor the clone; log the loaded key + add github known_hosts.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "53aaba8c04a369fd5ba9e7536ee81fdd4ece6dad",
+"date": "2026-07-09",
+"subject": "Bump runtime/micropython to 7902ff1 (INT_WDT 300→1000ms + explicit brownout, #44)",
+"body": "Image fix for the mid-session Interrupt-Watchdog reboots: the fork's\nESP32_GENERIC_S3 sdkconfig now raises CONFIG_ESP_INT_WDT_TIMEOUT_MS\n300→1000ms and pins CONFIG_ESP_BROWNOUT_DET on at level 7. Root cause +\nevidence in issue #44 (IWDT on a transient >300ms interrupts-off window;\nflash/sleep/motor/power ruled out by on-board measurement).\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "89585b09eb8babf2ce8eddd622bbe13e8c6496f9",
+"date": "2026-07-09",
+"subject": "fw 0.1.98: resumed session binds persistent Wi-Fi station (SWR-260/#45); session persists at start_session anchor (SWR-259/#43)",
+"body": "Both grounded in live incidents during the 2026-07-09 50x7h endurance\nrun: a WDT reset seconds after SESSION entry (issue #44, cause still\nopen) put the device on the recovery path TWICE, and both resumed\nsessions were invisible/unreachable — self._wireless_station is bound\nonly in the AWAIT_CALIBRATION scan flow, so every resume held None and\n_sync() silently no-opped (no events, no command fetch, no store\ncommits — locally appended events were lost at the next reset, proven\nby uid reversion). Recovery now binds the persistent station\nbest-effort (a failed connect leaves the bound station for _sync()'s\nSWR-242 reconnect to heal). start_session additionally persists\nSESSION at the schedule anchor, before both entry syncs, closing the\nseconds-wide silent-session-loss window.\n\nRegistry 1.50 (+SWR-259/260 Open, doc regenerated, 127 reqs), tests\n183 (99 PASS / 0 FAIL), locks no-drift. Live-validated: the resumed\nsession's state event reached the hub within a minute of deploy.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "4395a105f41e353befbf121d5adefa505c38c64f",
+"date": "2026-07-09",
+"subject": "synchronize-service 1.1.4 pointer; prompts log 102 (store-full root cause + E2E session)",
+"body": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "39d62d1444acaec03a2709a4d942b4da9092b41c",
+"date": "2026-07-09",
+"subject": "synchronize-service 1.1.2 pointer (Samples column scoped to current session)",
+"body": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "e70d1fdcd2a1c99c3817edf5408d859ba8a92699",
+"date": "2026-07-08",
+"subject": "Hub spec 1.4.0 + service 1.1.1 pointer; prompts log 101 (hub pairing arc)",
+"body": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "8f33be778be40f7be36a94202d23d07a7dc6c3e9",
+"date": "2026-07-08",
+"subject": "HUBR-305..307: pairing gates command pipeline, version footer, devices-list status",
+"body": "Hub registry 1.2 + regenerated doc; submodule pointer to\nsynchronize-service 4de99f1 (service 1.1.0: pairing restored on\nsql-refactor — device event_store only uploads events/command acks while\nacquired, so the un-paired deploy silently killed the command pipeline;\nguarded acquired_at migration; version on every page; devices list\nState + Samples N/NN).\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "8c5ae1649f1f354f79de7d9ec13f2d3bca9a9044",
+"date": "2026-07-08",
+"subject": "verification: HUB requirements registry (HUBR-xxx, SWR-514) + hub spec 1.3.0",
+"body": "New machine-readable requirements registry for the hub appliance +\nsynchronize-service platform, mirroring the SW/QC disciplines:\n- verification/hub_requirements.py — 13 requirements (v1.0, all Open):\n  HUBR-101..103 platform & boot (Buildroot appliance, A/B rollback,\n  /data partition survival), HUBR-201..204 network & access (AP\n  identity, internet routing, key-only root SSH on BOTH slots + overlay\n  with the owner pubkey documented, nginx proxy), HUBR-301..303 service\n  & data (supervisord/site-packages, device-page-renders-without-AP-row,\n  NTP/epoch clock), HUBR-401..403 operations (site-packages deploy rule,\n  image-pin/slot-consistency incl. the KNOWN stale-pin + stale-slot-B\n  gaps, verified full-card backup procedure).\n- lock_baseline.py: --registry hub (content-hash lock baseline,\n  hub_requirement_locks.py on first lock).\n- gen_hub_requirements_doc.py -> docs/fluispotter_hub_requirements.html.\n- tests_sw/test_hub_requirements.py: registry well-formedness, doc\n  mirroring, lock guard, change-history guard (string limits allowed —\n  SSIDs/addresses/pins, unlike QC's numeric-only rule).\n- Registry 1.49: SWR-514 (Open) guards the hub registry discipline.\n- Submodule -> ccc13aa: Hub spec 1.3.0 (2026-07-08 deployment record,\n  SSH access resolution + owner pubkey in §4.8, internet routing,\n  epoch-clock fact, standing gaps, HUBR registry cross-reference).\n\nGrounded end-to-end in the verified 2026-07-08 hub work: appliance\nmapped from fluispotter/raspberry-pi-os, access recovered, LEFT-JOIN\nfix deployed to the live hub (device page HTTP 200), full-card backup\ntaken + verified. make verify: 125 reqs, 0 fail, 179 tests; sw 109\nlocked no drift; hub 13 open no drift.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "cf3504ce52d763c039c258076ed01c41418f4e85",
+"date": "2026-07-08",
+"subject": "spec 2.20: new §5.6.2 Session Recovery (Power-Loss Resume)",
+"body": "Persisted state, the 7-step boot algorithm (valve close -> restore ->\none-shot hub reconnect/NTP -> ULP health verify with AWAIT_CALIBRATION\nfallback -> counters/schedule -> AC cycle + explicit yield ->\nSESSION/FINISH), the AC-first invariant at every BP start, and the\nstale-schedule dose-backlog operational note. Documents the 2026-07-08\nresume incidents (SWR-257/258, fw 0.1.92/0.1.93). .docx regenerated.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "115950e4d0a38482991867ef5a2c69a71146a051",
+"date": "2026-07-08",
+"subject": "docs: prompts log 99-100 (dead-ULP resume, AC-first invariant)",
+"body": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "c924362f15f0d898d570282f893171ebbd12b946",
+"date": "2026-07-08",
+"subject": "fw 0.1.92-0.1.93: verified ULP start/resume + AC-first invariant",
+"body": "0.1.92 — SWR-257: resume-onto-dead-ULP incident. After a power cut the\nRTC slow memory is random noise; the ULP start's liveness gate\n(INITIALIZED != 0) was satisfied by that noise and a session resumed\nonto a NEVER-EXECUTED ULP: no regulation, parks never serviced, encoder\ncounts frozen (valve/tape moves gated on them misbehaved), DAC latched\n(runaway AC). Forensics at the REPL proved the memory was noise at the\nboard's own address map and that a manual reload came straight up\n(v1.9.0, canary clear, INITIALIZED advancing).\nFix: (a) ULPPumpRegulator.start zeroes INITIALIZED before run and\nrequires it to ADVANCE (>= 2), one reload retry, then a hard failure;\n(b) session recovery runs the SWR-250 health verify (canary + core\nadvancing) BEFORE any pump is enabled — on failure the session is NOT\nresumed and the device falls back to AWAIT_CALIBRATION with an error\nnaming the required power-cycle.\n\n0.1.93 — SWR-258: unanticoagulated-BP window on resume (observed\ntwice). The recovery create_task()s the AC cycle but session entry runs\nsynchronously — suspend no-op, instant BP kick, no-op sync — straight\ninto the BLOCKING machine.lightsleep without one scheduler yield: the\nAC enable executed only at the first wake (+16 s hall / +60 s\nbackstop). Hub log showed 'Starting AC pump cycle' at exactly\nentry+60 s while the BP fought its dead-point start.\nFix: (a) _start_blood_pump enforces AC-FIRST at the ULP register level\nfor state >= SESSION (SPR + preset + enable, warning event when it\nfires; calibration/priming states excluded by the gate — AC cycle\nadopts the running pump idempotently); (b) recovery yields one\nscheduler pass after creating the AC cycle so the enable executes\nbefore the state machine moves.\n\nDeploy tools: pump_regulator.py added to the file lists; EXPECT_VER\nbanner brought current.\n\nRegistry 1.47-1.48 (SWR-257/258, Open); 124 reqs, 109 locked, no\ndrift; make verify 168 tests 0 fail. Both builds bench-deployed;\nsession-reset + clean re-test in progress on 0.1.93.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "dc584c39d01a34b680b58b812ba8e7c631f4f144",
+"date": "2026-07-08",
+"subject": "ppk2_power_logger 1.2.2: 10s no-samples watchdog (PPK2 replug leaves a silent dead fd)",
+"body": "A PPK2 unplug/re-plug mid-run re-enumerates the device on a new USB\nlocation while the logger's old file descriptor keeps returning empty\nreads with no exception — the run then logs 0.00 mA forever looking\nalive. The sampler now aborts with a clear error and a proper summary\nafter 10 s without data. Also logged the bench diagnosis in prompts.md.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "9ed5adb05baec07b389262977bbcc620a9b43110",
+"date": "2026-07-08",
+"subject": "docs: prompts log 96-98 (orphan cycles, ULP wake, NTP era-zero)",
+"body": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "c65e0784e8a473499e371a7f2294f935f021c030",
+"date": "2026-07-08",
+"subject": "fw 0.1.88-0.1.91: session-start fixes, ULP lightsleep wake, NTP guard",
+"body": "0.1.88 — orphan flush cycles (bench: double park at session start):\nAWAIT_SESSION re-entry spawned a second cycle; suspend-then-create keeps\nthe reference the ONLY live cycle, plus an asyncio.current_task()\nownership guard so a superseded cycle exits without ever parking under\nthe new owner. Session entry now takes pump ownership BEFORE the entry\nsync when the first sample is <5 min out (a 74 s hub timeout had let the\ncycle park mid-entry).\n\n0.1.89 — SWR-255 (LOCKED): start_session with no samples is rejected IN\nPLACE — warn, sync, back to the command wait. No state re-entry, no\nstate event, no state.dat write, no flush-cycle restart (the old\nreturn-to-reenter path was the orphan-cycle trigger).\n\n0.1.90 — SWR-245/247: esp32.wake_on_ulp(True) at ULP boot. machine.\nlightsleep only wakes on ENABLED sources; every hall/stall/fail\nwakeup_main_cpu() was ignored and naps ran to the full 60 s backstop\n(hub log: fluid measurements at 64-65 s cadence, deque batch-stamped,\nsample loading ~3 min late). Hall edges now cut naps short; stall/fail\nreporting is immediate. Closes OI-12 (negatively, then fixed).\n\n0.1.91 — SWR-256 (LOCKED): NTP accepted only inside [build-1, build+5]\nyears (derived from __build_date__); RTC sanity bounded on BOTH ends.\nBench: hub (no battery RTC) moved+rebooted at 1970, its unsynchronized\nNTP answer (era-zero = 2036-02-07 06:28:16) was accepted and ended the\nsane-gated retry. Now rejected as a failed sync, and a poisoned clock is\njudged insane so the device self-heals once the hub serves plausible\ntime — verified end-to-end (hub healed via the UI time form, device\nre-synced from 2036 with no reboot).\n\nDeploy tools hardened: _serial_io.find_port never returns a PPK2\n(VID 0x1915, Espressif preferred — a catcher spent its window\nraw-REPL'ing the profiler mid-power-run); assert_port_free pre-flight\nrefuses to deploy while a Monitor/Control app holds the port (its\nbackground reader silently corrupted two deploys); catch-boot kills the\n/telemetry flood first and probes wake_on_ulp availability.\n\nRegistry 1.43->1.46 (122 reqs, 109 locked, no drift); make verify 164\ntests 0 fail. All four builds bench-deployed; 0.1.91 live.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "e3f1ffe3e66789baf7f1e9c5606f33d8892475b4",
+"date": "2026-07-08",
+"subject": "submodule: synchronize-service -> bfe6a1d (Hub spec 1.2.0)",
+"body": "Hub spec doc now documents the Buildroot appliance platform (SSH is\nkey-only as root; AP identity; SWUpdate A/B) and the VERIFIED deploy\npath for the device-page 500 fix: make deploy alone does not take\neffect on the appliance — site-packages copy + supervisorctl restart\nrequired (or pin bump + .swu rebuild).\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "334cde71c73c39b34c45427bd8cd4ee135a2ff96",
+"date": "2026-07-07",
+"subject": "Control app 1.5.1: Session Reset toolbar action (SWR-317)",
+"body": "The verified-safe session state reset, integrated into the Control app:\nback up + delete /state.dat + /time-table.dat (.bak rename — backup and\ndelete in one step, stale .bak removed first), verify the RESETOK\nreadback BEFORE rebooting (nothing destructive without the confirmed\nclear), then machine.reset() -> clean AWAIT_CALIBRATION, hub re-acquire.\nConfirmation-gated, destructive-red toolbar button.\n\nALWAYS enabled (owner: \"it needs to be active also when NOT connected\"):\na light-sleeping SESSION/FINISH board drops its USB-CDC between naps and\ncannot be connected to at all — disconnected, the action runs a\nBOOT-CATCH in a worker thread: the operator power-cycles, the app\ncatches the fresh enumeration (open + interrupt both inside the retry\nloop, ESP32-S3 double-enumeration tolerant, PPK2-safe find_port),\ninterrupts main.py before the first nap, clears, verifies, reboots.\nUp to a 2-minute watch window; success/timeout reported on the UI\nthread.\n\nRegistry v1.44: SWR-317 added + extended (Open); doc regenerated.\nTests: SWR-317 (always-enabled, RESETOK-before-reboot in both paths,\ncatch-loop structure) + the SWR-251..254 fluid-sensor structure tests\nfor fw 0.1.87 (shared test module, implementation in 5f9982e).\nmake verify: 120 reqs, 0 fail, 157 tests; 107 locked, no drift.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "5f9982ec3c9e63756e744447ef8027438f8e79cc",
+"date": "2026-07-07",
+"subject": "fw 0.1.87: fluid-sensor 4s measurements (SWR-251..254 implementation)",
+"body": "One measurement = one 4-second powered window (_measure_fluid_sensors):\nfluid-receiver rail ON -> 4 s settle -> read BOTH sensors -> two logged\nevents (raw uV + classification from the overlay-tunable board_config\ncutoffs: Blood/Air/AC for the blood receiver, AC/Air for the AC\nreceiver) -> rail OFF (finally-guaranteed, cancellation-safe).\n\nSchedule: first hall tick after BP start in each 2+8 flush RUN, and\nevery hall tick through the sample-loading (TRIGGER) window — riding\nthe SWR-245/247 hall-edge wakes.  The old continuous CSV fluid sampler\nno longer runs during SESSION (it held the receiver rail ON through\nevery RUN nap, violating SWR-251's off-between-measurements rule); the\ncatheter-priming fast sampler is untouched and any leftover is stopped\nat SESSION entry.\n\ndeploy_firmware_catch_boot: EXPECT_VER 0.1.87 + wait window 60 min.\nBench-deployed via boot-catch (all files byte-verified, FWVER\nconfirmed).  Structure tests land with the next commit (shared test\nmodule).\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "bbfaf25851e95874b926349cf6d4f1c2c5aec962",
+"date": "2026-07-07",
+"subject": "requirements v1.43: fluid-sensor measurements SWR-251..254, LOCKED",
+"body": "Blood/Air sensor (SWR-251): powered ON 4 s, raw uV + \"Blood\"/\"Air\"/\"AC\"\nclassification from the board_config cutoff intervals\n(BLOOD_SENSOR_*_THRESHOLD_UV, overlay-tunable), logged as an event.\nAC/Air sensor (SWR-253): same 4-s powered reading, \"Air\"/\"AC\" from\nAC_SENSOR_FLUID_THRESHOLD_UV. Schedules (SWR-252/254): first hall tick\nafter BP start in each 2+8 flush RUN, and every hall tick during sample\nload — riding the SWR-245/247 hall-edge wakes; the two sensors may\nshare the 4-second powered window. All four LOCKED on owner\ninstruction; implementation pending (fw 0.1.87).\n\n119 reqs, 107 locked, no drift; make verify 150 tests 0 fail.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "aa2b47adeff568804f52e35486ce8a06fab2f6f4",
+"date": "2026-07-07",
+"subject": "fw 0.1.86: BP flush cycle reinstated + full lightsleep map (SWR-243..250)",
+"body": "The continuous in-session pumping introduced by 4cc92da was a serious\nbattery bug (owner). Between samples the BP now runs the 2-min-run /\n8-min-park flush cycle (SWR-243, LOCKED), preloads continuously at\n16 SPR when a sample is <5 min out (SWR-244, LOCKED), and the flush\ncycle CONTINUES in FINISH so the line stays flushed (SWR-248, LOCKED).\n\nThe CPU light-sleeps in every phase except dosing + fault handling\n(SWR-245, LOCKED; supersedes SWR-240): flush RUN and preload/loading\nsleep between hall ticks — the ULP wakes the CPU per hall edge to\nupdate the 7-slot deque (SWR-247, LOCKED; from Blood-Primed onward,\ncalibration excluded) — and the 8-min REST (motor parked+off) measures\n~20 mA on the bench. Sleepers are mutually exclusive by construction\n(flush cycle in IDLE/FINISH vs session loop in TRIGGER). Hub sync is\nbatched to RUN boundaries + pre/post-dose + faults (SWR-246, LOCKED;\nsupersedes per-hall-tick SWR-242 — a REST nap drops the association).\n\nAdversarial-review fixes: recovery no longer spawns the flush cycle\n(double-start); REST nap clamped to the preload boundary; after-REST\nsync skipped on the preload break (lock-hold delayed pump-start);\nstale _on_hall_tick early-start cancel removed (state desync).\n\nULP #36 canary bench incident (silent pump-dead ULP; 1472 B stack\nheadroom, deepest kick path now exercised every 10 min): the tripped\ncanary is reported as an error once per boot naming the POWER-CYCLE\n(SWR-249) and CALIBRATION entry verifies ULP health — canary clear +\ncore loop advancing — else aborts (SWR-250).\n\nTooling: deploy_firmware_serial.py (firmware-only, strict numeric\nlen+fnv verify + retries after a CDC print-flood truncated a file) and\ndeploy_firmware_catch_boot.py (catch the fresh enumeration and\ninterrupt main.py before the first nap — deploys to a light-sleeping\nboard). PPK2 PowerLogger launcher app.\n\nRegistry 1.31→1.42 (115 reqs, 103 locked, no drift); spec v2.19\n(§5.6.1 rewritten for the final sleep model); Hub spec repo v1.0.0 in\nthe synchronize-service submodule (88ab563). make verify: 150 tests,\n0 fail. fw 0.1.79→0.1.86 all bench-deployed.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "ca41c1f8aedf7c849e6ae1a265083e99582fe7ae",
+"date": "2026-07-06",
+"subject": "fw 0.1.79: FINISH state syncs + stays commandable (SWR-241)",
+"body": "_state_finish was a black hole — slept forever with no sync and no\ncommand polling, so the 'Executing state FINISH' event (appended after\nthe session's final sync) never reached the hub: the hub showed SESSION\nforever and a finished device was unreachable until power-cycle.\nConfirmed live by the 2-sample finish-check run.\n\nNow: persist FINISH to state.dat (reboots recover into FINISH instead\nof re-dosing the last sample from a stale SESSION index), sync\nimmediately on entering the state, then re-sync + poll commands\n(reset_session/restart_device) every 10 min, best-effort, never fatal.\n\nBench-validated end-to-end: FINISH transition 22:53:49 -> event on the\nhub 22:53:53 (4 s); device record reports fw 0.1.79.\n\nRegistry v1.32: SWR-241 added (+ static test, CHANGE_HISTORY row,\nregenerated doc). make verify: 106 reqs, 79 PASS, 0 FAIL, locks green.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "4d02f66c98df4daa02628b030b38010902d26d25",
+"date": "2026-07-06",
+"subject": "requirements v1.31: SWR-240 — ESP32 SHALL light-sleep when not active",
+"body": "Owner instruction after PPK2 showed no sleep. The requirement documents the\nthree current defeats in its own text (telemetry force-enabled capping\nlightsleep at 100 ms; poll loops bypassing the SleepScheduler; the fixed\n3-sleeper gate) and stays NOT-TESTED until the 0.1.79 power build fixes\nthem. Trigger design agreed: drain-detected telemetry (SWR-235 writability\nprimitive) with hysteresis — host draining = telemetry on, nobody draining\n= dormant + long sleeps.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "d67bfc603fccd9a1ea907a6e367f22e4561eaf97",
+"date": "2026-07-06",
+"subject": "docs: prompts log 89-91 (RTC sync, canary discovery, dead-point invariant, holding kick)",
+"body": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "8bd82798d505cf5df5587e9ba10fe6edc3fbfdc3",
+"date": "2026-07-06",
+"subject": "requirements v1.30: SWR-237/238/239 added; SWR-126 modified; SWR-132 added+LOCKED",
+"body": "- SWR-237 RTC sync robustness (no silent year-2000 clock)\n- SWR-238 event-store append failures never crash a session\n- SWR-239 revolution-gated periodic events are edge-triggered\n- SWR-236 gains clause (f) prompt fault-flag attribution\n- SWR-126 modified (owner-instructed, re-baselined): the kick is a\n  continuous escalating HOLD — never de-energizes mid-spin-up; stale\n  \"park does not kick\" sentence fixed\n- SWR-132 added and LOCKED (owner design invariant): the BP park SHALL\n  always rest at the dead-point — the sealed position is the purpose,\n  the holding kick is the designed way to start from it, offset-away\n  parking is forbidden\n\n96 locked / 8 open, no drift; suite 104 reqs PASS 78 / FAIL 0.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "cc655a91c407515c4ebf42c9401aa8fe99e2b513",
+"date": "2026-07-06",
+"subject": "ULP 1.9.0: the kick holds the drive — continuous escalating spin-up",
+"body": "try_kick_start no longer de-energizes on a failed 50 ms attempt: motor and\nencoder stay ON at the current kick power between per-tick attempts, and\nthe +200 escalation (persisted) is applied immediately to the HELD drive —\nthe spin-up becomes a continuous escalating hold.\n\nDefinitive bench differential (2026-07-06, clean chain: fresh power-cycle,\ncanary 0, AC regulating through the same DAC): from the SEALED park\ndead-point (max tube compression, BY DESIGN — SWR-132) the pulsed kick at\nFULL power produced ZERO encoder edges, while a CONTINUOUS drive at power\n3000 turned a clean full revolution (enc 5189, hall bracket 404) from the\nsame rest. A pulse-then-stop start can never build breakaway against the\nsealed compression — every stop surrenders the accumulated strain (the\nresistance-map source has encoded this lesson all along: \"stiction only\nhas to be overcome ONCE\").\n\nSame function, signature, callers, flags, clamps, adaptive persistence;\ncallers' cancel/deadline/disable paths still halt the motor. Park rests AT\nthe dead-point per SWR-132 (locked design invariant).\n\nBench-validated 3/3: 50-deg dose-prepare from the sealed dead-point DONE\nin 3.45 s at 722-723/720 ticks; park re-seats each cycle; owner confirmed\nthe full production path (\"sampling works, logging works\"). Fixes the #35\nroot cause; #36 (ULP stack canary — the masking fault) and #29 (DAC latch)\nremain open.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "1a730d53ec55f6f637ce73a5c4fad01dcbf52273",
+"date": "2026-07-06",
+"subject": "fw 0.1.78: RTC sync robustness + fault attribution + event-store hardening",
+"body": "0.1.77 (SWR-237): NTP outcomes are never silent — every attempt logs an\nevent (success always, failure rate-limited), the sync retries on every\ncommand poll while the RTC is below the 2025-01-01 sanity floor, and a\nsession transition with an insane clock raises a warning. Root cause: the\nacquire path ignored ntp_synchronize()'s False return (host\nfluispotter.internal, 2 s timeout) and a session ran on a year-2000 clock\n(\"sample 0 scheduled in 9680d\").\n\n0.1.78: (a) SWR-236(f) prompt fault-flag attribution — _drain_motor_stop_\nevents factored out of _on_hall_tick, polled in the priming loop and called\nbefore every BP enable, so flags are logged in the phase that caused them\n(a catheter-entry kick escalation had surfaced at session start looking\nlike a failure on a running pump); immediate push suppressed pre-session\n(open-station conflict). (b) SWR-238 event-store append failures degrade\nto log-only instead of crashing — the 8192-entry overflow was a latent\novernight session-killer at the heartbeat-spam rate. (c) SWR-239 the RTC\nheartbeat is edge-triggered on the revolution counter (the level-triggered\n%10 guard emitted ~1 event/s in ~12-event bursts since 2026-04) and reports\nan honest sane/UNSYNCED verdict. (d) _start_blood_pump helper skips the\nlive-DAC preset poke when the ULP is already regulating. (e) start-FAIL-only\nmotor messages reworded to neutral \"Adaptive start:\" log lines.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "0ce77b8a6b14ea98062256065d4f300a4538f04e",
+"date": "2026-07-06",
+"subject": "docs: prompts log 84-88 (testbed, hard spots, QCR-102, tracker, fault reporting)",
+"body": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "3a9c1b209f651a29a0cc671a2cdd5863cd2aabb3",
+"date": "2026-07-06",
+"subject": "requirements: SWR-131 + SWR-236 (v1.25); QC v1.2 with QCR-102 LOCKED",
+"body": "SW registry 1.22 -> 1.25: SWR-131 (start-method A/B testbed lives in\nULP_Test2, operational byte-identical gate), SWR-236 (immediate fault\nreporting, amended 1.25 with the false-positive triage clause). QC registry\n1.0 -> 1.2: QCR-102 blood-pump startability at every rotor position — full\nstart-position scan, breakaway power < BP_START_MAX_POWER (3800) at every\nposition, hard-arc width limit TBD — LOCKED on owner instruction (first\nlocked QC requirement). Suite: 100 SW reqs PASS 75 / FAIL 0; QC 2 reqs.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "ec223a11ffea19e5d9f17b484333e0b7408f7ef0",
+"date": "2026-07-06",
+"subject": "fw 0.1.76: immediate fault reporting with triage (SWR-236)",
+"body": "Any ULP motor_stop_events fault now produces a rich, self-contained fault\nevent (decoded flags, occurrence count, sample, main/session state, per-pump\nDAC/SPR, learned kick registers, bp_state_word, bp_park_enc, uptime, fs free,\nfw+ULP versions, reset cause) that is COMMITTED to flash FIRST and then\npushed to the hub at once via a single bounded, never-raising Wi-Fi task\n(10-min per-flags cooldown; new flag combinations push immediately).\nSleepScheduler defers lightsleep to asyncio sleep while a report is in\nflight so the radio and the task stay alive.\n\nTriage (0.1.76, after a bench false positive where the BP was RUNNING while\na start-FAIL fault reached the hub): stall bits and start-FAILs whose kick\nregister reached 0 (full power — the dead-point signature) report\nimmediately; a below-full-power start-FAIL is held 30 s and confirmed via\nhall revolutions / still-commanded checks — resolved-by-escalation becomes\nan informational event, no hub alarm.\n\nVERIFIED END-TO-END on the bench (0.1.75 base): fault emitted 14:24:49,\nvisible on the hub 14:24:57 — 8 seconds fault-to-hub. Root-caused from the\nstuck-in-INITIAL board (issue #26: resume worked but died invisibly in a BP\nstart-FAIL loop). Forensics + remaining policy items on #26; hub migration\nsplit to #34.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "2a1302d899c49f65c50d63eb9c3903a83d99d118",
+"date": "2026-07-06",
+"subject": "tools: PPK2 power logger + live viewer; bridges never grab the PPK2 port",
+"body": "ppk2_power_logger v1.2.0: PPK2 mAh logging per hub event + heartbeat into\nappend-only logs/power_sessions.log, 1 Hz live feed, baseline/reset control\nchannel. power_viewer v1.1.0: PyQt6 sparklines (5-min window + full-run,\nmax-preserving decimation), baseline line, net stats; tails the feed\nread-only. Monitor 1.1.3 / Control (1.4.3 changelog in prior commit):\nfind_port skips Nordic PPK2 (VID 0x1915) and prefers Espressif (VID 0x303A)\n— the Monitor auto-grabbing the PPK2's CDC port corrupted power measurements.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "83b68feed0d41a682cb3f140d60ac6dae6f15a38",
+"date": "2026-07-06",
+"subject": "Control 1.4.2: Start Test tab — BP start-method A/B bench UI",
+"body": "New tab driving the Test2 sweep-start testbed: pump/mode selectors, all\nspin-up knobs, live status, per-rep results table (Result / time-to-edge /\nescalations / learned power / run edges, green/red, rows kept across runs\nfor the A/B). 1.4.1 adds the Copy button (whole table -> clipboard as TSV\nwith each run's parameters stamped per row); 1.4.2 raises Repeats to 2000 +\nPause min to 100 ms enabling full-revolution position walks (short Run ms\nsteps the rotor a few edges per rep). Stop path writes Test2 addresses (not\nstale operational ones). app_version changelog also carries the 1.4.3\nPPK2-port-guard line (guard itself lands with the PPK2 tooling commit).\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "a4c674d7f2831de745c4df640467d6aadf2bdf3d",
+"date": "2026-07-06",
+"subject": "ULP_Test2 1.4.1: sweep-start start-method A/B testbed (SWR-131)",
+"body": "Owner rule: the operational binary is reserved for PROVEN solutions —\nstart-method experiments run in Test2. test_sweep_start (TEST_SWEEP_START=8,\nULP_TEST2_BUILD only): mode 0 = continuous-hold ramp (enable once, escalate\npower per hold window WITHOUT stopping), mode 1 = faithful replica of the\noperational pulsed kick (50 ms first-edge window -> full stop -> escalate ->\nretry) for same-board A/B. All knobs runtime-tunable; publishes\ntime-to-first-edge, escalations, learned register, post-start run edges.\n1.4.1 raises the mode-0 start bar to 3 rising edges (parity with the\noperational kick's count>0) after bench jitter false-starts.\n\nOperational binary verified BYTE-IDENTICAL (6432 B, 1.8.0) through both\nversions. sweep_start_script drives it (swap-in test2, JSON frames, restores\noperational); deploy_test2_serial.py now pushes bin + regenerated map.\n\nBench results (2026-07-03): both modes start reliably from normal rest\npositions at power 2500 (t_edge 2-44 ms); POSITION-DEPENDENT HARD SPOTS are\nthe real BP start problem — a hard arc in the park area needing 3500-4095 and\none dead-center that fails at full power (worst-case pump). See issue #30.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "c0a173252eace7c5b62e47e6a0f0093b52fd3178",
+"date": "2026-07-03",
+"subject": "lib/synchronize-service: bump to sql-refactor tip 108cc46",
+"body": "30 commits (previously local-only): time-table caching, UI/event\nimprovements, AC-upkeep state/command removal, access_points LEFT JOIN,\nREADME documentation. Pushed to origin/sql-refactor.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "9779d0414ecf60b4fdbfd8f4ae5f3b842060ac3d",
+"date": "2026-07-03",
+"subject": "tools: printpods pattern + tape markings utilities (+ .app launcher)",
+"body": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "9d5f4c6c303b797939cd2b3324a5ea5b996ac5b1",
+"date": "2026-07-03",
+"subject": "docs: prompts log 74-80 + compaction #2 (dose/park debug span)",
+"body": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "bda0e30ac523fe96197b1d8aafd06a65ae980cf7",
+"date": "2026-07-03",
+"subject": "requirements: lock status + change history + QC registry (SWR-511/512/513)",
+"body": "SW registry 1.19 -> 1.22:\n- SWR-128 reworded: park start = the shared adaptive START_DAC (1.19)\n- Per-requirement LOCK status (1.20): Status column in the generated doc;\n  the 95 pre-existing requirements Locked (frozen — text changes only on\n  the owner's explicit instruction), new requirements default Open.\n  Enforced by a content-hash baseline (requirement_locks.py) managed\n  exclusively via lock_baseline.py; SWR-511 fails the suite on drift or\n  removal (negative-tested: both caught).\n- Requirement Change History (1.21): append-only itemized log of every\n  requirement change (add/modify/lock/unlock/remove), rendered as its own\n  doc table; SWR-512 validates entries.\n- NEW mechanical & sub-system QC requirements registry (1.22, SWR-513):\n  verification/qc_requirements.py -> docs/fluispotter_qc_requirements.html.\n  Collects all testable MECH/ELEC device requirements for the automated\n  device QC process; each entry carries a measurement method + machine-\n  readable limits (TBD = listed, not yet enforceable). Same lock +\n  change-history disciplines (lock_baseline.py --registry qc). First\n  requirement QCR-101: blood-pump placement centered — resistance-map\n  centroid distance from theoretical center, dead-point/parking samples\n  excluded, < BP_CENTER_MAX_DISTANCE (TBD).\n\nSuite: 98 reqs, PASS 73 / FAIL 0; lint clean.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "40b66408df68215d7ba800288c5a87c4c2181992",
+"date": "2026-07-03",
+"subject": "ULP 1.8.0: park start via the shared adaptive START_DAC (try_kick_start)",
+"body": "BP_PARKING now cold-starts through bp_dose_park_kick() -> try_kick_start —\nthe proven adaptive START_DAC (drive at persisted bp_dac_start, escalate\n+200 power per no-edge attempt until the first encoder edge) — then drives\nto the hall home via bp_drive_window(watch_hall) Simple-P, exactly the dose\npattern. One start method everywhere: run / dose / park / AC.\n\nReverts the 1.7.0 fixed-power continuous spin-up (a fixed start power\ncannot ramp to break a hard rest position free); PARK_SPINUP_MIN_EDGES\nremoved. try_kick_start and DOSE unchanged. SWR-128 test updated\n(test_park_kick_shared). Deploy sanity string -> 1.8.0.\n\nBuilt + verified off-device (6432 B, headroom 1456 B, no libgcc; address\nmaps CONSISTENT — .shared_vars pinning kept variables.py byte-identical).\nDeployed + verified on the board (ULPVER 1.8.0, INIT advancing). Bench\nmove-out -> stop -> park validation pending.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "5b15450989d596b56e089d61d1030220304c88b7",
+"date": "2026-06-29",
+"subject": "ULP 1.4.0: kick-gated park baseline + validated Simple-P dose",
+"body": "Roll the BP park drive back to the 1.4.0 kick-gated baseline: bp_dose_park_kick\n+ bp_drive_window(watch_hall), parallel to the dose; an already-home entry\nreturns immediately. The 1.5.0 cold-start + 1.6.0 continuous spin-up chased a\nmis-diagnosed park failure -- the in-calibration park test was invalid (it ran\nright after determine-parking, which leaves the rotor at the hall trailing edge\n/ near home, so the park does almost nothing). The proper drive-to-home test\n(move out of home -> stop -> park) is run via the Control Dose/Park Debug tab.\n\nDOSE unchanged: continuous bp_drive_window Simple-P (the validated 1.4.0 dose\nfix that passed the 20-sample run; replaces the 1.3.3 run_pid 2-edge batches\nthat stalled/re-kicked into a dose timeout -> fatal reset).\n\nRetained as behavior-neutral diagnostics: bp_parked live home-state flag +\nbp_park_enc telemetry (park encoder-tick total).\n\nVerified off-device: build 1.4.0 (6432 B, headroom 1456, no libgcc, byte-\nidentical), variables.py CONSISTENT with the ELF, SW suite 95 reqs PASS 70\nFAIL 0, make lint clean. SWR-127/128 updated; requirements doc 1.17.\n\nBench park test (move-out -> stop -> park) pending a board power-cycle.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "600454d87e98bc5992649cd46b1f32eb72ae4cd1",
+"date": "2026-06-19",
+"subject": "ULP 1.3.3 / fw 0.1.73: adaptive self-tuning motor kick-start (SWR-126)",
+"body": "Every operational motor-start site now routes through ONE try_kick_start helper\nthat learns the working start power per session — directly targeting the BP\ndose-completion failures (collect/prepare timeout -> fatal reset).\n\nAlgorithm (uniform at every start site): drive at the pump's learned start\nregister; wait <=50 ms for the first encoder edge (sample_encoder's first-edge\nwindow). Edge -> started, keep the power. No edge -> set MOTOR_START_FAIL + wake\nCPU (logged), stop the motor, escalate start power +200 (register -= 200, MORE\npower, clamped to full DAC_MAX_POWER), persist the new register in the shared var,\nretry next tick. One attempt per tick + clamped register => no infinite loop. The\nescalated value persists for the session and resets to the board_config default\nat boot — so it ideally escalates only once per session.\n\nStart sites unified (esp32/pump_regulator/main/ulp/main.c): regulate_pump spin-up\n(AC + BP running) + mid-run stall recovery; bp_enter_dosing / bp_enter_parking via\nbp_dose_park_kick; BP_DOSING + BP_PARKING mid-stall (replaced the one-shot\nnudge-to-DAC_START). New per-pump shared vars ac_dac_start / bp_dac_start.\n\nConfig: board_config DAC_START_AC = 700 power (reg 3395), DAC_START_BP = 3200\npower (reg 895, strong stiction-breaking) — both overlay-tunable; firmware\nconverts power->register (4095 - power) at ULP init and logs \"BP/AC start power\nraised to <pwr> (kick reg=<reg>)\" on each escalation.\n\nPOWER/REGISTER INVERSION verified correct: power = 4095 - register; escalate\nlowers the register (more power); clamp [DAC_MAX_POWER=0 .. DAC_HALT-POWER_FLOOR].\n\nVerified off-device: build green — operational 6480 B, headroom +1416 B, no\nlibgcc, ULP 1.3.3; test/test2 fit. variables.py/test_variables/test2_variables\nregenerated (AC_DAC_START/BP_DAC_START present, no hardcoded hex). SWR-126 added\n(+ SWR-111/113 reworded), doc 1.13 (91 reqs); SW suite 66 PASS / 0 FAIL; lint\nclean. NOT deployed, NOT bench-tested — operational binary intentionally changed\n(build_verify \"byte-identical\" gate re-passes after deploy).\n\nNOT YET DONE (user-driven, needs the board): deploy the rebuilt operational ULP\n(ulp_main.bin) + fw 0.1.73, RESTART the Control app (AC/BP_DAC_START addresses\nshifted), then bench-test via the Dose/Park Debug tab — each Dose/Park click now\nexercises the adaptive kick-start. Watch for \"start power raised\" + that the\nlearned value persists for the session.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "780708dc647abc5f66d989c2ce0f4fc584ec7ffc",
+"date": "2026-06-19",
+"subject": "spec v2.17: fix audit discrepancies (factual errors, stale numbers, omissions)",
+"body": "Updates docs/fluispotter_spec_repo.html per the spec-vs-implementation audit\n(264/330 claims matched; this corrects the confirmed factual + stale items).\n\nFactual corrections:\n- §4.7 valve GPIOs 2/3 -> 42/46 (GPIO2 = DAC SCL, GPIO3 = pressure ADC)\n- §4.1 spot/line emitter enable -> GPIO43 (GPIO48 = fluid receivers)\n- §4.3 firmware does NOT call machine.freq -> runs at default 240 MHz\n- §7.6 dac7574 uses the ULP RTC-I2C HARDWARE peripheral (not bit-banged);\n  pulse_counter.S / variables.c / config.h are legacy stubs not in the build;\n  3-binary model + 8176-byte reserve + 4592-byte swap ceiling; deploy = 14 steps\n  (step 4 = import-verify not remap; step 11 = full .text+.rodata verify)\n- §6.4 removed phantom maintain_anticoagulant_pump (10 CommandName members);\n  event types +settings/initialization/recovery; +GET /devices/{uid}/files;\n  §6.7 device-list columns corrected\n- §7.5 stale fixed ULP base address removed (regenerated per build)\n\nOmissions added:\n- §7.5 no-watchdog design (SWR-215), non-blocking serial (SWR-235), the\n  INITIAL..FINISH state machine, async background tasks, 1s/full-every-5th sync\n- §5.6 AC + motor-stop wake sources (not BP-only); dosing uses asyncio not lightsleep\n\nStale numbers (updated to code reality; ambiguous ones flagged in §8.1):\n- §5.1.3/5.2/5.6 SPR -> 16 s/rev (board_config default, overridable; was 17)\n- §5.7 tape-reel timeout -> 5000 ms (OI-10, under review vs prior 20 s),\n  flush-cycle park backstop -> 34 s, 5184 = 324x16 (was 326)\n- §5.8 three fatal state-transition valve codes added + fatal-vs-non-fatal clarified\n- §3.3 power budget RE-DERIVED for the actual 240 MHz CPU (~165 mW active, 50 mA;\n  total ~39.6 mW; runtime ~17.7 days; the motor still dominates) -- firmware does\n  not downclock (OI-11 resolved; optional 80 MHz noted); §4A 12 sections + 0x4C\n- §8.1 OI-10 (tape 5 s) opened; OI-11 (CPU clock) resolved\n\nNOT changed: §5.5 spin-up / §5.7 dose-stall START logic (being revised to the\nadaptive kick-start in a concurrent change). .docx regenerated to ~/Downloads.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "31436e1090dec2a63e51d730aa2eed3aa61607e7",
+"date": "2026-06-19",
+"subject": "control 1.3.0: Dose/Park Debug tab (drives the operational bp_tick) — SWR-316",
+"body": "A new Control tab to debug + optimise the blood-pump dose/park, which has been\nfailing in sessions (collect 213deg / prepare 50deg -> TimeoutError -> fatal reset).\n\nWHY NOT a test binary: the dose/park code (bp_tick + regulate_pump + helpers\n~3.5 KB) makes any test image 6.8 KB — over the 4592 B runtime-swap ceiling\n(TEST2_MAX_BYTES; above it the mem32 load crashes into MicroPython RTC memory).\nA trimmed Test3 hits the same wall. But the OPERATIONAL binary already runs the\nexact dose/park, driven entirely by shared vars — so the tab drives that directly,\nwhich also means it debugs the EXACT failing code, not a copy.\n\nWhat it does:\n- monitor/board_script.py: dose_park_debug_script(action, ...) injects a script\n  that writes the operational shared vars (bp_dose_target + bp_dosing / bp_parking /\n  bp_pump_running) and streams encoder feedback at ~20 Hz. read_bp_params_script()\n  pre-fills the tab from the live board. Addresses bind from variables.py (no hex).\n- Idle-only safety: refuses to drive when MAIN_CPU_STATE >= SESSION(10) so it can\n  never collide with the firmware's own _dosing_tick.\n- control/panels/dose_park_panel.py: Park / Prepare 50deg / Collect 213deg / custom\n  Dose N / Run warm-up / Stop, with editable params (target ms/rev, kp/ki/kd, start\n  DAC, park offset) and a live pulses-vs-time + power twin-axis plot, plus readouts\n  for dose_actual/target, hall, revolutions, decoded motor_stop_events, state word.\n  A stall shows as flat pulses while power maxes — exactly the signature to chase.\n- control/main.py: tab registration, _MODE_DOSE_PARK, dp_* frame dispatch, start/\n  stop/refresh slots. control 1.3.0.\n\nVerification: SWR-316 added; SW suite green (PASS 65 / FAIL 0); 90 requirements;\ngenerated board scripts compile as valid MicroPython; panel lifecycle verified\nheadless. Operational ULP UNCHANGED (pump_regulator.bin byte-identical).\n\nNOT YET DONE: bench-driving the tab to root-cause the dose failures (lead\nhypothesis: BP_DOSING's mid-dose stall path only nudges DAC->DAC_START with no\nescalate-to-full-power and no stall event, unlike regulate_pump's spin-up\nescalation — so a stiction stall mid-dose never breaks free -> timeout -> reset).\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "87f72aff0770a29fd6ab334a037f0466c2e16a39",
+"date": "2026-06-19",
+"subject": "firmware 0.1.72: non-blocking serial + dose sub-stage logging + verification",
+"body": "Changes (on top of fefc581/aba073d):\n- Non-blocking serial (SWR-235): telemetry + _DEBUG log writes gated on USB-CDC\n  writability (select.poll POLLOUT), dropped when the host isn't draining — kills\n  the print-wedge that hard-hung the board when a USB host was attached but not\n  reading.\n- Dose sub-stage logging (SWR-234): every dose sub-stage is an event-store event,\n  now incl. encoder-step counts (50 deg/720 steps, 213 deg/3067 steps) and a\n  per-rev hall-loading countdown (\"Loading sample N: k/7 hall revolutions\").\n- SWR-315: Monitor Sampling tab reflects the sample deque + schedule (codified).\n- Requirements doc v1.11 (89 reqs); regression tests; SW suite green; lint clean.\n\n== VERIFICATION STATUS (bench, fw 0.1.72) ==\n\nTESTED & WORKING:\n- Non-blocking serial: ran a full ~42-min 20-sample session AND idled with NO\n  serial drainer attached, never wedged; telemetry flows when a reader drains.\n- Dose sub-stage logging: all sub-stages incl. encoder steps + hall countdown\n  verified on the hub across the 20-sample run.\n- 20-sample session: all 20 samples [0-19] loaded AND completed, full sequence\n  each, complete hub event log.\n- Crash-boot DAC recovery (SWR-233) + session resilience (A/B/C): demonstrated\n  end-to-end — carried the run through dose-failure resets (reset -> DAC safe-off\n  + recovery -> retry -> success). state.dat persists SESSION; overnight NTP\n  crash-loop gone; survived ~1 day fully offline.\n- Motor-stop decoded logging (SWR-232): captured \"BP start-FAIL @ sample 6\" with\n  per-pump DAC/power/SPR context.\n\nNOT WORKING / known:\n- BP intermittently fails a dose rotation (collect 213 deg / prepare 50 deg,\n  \"motor or encoder malfunction\"). Firmware treats a dose timeout as FATAL ->\n  machine.reset(); recovery then retries, so samples still complete but each\n  dose hiccup reboots the device. BP dose reliability + the fatal-on-timeout\n  response are open.\n- No hardware watchdog (by design): print-wedge fixed, but any OTHER hang is\n  unrecoverable except by power-cycle.\n\nNOT TESTED:\n- The ULP Dose/park functions in depth (relatively untested — next work item).\n- A clean uninterrupted SESSION->FINISH completion (20-sample run completed but\n  with dose-failure reboot/recovery cycles).\n- WiFi-off recovery as a dedicated on-bench functional test (best-effort\n  connectivity validated; ~1-day offline survival is supporting evidence).\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "aba073db93332b2ebdf464ff29a92a4415b93d6e",
+"date": "2026-06-18",
+"subject": "control: PID Tuner Run-History persists to a cross-session log file",
+"body": "Run-History is now also appended to <repo>/logs/pid_tune_history.log (or\n~/.fluispotter/ if the repo tree isn't writable); on startup the on-screen log\npreloads the file's tail below an \"earlier sessions\" divider, so recent\nprior-session runs are visible without opening the file. \"Clear log\" clears only\nthe screen (the file is kept). app_version 1.2.1; logs/ gitignored.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "fefc581dd1ecce459fe9691792fcb0c80a9e0cfa",
+"date": "2026-06-18",
+"subject": "firmware: session resilience + crash-boot DAC recovery + diagnostics",
+"body": "Session resilience (overnight-stall fix):\n- ntp_synchronize is best-effort (returns False, never raises) so a Wi-Fi/NTP\n  timeout can no longer crash the firmware — the overnight AWAIT_CALIBRATION\n  ETIMEDOUT crash-loop. Recovery Wi-Fi/sync is wrapped so an out-of-range radio\n  is skipped and the session resumes offline.\n- _state_session persists state=SESSION + sample index via _write_state on entry\n  and on each sample advance, so a mid-session reset recovers and continues the\n  schedule (state.dat previously froze at AWAIT_CALIBRATION, so recovery was dead\n  code). Bench-confirmed: state.dat held state=10 after a mid-session reset.\n- log_error appends + timestamps (16 KB cap) so the first fault survives a\n  reset loop.\n\nCrash-boot DAC7574 recovery (A+B gated by reset_cause):\n- ULPPumpRegulator.start(), on any non-power-on reset, runs an I2C SCL clock-out\n  bus recovery then commands DAC7574 CH0/CH1 (pump signals) OFF before the RTC\n  takes the bus — clears a crash-latched DAC / stuck bus without a power-cycle.\n  Best-effort; skipped on a clean power-on.\n\nDiagnostics:\n- Motor-stop events logged decoded (per-pump stall vs never-started) with the\n  sample index + each pump's DAC/power.\n\nmain_debug.py: fix stale `Controller` import so the debug build runs again.\n\nVerification: SWR-230/231/232/233 + regression tests; requirements doc v1.9\n(86 requirements); SW suite green. Deployed + bench-verified on fw 0.1.70.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "e6fcd66899d37d6929a65378e262b08a44c65946",
+"date": "2026-06-17",
+"subject": "feat(ulp): test2 1.3.2 — tunable N + skip-ladder VALUES (deployed)",
+"body": "The test2 sandbox binary (pump_test2.bin) now exposes p_reg_pulse_count (N)\nand p_reg_skip_table[10], both #ifdef ULP_TEST2_BUILD so the operational\nbinary stays byte-identical (verified: pump_regulator.bin 6348 B unchanged).\ntest_p_regulate reads N from p_reg_pulse_count; skip_for_level() returns the\ntable in test2 / keeps 2^idx elsewhere.  ULP_Test2 1.3.1 → 1.3.2.\n\nRegenerated test_variables.py + test2_variables.py from the same ELFs\n(test2 gains P_REG_PULSE_COUNT + P_REG_SKIP_TABLE; test gains\nP_REG_PULSE_COUNT).  variables.py unchanged (operational byte-identical),\nso CI's drift gate now matches the built ELFs.\n\nBuilt + verified off the bench toolchain (ninja); operational byte-identical,\ntest2 3304 B (≤ 4592 ceiling), headroom 4672 B, no libgcc.  Deployed\npump_test2.bin via pyserial (FNV-verified on board); operational ULP confirmed\n1.3.2, INITIALIZED advancing.  This pairs the host changes in d538bed (the\nsingle Simple-P tuner) with the binary that backs the N + ladder controls.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "d538bed65be3ceb5df8acaa2f81867949879ee2e",
+"date": "2026-06-17",
+"subject": "feat(control): PID Tuner → single Simple-P tuner (host/UI; ULP deferred)",
+"body": "Collapse the PID Tuner to one Simple-P tuning mode on the test2 sandbox and\nexpose the three tuning levers (pwr/1%, N pulses, skip-ladder VALUES).\n\nUI (pid_tuner_panel.py) — rewritten single-mode:\n- removed the mode combo, legacy Kp/Ki/Kd + N/deadband, \"Apply gains\" + the\n  live-Operational path, and the variables.py/board_config.py loads\n- added an N (pulses) spinbox + a validated 10-value skip-ladder editor\n- telemetry now in SPR seconds (was raw RC ticks); EncOn% uses the live N\n- Control app 1.1.14 → 1.2.0\n\nHost (monitor/board_script.py):\n- pid_p_regulate_script writes N + the 10-entry skip table, but only when the\n  deployed test2 map exposes p_reg_pulse_count + p_reg_skip_table — older\n  builds degrade gracefully (baked N=16 + 2^idx); count/safety-cap use the\n  effective N\n- deleted the now-dead pid_operational_p_regulate_script + the legacy\n  positional-PID harness; updated the control/board_script.py shim, the\n  control/main.py dispatch (single pid_p_regulate_script call), and\n  test_board_scripts.py (SWR-314 → one script)\n\nDocs: control_spec_repo 1.3 → 1.4 (§6.5 rewrite); SW-requirements 1.5 → 1.6\n(SWR-314 reword).\n\nNOTE: the matching test2 ULP change (p_reg_pulse_count + p_reg_skip_table,\nULP_Test2 1.3.2, all #ifdef ULP_TEST2_BUILD so the operational binary stays\nbyte-identical) is held back — it needs a bench rebuild + variable-map regen\n(no local IDF toolchain) and is committed together with the regenerated maps\nso CI's variables-drift gate stays green.  Until then the host degrades\ngracefully; the cleaned-up window is live on Control-app restart.\n\nVerified: py_compile; make lint clean; SW suite 57/0 + 52/52 discovery.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "d82e61d52ee6a2e7c38e9417138613b8dda84f60",
+"date": "2026-06-17",
+"subject": "fix(ci): let ULP-build generate the tree, link via build_verify_ulp.py",
+"body": "The ulp-build job failed at `idf.py build` with `undefined reference to\nulp_stack_canary`: main.c declares that stack-overflow sentinel extern,\nand it's defined only by the version-controlled\nesp32/pump_regulator/main/ulp/ulp_riscv.ld.  But idf.py regenerates\nulp_riscv.ld from the stock ESP-IDF template (no canary), so the ULP link\nfails.  The bench never hits this because build_verify_ulp.py copies our\nulp_riscv.ld over the generated one and re-links — but CI ran raw\n`idf.py build` and aborted (sh -e) before that step.\n\nFix: `idf.py build || true` — it only needs to generate the ULP ninja\ntree (it reaches the final ULP link before failing, so the tree is\ncomplete).  build_verify_ulp.py then installs main/ulp/ulp_riscv.ld and\nre-links/objcopies all three images + runs the size/headroom/libgcc/\nversion gates.  A genuine earlier build break still fails the job (ninja\nhas no tree to run against).\n\nVerified in CI (no local ESP-IDF toolchain).\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "9ebdd2e9b8f2827dd4080800422ebdaed5f9fc24",
+"date": "2026-06-17",
+"subject": "fix(ci): drop dead `import serial` from output/_serial_io.py",
+"body": "The SW verification CI job failed with `ModuleNotFoundError: No module\nnamed 'serial'`: test_board_config_overlay imports `output._serial_io.fnv`,\nand _serial_io.py imported pyserial at module top — but CI doesn't install\npyserial.  The import was dead: _serial_io never calls serial.Serial();\nRawRepl takes an already-open port and the deploy callers\n(deploy_*_serial.py / run_*_serial.py) own the serial.Serial() open.\n\nRemoving it lets the pure helpers (fnv, find_port, FNV_BOARD_SRC) import\nwhere pyserial is absent.  Verified by running the suite with pyserial\nblocked (sys.modules['serial']=None): 52/52 OK; normal suite still 57/0.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "34d073a478b1ee3464df0f2b8ce4a71b7902ecbe",
+"date": "2026-06-17",
+"subject": "chore: remove obsolete fluispotter_sv hardware variant",
+"body": "fluispotter_sv.py was an alternate firmware variant for a different PCB\n(\"sv\" = the owner's initials).  It is obsolete and never imported — the\nlive firmware is fluispotter.py (fluispotter/__init__.py loads\nMainController from .fluispotter).  Removing it also clears the GPIO-5\ndocumentation trap: the variant's \"Main I2C bus: SDA GPIO 5, SCL GPIO 4\"\nnote (its reed switch was relocated to GPIO 38) read as if it applied to\nthe main board, where GPIO 5 is the reed/Hall ON switch and I2C is on\n39/40.\n\nRemoved all live references:\n- delete fluispotter/fluispotter_sv.py\n- deploy_ulp.py: drop from FLUISPOTTER_PY_FILES\n- output/deploy_all_serial.py: drop from the deploy tuple; the shadow-clean\n  step now also purges /fluispotter/fluispotter_sv.{py,mpy} off the board\n- .flake8: drop the per-file-ignore\n- verification/tests_sw/test_apps_and_firmware.py: drop from the\n  test_attn_11db_everywhere loop\n- docs/main_cpu_architecture.rtf: remove §7 \"Hardware Variant\"\n\nPreserved append-only history (prompts.md, _commits.json, generated\nhistory.html, spec changelog rows) — factual records of past work.\n\nVerified: full SW test suite 52/52 OK (57/0 tagged); `make lint` clean;\nno runtime import, CI, build, or deploy-list reference remains.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "c253ea3adf93df92b253dc8fe059d0dc55f1cebe",
+"date": "2026-06-16",
+"subject": "feat(control): Pumps tab → Simple-P stats + encoder-duty reconciled across tabs",
+"body": "Pumps tab (app v1.1.13): aligned to the operational Simple-P regulator.\n- Removed the legacy PID Kp/Ki/Kd gain fields + \"Apply gains\" (Simple-P uses a\n  fixed per-pump step_per_pct, not a tunable PID; arming no longer clobbers the\n  BP dose/park PID's board_config boot gains).\n- Stats grid now shows the TRUE hall-interval SPR (wall-clock between hall-rev\n  increments) + its error vs target, skip-ladder level, hall revolutions, and\n  motor-stop events; plus a read-only readout of the Simple-P constants written\n  on Start (step/kp, power floor/ceiling, max-err%, N, skip max/good, escalate).\n- \"Apply gains\" → \"Apply SPR\" (live target-SPR change, no restart).\n- \"Encoder On%\" → \"Encoder duty %\" + a \"Measurements/s\" row + row tooltips.\n- MONITOR_SCRIPT now also streams ac_skip / bp_skip + ac_revs.\n\nPID Tuner EncOn fix (app v1.1.14): the EncOn % reconstructed per-batch\nencoder-on time with a stale N=2 pulses/batch (ULP 1.2.4 era); the operational\nSimple-P measures N=16 (op_p_pulse_count), so EncOn read 8x too low (~4% vs the\ntrue ~32%).  Now uses _OP_N_PULSES=16, so the PID Tuner agrees with the Pumps\ntab (which sums the real LAST_ELAPSED_US).  ~30% duty at max skip is real — the\n~49 ms 16-pulse measurement is comparable to the ~64 ms idle at a 1 ms wake.\n\nHost-side only (board_script is injected; no firmware deploy).  control_spec 1.3.\nHeadless-verified; SW suite 57/0.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "636a15d095cd77d2c4031dd4126bebeb9a1442db",
+"date": "2026-06-16",
+"subject": "feat(control): \"Commit cutoffs → Board Config\" button on the Sensors tab (v1.1.12)",
+"body": "Closes the calibration loop onto the boot overlay.  The button maps the tuned\nfluid state-band boundaries (midpoints, mV→µV) to the four BLOOD_SENSOR_*/\nAC_SENSOR_* thresholds, shows a confirmation dialog with the exact keys/values\n(flagging that only BLOOD_SENSOR_BLOOD_THRESHOLD_UV is firmware-active), then\nwrites /board_overrides.json on the board via a one-shot raw-REPL command that\npauses + resumes the live sensor stream.  Applies at the board's next reboot —\nno new firmware version.  control_spec_repo → 1.2.\n\nHardware-verified end-to-end: write → reboot → source=overlay applied → revert\nto clean defaults.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "ec0d4a8c3c2cd3a8f509171c59036c007e13eb96",
+"date": "2026-06-16",
+"subject": "test(verification): SWR-508 asserts APP_VERSION equals the newest changelog entry",
+"body": "The version-bump discipline check previously only verified that a changelog line\nfor the current APP_VERSION existed — it did not catch APP_VERSION trailing the\nchangelog (e.g. the constant stuck at 1.1.8 while the changelog had advanced).\nSince the window title renders APP_VERSION, a stale constant misreports the\nversion.  Now both the monitor and control app_version.py must have APP_VERSION\nexactly equal to the first MAJOR.MINOR.PATCH in the \"Changelog (newest first)\"\nblock.  Passes on the current tree (control 1.1.12, monitor 1.1.2).\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "f85f2ff4cd6af703f03fe4c9da9c7f427b72a25e",
+"date": "2026-06-16",
+"subject": "feat(firmware): boot-loaded board-config overlay (+ hash, logging, lock) + pressure docs",
+"body": "Tunable calibration values are now adjustable WITHOUT a new firmware version via a\nJSON overlay loaded once at boot (no runtime mutation — applies on reboot).\n\n- NEW fluispotter/config.py: Config(defaults) merges /board_overrides.json over the\n  compiled board_config defaults; 25-key TUNABLE allowlist (sensor thresholds, pump\n  speeds/start-powers, ULP PID gains, dose, parking, sync); HARDWARE keys guarded;\n  int+range validation; FNV-1a hash (== output/_serial_io.fnv); /board_config.lock\n  freeze hook; change detection vs the persisted /board_config.hash.  Accessor\n  cfg.NAME; dependency-free (os+json), headless-testable.\n- fluispotter.py: build cfg in BaseController.create() (between event_store.open()\n  and the ULP PID writes); one 'config' boot event (hash/source/n_overrides/changed/\n  rejected); ~30 tunable consumers rewritten bare→self.cfg.NAME.\n- board_config.py: fluid-threshold comments reconciled to Blood<Air<Water/AC (the\n  active < blood-detect compare was already correct — no logic change); pressure\n  sensor documented (NXP MPXV5004DP, 0–3.92 kPa, raw-µV read, 3.3 V ADC caveat).\n- config.py added to deploy_all_serial FILES + manifest.py freeze list.\n- Verification: test_board_config_overlay.py; requirements SWR-224..229 + registry\n  DOC 1.5; spec 2.16 (§4A.6 overlay + §4.1b pressure paragraphs).\n\nHardware-verified: boot logs the 'config' event + persists the hash; an overlay\napplies at boot (source=overlay) and reverts cleanly to defaults.  MicroPython\ngotcha fixed pre-deploy: self.__dict__ item-assignment TypeErrors on the board.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "63103265c6327f8dbc9b05c7cb5f263c26818239",
+"date": "2026-06-15",
+"subject": "feat(sensors): ON/Switch sparkline + correct reversed VEML spot/line designations",
+"body": "Two Control \"Sensors\" changes (+ the firmware/doc corrections they imply):\n\n1. ON/Switch sparkline (Control v1.1.10).  New digital ON/OFF trace for the\n   reed (Rev A-D) / Hall TMAG5231 (Rev E) power-ON switch on GPIO5: packaging\n   magnet holds it closed → GPIO5 LOW = OFF; magnet removed → pull-up → HIGH =\n   ON.  sensors_monitor_script + MONITOR_SCRIPT now emit 'on_switch';\n   _Sparkline gains a binary mode (fixed 0/1 rail, step trace, ON/OFF readout).\n   Host-side only (injected script) — no board firmware change.\n\n2. VEML6035 SPOT/LINE designations were REVERSED (Control v1.1.11, Monitor\n   v1.1.2).  The SPOT receiver is physically at I2C 0x3a and LINE at 0x29.\n   - board_config: VEML_LINE_ADDRESS 0x3a→0x29; new VEML_SPOT_ADDRESS=0x3a\n     (spot previously relied on the VEML6035 driver-default 0x29 implicitly →\n     now explicit).\n   - fluispotter.py / fluispotter_sv.py: spot receiver instantiated at the\n     explicit 0x3a; monitor/control sensor scripts + panels + the probe read\n     spot from 0x3a, line from 0x29.  Deployed to the board (FNV-verified).\n   - Also corrects control/app_version.py APP_VERSION, which had drifted at\n     1.1.8 while the changelog advanced (now 1.1.11).\n\nDocs/verification: requirements SWR-125/223 + registry DOC 1.4; spec 2.14\n(§4.1 + §4A.6 + new VEML_SPOT_ADDRESS row); monitor/control spec repos 1.1;\ntest asserts both VEML addresses + the board-config constant count (68→69).\nSW suite 51/0.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "34d633e5ccf9dae13be893a8578a314454bb4608",
+"date": "2026-06-15",
+"subject": "docs(site): local documentation website (specs, requirements, datasheets, history)",
+"body": "Self-contained, fully-offline static site under docs/site (no external CDNs/\nfonts — verified). Shared styles.css + 7 pages with consistent nav:\n- Overview, plus Specifications/Requirements doc-viewers that EMBED the canonical\n  docs/*.html via relative <iframe src=\"../…\"> (not copied), so edits to the\n  source docs are always reflected.\n- Architecture/Process pages render the .md notes to HTML and link the .rtf docs.\n- Datasheets: the 5 vetted electronic component datasheets (ESP32-S3-WROOM-1,\n  DAC7574, VEML6035, Faulhaber 1512 IE2-8, Kingbright APDA3020P3C) — cross-checked\n  against the codebase; the PDFs live in docs/site/datasheets/ and are gitignored\n  (large binaries), the HTML/CSS is tracked.\n- History: git-log timeline (build-time snapshot) + the prompts.md prompt log.\n\nBuilt by a multi-agent workflow (inventory → build → adversarial verify);\n_build_site.py + _commits.json are kept so the site can be regenerated.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "0a4baa214fdc83314203e2dfca07857c3b1c1dda",
+"date": "2026-06-15",
+"subject": "tune(ulp): BP proportional gain 3→6 (op 1.3.2), graded on hall-interval SPR",
+"body": "Verification metric (SWR-122/123): grade SimpleP convergence on the TRUE\nseconds-per-revolution — the mean board-side time between consecutive hall\nrevolutions — not the encoder-batch sub-sample (a 1/324-rev window dominated by\nwithin-revolution peristaltic ripple, which bounces ±10% and produced the old\n17.3-vs-16 false fail). The harness (run_operational_convergence.py) computes\nthe hall-interval SPR board-side; test_bench grades sprh_mean within ±5% with\n≥3 hall intervals and motor_stop_events == 0.\n\nBP gain: bp_p_step_per_pct default 3 → 6, operational ULP 1.3.1 → 1.3.2.\n7 oscillates/stalls BP, so 6 was validated at runtime on the live binary before\nbaking in: baked-in BP converges 16 s/rev stall-free, hall-interval mean\n15.96 s/rev (−0.28%), stop=0, skip→6; AC unchanged (20.09 s/rev, no regression).\nControl app writes step 6 when arming BP (v1.1.9). Binary size unchanged\n(6348 B, value-only .data change) so ULP addresses are byte-identical — no\nvariables.py drift.\n\nDocs/registry: requirements SWR-105/122/123 + registry DOC_VERSION 1.3;\nspec §5.5 gain paragraph + changelog (2.13); requirements .html/.docx regen.\n\nVerified on hardware (op 1.3.2): build gates ALL PASS (headroom 1544 B, no\nforbidden libgcc); formal MECH suite SWR-122/123/124/125 4/4 PASS; SW suite\n51/0. Board reset to normal firmware, pumps idle.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "a263dc76105b5e319fc778352ca779114f73f642",
+"date": "2026-06-15",
+"subject": "fix(tooling): aiorequests hex chunk size + regen test/test2 ULP maps + full pyserial deploy",
+"body": "- aiorequests.py: chunked-transfer size header must be hex (b'%x\\r\\n'), not\n  decimal — the decimal length corrupted any chunk ≥ 0x10 bytes. test_requests\n  updated to match.\n- Regenerate test_variables.py / test2_variables.py from fresh ELFs (the prior\n  maps predated the retain-pinning, so the CI variables-drift gate was red).\n  Now 79/95/81 symbols; drift gate green.\n- Add output/deploy_all_serial.py: comprehensive pyserial raw-REPL deployer\n  (firmware .py + all three ULP bins + the three address maps), per-file FNV\n  verify with one retry, .mpy shadow cleanup, reset + telemetry sanity readback.\n  mpremote 1.28.0 drops this native-USB board (RTS toggle → ENXIO), so the\n  pyserial path that never touches RTS is the only reliable transport.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "972dfb54997e277e2826a351f3a8254aa88ac263",
+"date": "2026-06-12",
+"subject": "feat(control): fluid-sensor state-bounds classification + directed transitions (v1.1.8)",
+"body": "Sensors-tab fluid classification reworked from ordered cut-points to the\nstate-bounds model: each state has independent [lower, upper] bounds in the\nCORRECTED signal ordering Blood < Air < Water/AC (the previous\nboard_config-seeded model encoded Blood < AC < Air — wrong about which\nmedium reads highest; the firmware thresholds are pending re-derivation\nfrom this tuning).  Readings between state bands classify as TRANSITION\n(amber) with their own share of the retrospective breakdown.\n\nblood_air: three state bands (Blood 0-150, Air 200-550, Water/AC 650-3300\nmV tune-me defaults) plus the four directed transition values as tunable\namber dashed lines — Air→AC 600 (rising), AC→Blood 170 (falling),\nBlood→Air 190 (rising), Air→Blood 160 (falling); independent rising/falling\nvalues make hysteresis expressible.  ac_air: two state bands + Air→AC /\nAC→Air.  Tape spot/line keep the legacy cuts model.\n\nSWR-309 reworked to specify this model (requirements registry v1.1, doc\nregenerated).  Verified: lint + verification suite green (51 PASS / 0\nFAIL); offscreen functional smoke classifies [100, 300, 480, 700, 180] mV\nas Blood/Air/Air/Water/TRANSITION with the correct percentage breakdown.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "5cd2de65876ebfd3411e41851cfb29646a7dcfef",
+"date": "2026-06-12",
+"subject": "fix(ci): track the output/ bench+CI tool scripts (were gitignored)",
+"body": "The blanket 'output' ignore hid the hand-written tool scripts at output/\nroot — including output/build_verify_ulp.py, which the just-added ci.yml\nulp-build job runs (it would have failed file-not-found on a clean\ncheckout), and the pyserial bench tools the MECH verification suite wraps\n(run_operational_convergence.py, veml_pressure_probe.py, _serial_io.py,\ndeploy_*_serial.py).  Narrow the ignore to output/* with !output/*.py so\nthe generated build trees (debug/, release/) stay ignored while the tool\nscripts are tracked source.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "7664bdceaf4728e769399b3b0ee1fd4fad583362",
+"date": "2026-06-12",
+"subject": "feat(ci): Phase 2 — ULP build/verify/drift gates in CI + Stage-1 artifacts (plan v1.3)",
+"body": "ci.yml gains the ulp-build job in the pinned espressif/idf:v5.3.2 container\n(matching the bench IDF): idf.py build → output/build_verify_ulp.py (size /\nstack-headroom / libgcc / version gates for all three images) →\n.github/scripts/check_variables_drift.py (NEW: regenerates the address maps\nfrom the freshly built ELFs via nm + esp32ulp_mapgen and diffs them against\nthe committed variables/test_variables/test2_variables — the stale-address\nbug class as a CI gate).\n\nStage 1: .github/workflows/artifacts.yml (master + dispatch) builds the\nstamped firmware image (make stamp-version + frozen manifest) and the\nverified ULP binaries, then .github/scripts/make_manifest.py (NEW) emits\nrelease_manifest.json + SHA256SUMS + SBOM — commit/branch/dirty, all\nsubmodule SHAs, every component version (verification.versions), toolchain,\nartifact hashes; dirty trees flagged unreleasable.\n\nSupporting fixes, validated by a full local build (ALL CHECKS PASS,\nop 6348 B byte-identical to deployed 1.3.1, versions 1.3.1/1.2.14/1.3.1):\n- deploy_ulp.py tool paths fall back to env/PATH (container-portable,\n  no local behavior change)\n- build_verify_ulp.py: byte-identical check skips with a note on clean\n  checkouts; fixed the longstanding 'ver=?' (nm prints source-case\n  ulp_version; regex expected the uppercased mapgen name)\n\nKNOWN RED at introduction: the drift gate truthfully reports the test/test2\nmaps stale vs source@HEAD (regenerated before the retain pinning; the\nboard's old test binaries still match them) — cleared by one sanctioned\ndeploy_ulp.py bench run.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "973022287a0ce99b1737a0d184e86b19a25f2080",
+"date": "2026-06-12",
+"subject": "fix(config): pump gear ratio 326 → 324 (Faulhaber-verified); spec 2.12",
+"body": "The verification framework's first run flagged PUMP_MOTOR_GEAR_RATIO=326 as\ninconsistent with the spec's selected 324:1 gearbox.  Resolved against the\ndatasheets: the local EN_1512_SR_IE2-8_DFF sheet lists ratios as ROUNDED\nnominals, and Faulhaber's official 'Gearheads reduction ratios' document\n(Spur Gearheads 1512...SR) gives nominal 324:1 = exact 323.6279268\n(210 208 960 / 649 539).  326 matched neither — a typo.\n\nCorrected to 324 in board_config.py and fluispotter_sv.py (gear_ratio feeds\nthe revolutions telemetry calc and degrees→pulses conversion, where 326 was\n~0.6% off; takes effect on the next firmware deploy).  The bench-validated\nencoder constant 5184 (= 324×16; exact 5178, +0.115%) is unchanged.  Spec\nbumped to 2.12 (§4A.6 row, §2.4 exact-ratio note, change log); verification\ntest now asserts GEAR_RATIO==324 and GEAR_RATIO×16==5184.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "054ecc435e7410680c876610901470f296a929ec",
+"date": "2026-06-12",
+"subject": "feat(verification): SW requirements registry + automated verification framework + Stage 0 CI",
+"body": "SW Requirements (docs/fluispotter_sw_requirements.html v1.0): 76 testable\nrequirements (64 SW / 12 MECH) with stable SWR-### IDs, extracted from the\ndevice spec v2.11, the project rules/checklists, and the implemented code.\nGENERATED from the machine-readable registry verification/requirements.py\n(gen_requirements_doc.py), which tests tag via @requirement(...) and the\nreport computes coverage against — doc, tests, and report cannot drift.\n\nVerification framework (verification/): runner with suites sw|mech|all,\nper-requirement PASS/FAIL/SKIP/NOT-TESTED report + JSON, and the version of\nevery SW component (git build, ULP ×3, Monitor/Control APP_VERSIONs, spec-doc\nversions, sync-service SHA). 80 SW tests across 5 modules (ULP source law +\nconstants, injected-script compile + contracts, board_config + address maps,\napp guarantees + firmware safety rules, spec-doc consistency); legacy test/\nsuite mapped to SWR-201..205. MECH suite (bench convergence via\nrun_operational_convergence.py, live sensors via veml_pressure_probe.py)\nauto-skips without --board — never drives motors implicitly.\nmake verify / make verify-mech.\n\nFirst run: 51 PASS / 0 FAIL / 25 NOT-TESTED, and it caught a real\ninconsistency: PUMP_MOTOR_GEAR_RATIO=326 contradicts spec §2.4 (324:1\nselected; 5184 = 324×16) — flagged for resolution, not changed here.\n\nStage 0 CI (.github/workflows/ci.yml, per docs/ci_release_plan.md v1.2):\nlint (house style frozen in .flake8 — bug codes F401/F841 stay active;\nverification/ added to scope), verify-sw (uploads the report artifact),\nMonitor+Control offscreen-Qt smoke, and the version-bump discipline gate\n(.github/scripts/check_version_bump.py — monitor/board_script.py counts as\nControl). All jobs validated green locally before introduction.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "af3cd3899b02dc020cc0a28fcca5f40f837bc3c3",
+"date": "2026-06-12",
+"subject": "docs: CI/release process plan v1.1 (approved; Stage 0 starting)",
+"body": "Four-stage pipeline: Stage 0 PR gate (lint, unit tests, offscreen app smoke,\ninjected-script compile gate, ULP build+verify, variables.py drift check,\nversion-discipline gates) → Stage 1 artifacts + release manifest → Stage 2\nbench HIL on a self-hosted Mac runner (pyserial-only) → Stage 3 master-only\ntag releases gated on evidence. Decisions recorded: bench runner YES,\nmaster-only tagging YES, app packaging DEFERRED.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "06082218ee9eed82e826094090441a1be16456d6",
+"date": "2026-06-12",
+"subject": "feat(control): Sensors continuity across tabs + BP Simple-P start fixes (v1.1.2–v1.1.7)",
+"body": "Sensors tab no longer freezes or loses data when switching tabs:\n- 1.1.2 Sensors panel also fed from the MONITOR stream (it carries all 7 keys)\n- 1.1.3 LED rails persist across tab switches (MONITOR_SCRIPT preserves pin 43\n  drive); rails turned off on disconnect/app-close via _leds_off_if_on()\n- 1.1.4 all three PID-tuner run scripts splice a guarded _LIVE_SENSORS_SRC\n  block and emit {sensor} frames, so Sensors stays live DURING a PID run\n  (regulation runs on the ULP; sensor reads are try/except-guarded no-ops on\n  failure and can never perturb the run)\n- 1.1.5 central _frame_history deque(4000); Sensors repopulates its sparklines\n  from it on tab restore — full continuity, finds values captured while hidden\n\nPumps tab drives the operational Simple-P correctly:\n- 1.1.6 SPR-mode arming writes the per-pump step_per_pct and clears\n  bp_dosing/bp_parking before start (BP pre-empt fix)\n- 1.1.7 per-pump start power (BP 3000, AC 1000): BP seeded at power 1000\n  stalled after the spin-up kick → full-power recovery limit cycle (ran fast\n  at ~11 s/rev with spikes to 4095). 3000 matches board_config\n  BLOOD_PUMP_START_POWER and the validated PID-Tuner runs; adversarially\n  verified against the ULP recovery path.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "cb04882bf7c569ea8e17538f0159fae1817e46c9",
+"date": "2026-06-11",
+"subject": "feat(apps): show per-app semantic version (v1.1.1) in window title",
+"body": "The title previously showed only the git-derived build tag (version.py:\n<short-hash>[*] <commit-time>), which changes only on commit, so intermediate\nedits were indistinguishable. Add a manually-bumped MAJOR.MINOR.PATCH version\nper app — monitor/app_version.py and control/app_version.py (APP_VERSION, bump\npolicy + changelog) — shown as 'Fluispotter <App>  v1.1.1  ·  [<git-build>]'.\nMonitor and Control version independently; bump on every change (incl.\nintermediate/uncommitted edits).\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "14093f45158a09980f0cc83bf006a0a678d81e00",
+"date": "2026-06-11",
+"subject": "tune(sensors): seed spot/line lux cutoffs from live bench read",
+"body": "Set the Sensors-tab spot/line classification cutoff defaults to 300 / 400 lx\n(from a live VEML6035 read: spot background ~357 lx, line background ~462 lx),\nreplacing the earlier 200 lx placeholders so the cutoff lines land near real data.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "6f969fc9bbb3d1bd1c410b7ebce22763bd94bfb3",
+"date": "2026-06-11",
+"subject": "feat(apps): add live Board Config tab to Monitor and Control",
+"body": "New monitor/panels/board_config_panel.py and control/panels/board_config_panel.py\nrender every constant in fluispotter/board_config.py grouped by its section\nheaders. A self-contained source-text parser (regex over the U+2500 section\nheaders and NAME = const(value) lines) preserves grouping + declaration order\nand shows values verbatim (0x3a, 800_000, 5184), so the tab never drifts from\nthe deployed config. Parses the source text only (no module exec), so it works\non desktop CPython without the micropython.const import.\n\nWired into monitor/main.py (after Config) and control/main.py (after\nDiagnostics) following each app's panel conventions; static, read-only, no\nserial bridge. Verified: parser extracts all 68 constants (= ground truth).\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "2472b49e4ad5fe8c839bc62a2db8777c9b81dc67",
+"date": "2026-06-11",
+"subject": "docs: add Monitor & Control app spec repos; spec §4A.6 board_config (v2.11)",
+"body": "Add two living application specifications under docs/, matching the\nfluispotter_spec_repo style and versioning/change-log discipline:\n- monitor_spec_repo.html (v1.0): passive pyserial telemetry viewer; 9 tabs.\n- control_spec_repo.html (v1.0): raw-REPL injection, 3 ULP binaries, modes;\n  14 tabs. Each covers architecture, threading, data handling, hardware\n  interaction, and a per-tab reference (incl. the new Board Config tab).\n\nBump fluispotter_spec_repo to v2.11: new §4A.6 Board Configuration Constants\nlisting the firmware board_config.py values (68 const / 11 sections), now\nalso surfaced live in a Board Config tab in both apps.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "8a5df4d650eefc317d2031a34744d8b1cd9fae9e",
+"date": "2026-06-11",
+"subject": "Control App: Operational PID-Tuner→Simple-P, sensor cutoff tuning, VEML + ADC fixes; spec 2.10",
+"body": "Control App (host-side):\n- PID Tuner \"Operational\" mode now tunes the LIVE Simple-P production regulation\n  (ULP_Operational 1.3.1): new pid_operational_p_regulate_script writes the per-pump\n  *_p_step_per_pct + shared op_p_* knobs and arms <pump>_pump_running on the running\n  binary (no swap); the panel exposes the Simple-P knobs (kp/ki/kd are Test-mode only),\n  Apply live-tunes op_p_*, and the display shows skip level + a stall/start-fail flag.\n- UI cleanup: removed the orphaned \"Revolutions\" + \"PID skip\" controls (old\n  operational-PID knobs, unused under Simple-P) and the dead status branch.\n- Sensors tab: per-sensor cutoff TUNING — adjustable thresholds with tinted\n  classification bands + dashed lines over the 400-sample retrospective buffer\n  (Blood/Water/Air, AC Water/Air, Spot, Line) + a live class + %-per-band readout;\n  defaults from board_config; host-side only.\n\nSensor fixes:\n- VEML6035 \"no signal\": the monitor scripts never configured the sensor (it boots\n  shut down) and read the wrong register. Now write CONFIG 0x00=0x0300 (power on,\n  25ms, sens HIGH) for both 0x29/0x3A at startup, read ALS data reg 0x04, lux=count*0.0512\n  (matches the firmware driver). Fixed in both sensors_monitor_script and MONITOR_SCRIPT.\n- ADC attenuation: PressureSensor + FluidReceivers (+ the _sv ADCs) now create\n  ADC(..., atten=ADC.ATTN_11DB) for the full 0-3.3 V range; the MicroPython default\n  capped at ~0.95 V and clipped pressure. read_uv() returns true µV in-range, so the\n  air thresholds are unaffected. (Firmware change — needs a deploy.)\n\nSpec → v2.10: §4.1 VEML read protocol + new §4.1b analog ADC attenuation; §7.3 PID\nTuner 3 modes + Sensors cutoff tuning + the single-channel telemetry constraint.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "4d86e363fe6b94a8fddebccd28f466993f30a5c4",
+"date": "2026-06-10",
+"subject": "ULP_Operational 1.3.1: Simple-P 16-tick as the production control law + spec 2.9",
+"body": "Promote the bench-validated Simple-P (16-tick) regulator to the operational\nbinary, replacing the positional integer-tick PID for steady-state SPR\nregulation. Re-fitted into the tick-based op model (ac_tick/bp_tick →\nregulate_pump), preserving spin-up, stall recovery, dosing, parking.\n\nmain.c (operational, no test defines):\n- run_simple_p(): %-error over N=16 edges, 1% deadband, pwr += err%·step_per_pct,\n  saturate-and-continue, no integral (no windup limit cycle). Per-pump gains\n  ac_p_step_per_pct=7 / bp_p_step_per_pct=3 (kp=7 oscillates/stalls BP) + shared\n  op_p_* knobs, host-tunable with baked-in defaults.\n- adapt_skip_pct(): %-error skip ladder; AC hall read moved before the skip\n  early-return so revolutions count through the skip idle (matches BP).\n- sample_encoder(): N param + ENCODER_SKIP_PULSES turn-on skip + decoupled\n  ~50 ms first-edge stall window vs the longer 16-edge measurement window\n  (calc_meas_timeout_us) — stall detection stays fast.\n- Stall/no-start interventions: spin-up KICK escalates to DAC_MAX_POWER after\n  op_p_start_escalate_n(3) kicks; BOTH failure types log motor_stop_events —\n  MOTOR_STOP_* (running-stall) + new MOTOR_START_FAIL_* (never-started, bits\n  2/3) — captured even on a successful restart.\n- run_pid + PID/skip vars kept for BP dosing/parking; AC gains + legacy skip\n  vars pinned __attribute__((used, retain)) so host imports survive --gc-sections.\n- Operational version 1.2.4 → 1.3.1; 6348 B (boot-loaded), no new libgcc.\n\nvariables.py regenerated (+9 OP_P_* vars, none removed).\n\nBench-validated on hardware (target 16 s/rev): AC@kp7 holds ±1% at skip level 6\n(revs counted through skip); BP@kp3 stall-free (kp7 oscillated + 1 recovered\nstall, validating the recovery + event path).\n\ndocs/fluispotter_spec_repo.html: §5.5 rewritten to v2.9 for Simple-P 16-tick\nwith the stall/no-start intervention tables; §5.7/§5.7.9 cross-refs updated.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "777acee9fb7dfdc17c64d8dc97164b4c636b264c",
+"date": "2026-06-10",
+"subject": "ULP Simple-P: count HALL revs through the skip-ladder idle",
+"body": "test_p_regulate() sampled the hall switch only inside the N=16 measurement\nloop. While idling on the skip ladder it just spun on rtc_ticks() without\nreading hall, so a revolution completing during the idle (up to 1.58 s at\nskip level 5) was missed — under-counting both the revolution total and the\n`revs` run-length stop.\n\nFix:\n- ULP (main.c): the skip-idle loop now polls the hall switch every iteration,\n  counts revolutions continuously, and honors the rev-count stop during the\n  idle. Revolution tracking is now independent of whether the regulation\n  measurement is skipped.\n- Host (monitor/board_script.py): pid_p_regulate_script detected the rev\n  boundary only on a measurement update (test_rev_done change); rev detection\n  now runs every poll so revolutions counted during a long idle surface live.\n\ntest_p_regulate is shared by the test + test2 images, so both versions bump:\nULP_Test2 1.3.0 -> 1.3.1, ULP_Test 1.2.13 -> 1.2.14. Operational stays\nbyte-identical (1.2.4). test2 = 3204 B (under the 4592 B RTC-load ceiling,\n4772 B headroom), no new libgcc. test2_variables.py regenerated for the\nshifted addresses.\n\nBench-validated on AC (Kp=7, skip_max=5): converged, climbed to skip level 5,\nand counted all revolutions through the 1.63 s sparse sampling (hall_rev\n0->4, ~16 s apart); measured per-level sampling rate matched theory.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "832693055c3a683d0a2b2e76bd06ceffa1e3569e",
+"date": "2026-06-10",
+"subject": "Monitor.app: add application icon",
+"body": "Set CFBundleIconFile to AppIcon and add Resources/AppIcon.icns so the macOS\nMonitor launcher shows a proper icon in the Dock and Finder.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "b30e96fd7dacd6316f9d5f1cd10a325230a04770",
+"date": "2026-06-10",
+"subject": "ULP Test2: regulators-only binary to fix PID-Tuner board crash",
+"body": "Pressing Run in the PID Tuner (Simple-P or test-tune) hard-crashed the board,\nneeding a power-cycle. Root cause (evidence-confirmed via serial capture, not a\nbrownout): pump_regulator.py's _load_and_start writes the ULP image into RTC\nslow memory past the firmware's 4096 B ULP reservation. Once pump_test.bin grew\nto 5584 B (Simple-P added ~1 KB) it overran live MicroPython RTC memory at\nruntime, corrupting it. The deploy swap-test missed it because it runs on a\nfresh-boot board, before that region is live.\n\nFix: a third, regulators-only ULP image (pump_test2.bin, ULP_Test2 1.3.0,\n3148 B) with only test_pid_regulate + test_p_regulate; the four heavier\ndiagnostics are gated out via ULP_TEST2_BUILD. The PID Tuner (both Test and\nSimple-P modes) swaps in this small image, staying well under the ~4592 B\nruntime RTC-load ceiling. Operational + full test binaries stay byte-identical.\n\n- main.c: #ifndef ULP_TEST2_BUILD around the 4 diagnostics (in both their\n  #ifdef ULP_TEST_BUILD blocks) + dispatch; ULP_Test2 version 1.3.0.\n- main_test2.c: new image source (ULP_TEST_BUILD + ULP_TEST2_BUILD).\n- deploy_ulp.py: build/deploy/map all three binaries; TEST2_MAX_BYTES=4592\n  ceiling check; test2_variables.py mapgen.\n- monitor/board_script.py, control/main.py, control/board_script.py: _ULP_TEST2\n  + _swap_in_test2; the two regulation scripts run from pump_test2.bin.\n- serial_bridge.py: serial write_timeout (non-blocking inject).\n\nBench-validated on AC + BP via pyserial deploy: no crash, both regulate, both\nfinish clean. AC converges to the 16 s/rev goal at the Kp (step_per_pct)\nmultiplier ~5 (holding power ~480), settling near the measurement-noise floor.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+},
+{
+"hash": "7479f3428ed8f48b26a2137eee28008150733ed8",
+"date": "2026-06-09",
+"subject": "PID-tuning toolchain + Sensors tab (ULP_Test 1.2.9, fw 0.1.62)",
+"body": "Firmware — ULP_Test image only; ULP_Operational unchanged (byte-identical, 1.2.4):\n- Re-added test_dac_sweep_enc; added TEST_PID_REGULATE bench-tuning harness with\n  runtime kp/ki/kd, measurement window N, error deadband and start power.\n- Run length counts HALL revolutions; deadband-vs-stall hardening; skip the first\n  encoder rising edge (turn-on jitter) with per-measurement encoder cycling.\n- Independently versioned 1.2.5 -> 1.2.9. board_config DEFAULT_*_SCALED documented\n  as the operational fallback that mirrors board_config.py.\n\nControl app:\n- New Sensors tab: per-pair LED enable switches, live sparklines, env readouts.\n- PID Tuner: Operational | Test-binary mode selector with N / deadband / run-\n  revolution knobs; per-hall-rev polar traces; errors and chart in RC ticks;\n  measured-tick and resulting-power histograms (Test mode) renewed per rotation;\n  PID parameters logged at run start; config editable offline.\n- pump_panel + pid_tuner_panel default gains sourced from board_config.py.\n\nMonitor/host scripts:\n- sensors_monitor_script and pid_regulate_tune_script; PID-tuner N=2 batch fix.\n\ndocs: prompt log + new compacting log.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
+}
+]

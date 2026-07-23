@@ -1,0 +1,291 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Fluispotter Monitor Application — Software Specification</title>
+<style type="text/css">
+body { font: 11.0px Arial; margin: 40px; }
+h1 { font: bold 36.0px Arial; color: #1f4e79; text-align: center; margin: 100px 0 10px 0; }
+h2 { font: bold 16.0px Arial; color: #1f4e79; margin: 30px 0 6px 0; }
+h3 { font: bold 13.0px Arial; color: #2e75b6; margin: 20px 0 4px 0; }
+h4 { font: bold 12.0px Arial; color: #1f4e79; margin: 16px 0 4px 0; }
+p { font: 11.0px Arial; margin: 0 0 4px 0; }
+table { border-collapse: collapse; margin: 4px 0 8px 0; }
+td, th { border: 1.0px solid #bfbfbf; padding: 3px 6px; font: 10.0px Arial; vertical-align: top; }
+th { font-weight: bold; background-color: #eef3f8; }
+pre { font: 9.0px Menlo; margin: 6px 0; padding: 8px; background-color: #f5f5f5; }
+code { font: 9.0px Menlo; }
+.subtitle { font: 20.0px Arial; color: #2e75b6; text-align: center; margin: 0 0 10px 0; }
+.version { font: 12.0px Arial; color: #555555; text-align: center; margin: 15px 0 6px 0; }
+.conf { font: bold 11.0px Arial; color: #cc0000; text-align: center; margin: 0; }
+.company { font: bold 12.0px Arial; color: #1f4e79; text-align: center; margin: 30px 0 6px 0; }
+.email { font: 11.0px Arial; color: #555555; text-align: center; margin: 0; }
+.toc-section { font: bold 10.0px Arial; color: #1f4e79; margin: 8px 0 2px 0; }
+.toc-sub { font: bold 9.0px Arial; color: #333333; margin: 2px 0 2px 18px; }
+.note { font: 10.0px Arial; color: #555555; margin: 4px 0; }
+.label { font: bold 10.0px Arial; }
+.dim { color: #555555; }
+.warn { color: #cc0000; }
+.highlight { font: bold 10.0px Arial; color: #1d6627; }
+</style>
+</head>
+<body>
+
+<p style="min-height: 14px;"><br></p>
+<h1>FLUISPOTTER</h1>
+<p class="subtitle">Monitor Application &mdash; Software Specification</p>
+<p style="font: 6.0px Arial; text-align: center; min-height: 6px;"><br></p>
+<p class="version">Version 1.1 &nbsp;| &nbsp;2026-06-15</p>
+<p class="conf">CONFIDENTIAL &mdash; Internal Use Only</p>
+<p class="company">Fluispotter ApS</p>
+<p class="email">sten@fluispotter.com</p>
+
+<p style="min-height: 14px;"><br></p>
+<p style="min-height: 14px;"><br></p>
+
+<!-- ============================================================ -->
+<h2>Contents</h2>
+<p style="min-height: 14px;"><br></p>
+
+<p class="toc-section">1. Document Overview</p>
+<p class="toc-sub">1.1 Document Control</p>
+<p class="toc-sub">1.2 Change Log</p>
+<p class="toc-section">2. Purpose &amp; Scope</p>
+<p class="toc-section">3. Software Architecture</p>
+<p class="toc-sub">3.1 Technology Stack &amp; Process Model</p>
+<p class="toc-sub">3.2 Component Map</p>
+<p class="toc-sub">3.3 Threading Model</p>
+<p class="toc-section">4. Data Handling</p>
+<p class="toc-sub">4.1 Serial Transport &mdash; SerialBridge (Passive Reader)</p>
+<p class="toc-sub">4.2 Telemetry Frame Format</p>
+<p class="toc-sub">4.3 Inbound Data Flow (Board &rarr; Panels)</p>
+<p class="toc-sub">4.4 Outbound Path (None &mdash; Passive Listener)</p>
+<p class="toc-sub">4.5 Enabling the On-Board Telemetry Task</p>
+<p class="toc-section">5. Hardware Interaction</p>
+<p class="toc-section">6. Tab Reference</p>
+<p class="toc-sub">6.1 Live</p>
+<p class="toc-sub">6.2 Charts</p>
+<p class="toc-sub">6.3 Tape &amp; Valve</p>
+<p class="toc-sub">6.4 Sensors</p>
+<p class="toc-sub">6.5 Sampling</p>
+<p class="toc-sub">6.6 State Log</p>
+<p class="toc-sub">6.7 Config</p>
+<p class="toc-sub">6.8 Board Config</p>
+<p class="toc-sub">6.9 Log</p>
+<p class="toc-section">7. Source Layout &amp; Maintenance Notes</p>
+<p class="toc-sub">7.1 Directory Layout</p>
+<p class="toc-sub">7.2 Orphaned / Unused Panel Files</p>
+<p class="toc-sub">7.3 Maintenance Caveats</p>
+
+<!-- ============================================================ -->
+<h2>1. Document Overview</h2>
+<p style="min-height: 14px;"><br></p>
+
+<p>This document specifies the <span class="label">Fluispotter Monitor Application</span> &mdash; a macOS PyQt6 desktop app used during development to passively observe a connected Fluispotter device over USB serial. It describes the application's software structure, how it handles data, how it reflects device hardware, and the function of every tab in its UI.</p>
+<p>It is a living document. Per the same discipline as the Device Specification Repository, every change MUST bump the version in the cover page <span class="dim">and</span> the Document Control table below, and add a row to the Change Log.</p>
+
+<h3>1.1 Document Control</h3>
+<table>
+<tr><th>Field</th><th>Value</th></tr>
+<tr><td class="label">Document</td><td>Fluispotter Monitor Application &mdash; Software Specification</td></tr>
+<tr><td class="label">Version</td><td>1.1</td></tr>
+<tr><td class="label">Date</td><td>2026-06-15</td></tr>
+<tr><td class="label">Status</td><td>Living document</td></tr>
+<tr><td class="label">Applies to</td><td><code>monitor/</code> in the fluispotter-firmware repository</td></tr>
+<tr><td class="label">Author</td><td>Claude Code</td></tr>
+</table>
+
+<h3>1.2 Change Log</h3>
+<table>
+<tr><th>Version</th><th>Date</th><th>Author</th><th>Change Summary</th></tr>
+<tr><td>1.0</td><td>2026-06-11</td><td>Claude Code</td><td>Initial Monitor application specification: architecture, threading, data handling (passive SerialBridge, telemetry frames), hardware interaction, and a per-tab reference for all nine tabs including the new Board Config tab.</td></tr>
+<tr><td>1.1</td><td>2026-06-15</td><td>Claude Code</td><td>Sensors tab: corrected the VEML6035 SPOT/LINE designations &mdash; they were reversed. SPOT is physically at I&sup2;C 0x3A, LINE at 0x29 (matches the board_config + firmware correction). App v1.1.2.</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>2. Purpose &amp; Scope</h2>
+<p style="min-height: 14px;"><br></p>
+
+<p>The Monitor app is a <span class="label">strictly read-only</span> telemetry viewer. It opens the device's USB-CDC serial port, reads the JSON telemetry the firmware already prints (~10&nbsp;Hz), and renders it across a set of dashboards: live state machines, pump regulators, sparkline trends, valve/tape actuators, the sensor suite, the sample schedule, and an event log.</p>
+<p>It never injects code, sends commands, or drives hardware. That active role belongs to the sibling <span class="label">Control App</span> (see the Control Application specification). The two apps share a panels theme and the <code>board_script.py</code> library file on disk, but the Monitor app does not import or use <code>board_script.py</code>.</p>
+<p class="note">Scope: the macOS Monitor desktop app only. Firmware, ULP coprocessor, and the RPi hub are covered by the Device Specification Repository.</p>
+
+<!-- ============================================================ -->
+<h2>3. Software Architecture</h2>
+<p style="min-height: 14px;"><br></p>
+
+<h3>3.1 Technology Stack &amp; Process Model</h3>
+<table>
+<tr><th>Aspect</th><th>Detail</th></tr>
+<tr><td class="label">Language / GUI</td><td>Python 3, PyQt6 (QMainWindow + QTabWidget). Charts use matplotlib (FigureCanvasQTAgg); no pyqtgraph.</td></tr>
+<tr><td class="label">Transport</td><td>pyserial direct (115200 baud), read-only. NOT mpremote, NOT raw-REPL injection.</td></tr>
+<tr><td class="label">Concurrency</td><td>One GUI thread + one background serial daemon thread, bridged by a thread-safe queue polled on a Qt timer.</td></tr>
+<tr><td class="label">Entry point</td><td><code>monitor/main.py</code> &rarr; <code>MainWindow(QMainWindow)</code>, 1280&times;820.</td></tr>
+<tr><td class="label">Run command</td><td><code>python main.py</code> from inside <code>monitor/</code> (so <code>panels/</code> is importable as a top-level package; imports use <code>from panels.X import Y</code>).</td></tr>
+</table>
+
+<h3>3.2 Component Map</h3>
+<table>
+<tr><th>File</th><th>Role</th></tr>
+<tr><td><code>main.py</code></td><td>MainWindow: builds the toolbar (port combo, Scan/Connect/Disconnect, status dot) and the QTabWidget; owns the SerialBridge; runs a 100&nbsp;ms <code>_drain_queue</code> timer and a 2000&nbsp;ms <code>_check_health</code> timer; dispatches each frame in <code>_handle_frame()</code>. Also defines two inline tab classes: <code>_LiveTab</code> (the Live tab composite) and <code>_LogPanel</code> (the Log tab).</td></tr>
+<tr><td><code>serial_bridge.py</code></td><td><code>SerialBridge(threading.Thread)</code>: background reader; opens the port, reads lines, parses JSON, pushes dicts onto a bounded queue; auto-reconnects across USB re-enumeration. No write path.</td></tr>
+<tr><td><code>panels/</code></td><td>One QWidget subclass per tab (plus a few orphaned files &mdash; see &sect;7.2). Constructed with no arguments; live panels expose <code>update(d)</code>.</td></tr>
+<tr><td><code>board_script.py</code></td><td>Present on disk but <span class="warn">not imported by the Monitor app</span>. It is a shared MicroPython-script library for the Control app. Listed here only to avoid confusion.</td></tr>
+</table>
+
+<h3>3.3 Threading Model</h3>
+<p>Two threads communicate by polling, not by Qt signals:</p>
+<table>
+<tr><th>Thread</th><th>Responsibilities</th></tr>
+<tr><td class="label">Serial daemon</td><td>The SerialBridge IS a <code>threading.Thread</code> (started in its constructor). It performs all blocking serial I/O, parses JSON, and pushes dicts onto a <code>queue.Queue(maxsize=2000)</code>. It never touches Qt objects. A lock guards port open/close/reconnect against the GUI thread's <code>listen()</code>/<code>disconnect()</code>.</td></tr>
+<tr><td class="label">GUI thread</td><td>A 100&nbsp;ms QTimer fires <code>_drain_queue</code> (a <code>@pyqtSlot</code>) which drains up to 20 frames/tick via <code>get_nowait()</code> and updates panels &mdash; so all widget mutation stays on the main thread. A 2000&nbsp;ms timer reflects <code>bridge.error</code> to the toolbar.</td></tr>
+</table>
+<p class="note">A custom <code>sys.excepthook</code> prints tracebacks instead of letting PyQt6 <code>qFatal()</code>/abort the process when a slot raises &mdash; the app survives a bad frame.</p>
+
+<!-- ============================================================ -->
+<h2>4. Data Handling</h2>
+<p style="min-height: 14px;"><br></p>
+
+<h3>4.1 Serial Transport &mdash; SerialBridge (Passive Reader)</h3>
+<p><code>SerialBridge</code> is a daemon thread that opens <code>serial.Serial(port, 115200, timeout=0.2)</code>. Its <code>run()</code> loop calls <code>readline()</code>, strips the line, and parses <span class="label">only</span> lines that both start with <code>{</code> and end with <code>}</code> via <code>json.loads</code>. Valid dicts are <code>put_nowait</code> onto the queue (silently dropped if the queue is full). Non-JSON lines (REPL prompts, debug logs) and decode errors are silently ignored.</p>
+<p>On a <code>SerialException</code> (USB drop / light-sleep re-enumeration) it sets <code>connected=False</code> and auto-reconnects with a 0.5&nbsp;s backoff: it retries the last port, then <code>find_port()</code> which globs <code>/dev/cu.usbmodem*</code> (preferred over <code>tty.*</code>, which can block on carrier), then <code>tty.usbmodem*</code>, then <code>cu.usb*</code>/<code>tty.usb*</code>. This handles the ESP32-S3 reappearing under a new device name (e.g. <code>cu.usbmodem101 &rarr; cu.usbmodem1101</code>).</p>
+<p class="note">Public surface: <code>bridge.queue</code>, <code>bridge.connected</code>, <code>bridge.error</code>, <code>listen()</code>, <code>disconnect()</code>, <code>stop()</code>. There is deliberately no write/inject method.</p>
+
+<h3>4.2 Telemetry Frame Format</h3>
+<p>The firmware's on-board telemetry task prints one flat JSON object per ~100&nbsp;ms. A real telemetry frame is identified by the presence of the <code>t</code> key (a millisecond timestamp). Representative keys:</p>
+<table>
+<tr><th>Group</th><th>Keys</th></tr>
+<tr><td class="label">Timing / state</td><td><code>t</code>, <code>main_state</code>, <code>inv</code> (ULP invocation counter), <code>bp_revs</code>, <code>stop_ev</code> (motor-stop bitmask)</td></tr>
+<tr><td class="label">AC pump</td><td><code>ac_run</code>, <code>ac_st</code>, <code>ac_dac</code>, <code>ac_pwr</code> (= 4095&minus;dac), <code>ac_hall</code>, <code>ac_pulses</code>, <code>ac_us</code>, <code>ac_max</code>, <code>ac_min</code>, <code>ac_kp/ki/kd</code>, <code>ac_target_ms</code></td></tr>
+<tr><td class="label">Blood pump</td><td><code>bp_run</code>, <code>bp_st</code>, <code>bp_dac</code>, <code>bp_pwr</code>, <code>bp_hall</code>, <code>bp_pulses</code>, <code>bp_us</code>, <code>bp_max</code>, <code>bp_min</code>, <code>bp_parking</code>, <code>bp_dosing</code>, <code>bp_parked</code>, <code>bp_kp/ki/kd</code>, <code>bp_bracket</code>, <code>bp_offset</code>, <code>bp_target_ms</code></td></tr>
+<tr><td class="label">Actuators</td><td><code>valve_en</code>, <code>valve_dir</code>, <code>valve_open</code>, <code>valve_close</code>, <code>tape_en</code>, <code>tape_emit</code>, <code>reed</code></td></tr>
+<tr><td class="label">Sensors</td><td><code>ac_air</code>, <code>blood_air</code>, <code>pressure</code> (&micro;V), <code>spot_lux</code>, <code>line_lux</code> (lux, ~1&nbsp;Hz), <code>temp_c</code>, <code>rh_pct</code></td></tr>
+<tr><td class="label">Schedule</td><td><code>tt_n</code>, <code>tt_idx</code>, <code>tt_started</code>, <code>tt_chunk</code>, <code>dosed_at</code>, <code>utc</code>, <code>hall_ev</code></td></tr>
+</table>
+<p class="note">Power convention: <code>ac_pwr</code>/<code>bp_pwr</code> are pre-computed on the board as <code>4095 &minus; dac_register</code> (the inverted DAC power convention). The app consumes them directly.</p>
+
+<h3>4.3 Inbound Data Flow (Board &rarr; Panels)</h3>
+<pre>firmware telemetry print  (USB-CDC, ~100 ms)
+   -> SerialBridge.run()   readline + JSON validate + json.loads
+   -> bridge.queue         (queue.Queue, max 2000)
+   -> _drain_queue         (QTimer 100 ms, up to 20 frames/tick)
+   -> _handle_frame(data)</pre>
+<p><code>_handle_frame</code> always appends the raw dict to the <span class="label">Log</span> tab (colour-coded: <code>err</code>=red, <code>done</code>=green, <code>res_rev</code>/<code>enc_rev</code>=amber). On an <code>err</code> key it returns early. Only frames containing <code>t</code> fan out to the live panels via <code>update(data)</code>:</p>
+<table>
+<tr><th>Panel</th><th>Update policy</th></tr>
+<tr><td>Live (<code>_LiveTab</code>)</td><td>Every frame. Derives virtual BP states (PARKED/STOPPED) and a valve state (CLOSED/OPEN/MOVING/UNKNOWN) from limit switches, then calls <code>StatePanel.update(...)</code> and <code>VarPanel.update(d)</code>.</td></tr>
+<tr><td>Charts</td><td><span class="warn">Only when the Charts tab is the current widget</span> (performance optimisation &mdash; histories do not accumulate in the background).</td></tr>
+<tr><td>Tape&nbsp;&amp;&nbsp;Valve, Sensors, Sampling, State&nbsp;Log</td><td>Every frame.</td></tr>
+<tr><td>Config, Board&nbsp;Config, Log</td><td>Not fed via <code>update()</code> (Config/Board&nbsp;Config are static; Log is fed inside <code>_handle_frame</code>).</td></tr>
+</table>
+
+<h3>4.4 Outbound Path (None &mdash; Passive Listener)</h3>
+<p>The Monitor app has <span class="label">no outbound command path</span>. The SerialBridge exposes no write method and <code>main.py</code> never sends anything to the board. This is a deliberate safety property: running the Monitor app cannot alter device state.</p>
+
+<h3>4.5 Enabling the On-Board Telemetry Task</h3>
+<p>The firmware telemetry task that produces the JSON is enabled out-of-band, not by the app: place a <code>/telemetry</code> flag file on the device (e.g. <code>rshell touch /pyboard/telemetry</code>) and reset. The Monitor app cannot enable it.</p>
+
+<!-- ============================================================ -->
+<h2>5. Hardware Interaction</h2>
+<p style="min-height: 14px;"><br></p>
+
+<p>The Monitor app interacts with hardware <span class="label">only by observation</span> &mdash; everything it shows is decoded from firmware telemetry; it drives nothing. The hardware reflected in the UI:</p>
+<table>
+<tr><th>Subsystem</th><th>What the app reflects (read-only)</th></tr>
+<tr><td class="label">AC &amp; Blood pumps</td><td>Run flag, ULP state, DAC drive register and derived power, hall switch (0&nbsp;=&nbsp;magnet active), encoder pulses/batch and elapsed &micro;s &rarr; actual seconds-per-rev (using 5184 ticks/rev), regulator gains and target.</td></tr>
+<tr><td class="label">Valve</td><td>Enable, direction, and the open/close limit switches (GPIO 42 / 46, active-low) &rarr; CLOSED / OPEN / MOVING / UNKNOWN.</td></tr>
+<tr><td class="label">Tape reel</td><td>Motor enable (GPIO 41) and tape emitters (GPIO 43).</td></tr>
+<tr><td class="label">Reed / on-switch</td><td>GPIO 5 (pull-up, active-low): 0&nbsp;=&nbsp;active/closed.</td></tr>
+<tr><td class="label">Fluid / pressure ADCs</td><td>Blood-air (GPIO 7), AC-air (GPIO 6), Pressure (GPIO 3), reported in &micro;V.</td></tr>
+<tr><td class="label">Optical spot/line</td><td>VEML6035 at I2C 0x3A (spot) and 0x29 (line); reported in lux.</td></tr>
+<tr><td class="label">Temp / humidity</td><td>SHT4X at I2C 0x44.</td></tr>
+<tr><td class="label">ULP coprocessor</td><td>Invocation rate (from the <code>inv</code> counter) and motor-stop events.</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>6. Tab Reference</h2>
+<p style="min-height: 14px;"><br></p>
+<p>Tabs are listed in display order (the order of <code>addTab()</code> in <code>main.py</code>). All are read-only.</p>
+
+<h3>6.1 Live</h3>
+<p class="note">Composite tab (<code>_LiveTab</code>) = <code>StatePanel</code> (left) + <code>VarPanel</code> (right).</p>
+<p><span class="label">Purpose.</span> At-a-glance view of every device state machine plus a side-by-side AC-vs-Blood pump regulator table and a column of 60-second sparklines.</p>
+<p><span class="label">Displays.</span> <span class="dim">StatePanel:</span> the 12-state main-CPU machine (INITIAL&hellip;FINISH), session sub-state (IDLE/TRIGGER/DOSING) and the 8-step dose sequence (only highlighted in SESSION/DOSING), the ULP AC pump (IDLE/RUNNING) and Blood pump (IDLE/RUNNING/DOSING/DOSE&nbsp;COAST/PARKING/PARKED/STOPPED) states, the BP flush cycle (ACTIVE&nbsp;2&nbsp;min / IDLE&nbsp;8&nbsp;min / SUSPENDED), valve (CLOSED/OPEN/MOVING) and tape reel (STOPPED/RUNNING). The active state in each list is highlighted. <span class="dim">VarPanel:</span> an AC/BP table (Running, State, Power bar + value, DAC register, Hall, Pulses/batch, Elapsed &micro;s, Actual SPR, Avg SPR error, decoded Stop events, PID gains, ULP invocations, BP bracket/offset) plus sparklines (AC/BP power with hall-tick overlay, AC/BP SPR, Valve, Tape, WiFi sync, ULP rate).</p>
+<p><span class="label">Data.</span> <code>update(d)</code> from <code>_LiveTab</code>; several BP/valve states are <span class="dim">derived host-side</span>, not emitted by firmware. <span class="label">Controls.</span> None. <span class="label">Hardware.</span> Observe-only.</p>
+
+<h3>6.2 Charts</h3>
+<p><span class="label">Purpose.</span> A full-width column of 13 scrolling 60-second sparklines for an at-a-glance time-series of device state.</p>
+<p><span class="label">Displays.</span> AC power, BP power (each with an amber hall-tick overlay), AC SPR, BP SPR, Valve, Tape reel, WiFi sync, ULP invocation rate, AC-air &micro;V, Blood-air &micro;V, Pressure &micro;V, VEML spot lux, VEML line lux. Each is a 600-sample (~60&nbsp;s) rolling trace.</p>
+<p><span class="label">Data.</span> <code>update(d)</code> &mdash; but only while the Charts tab is visible (perf). SPR&nbsp;=&nbsp;<code>us&times;5184/pulses/1e6</code>; ULP rate from &Delta;<code>inv</code>/&Delta;<code>t</code>; air/pressure/lux are guarded so missing/None values skip rather than plotting 0. <span class="label">Controls.</span> None. <span class="label">Hardware.</span> Observe-only.</p>
+
+<h3>6.3 Tape &amp; Valve</h3>
+<p class="note">Tab title literal is the truncated <code>Tape &amp; V...</code>.</p>
+<p><span class="label">Purpose.</span> Diagnostic view of the valve motor, tape-reel motor, and reed switch.</p>
+<p><span class="label">Displays.</span> A valve banner (OPEN/CLOSED/MOVING/UNKNOWN from the two limit switches + enable), valve detail rows (enable, direction, open switch GPIO 42, close switch GPIO 46), a tape-reel state (RUNNING/STOPPED from <code>tape_en</code>) with enable (GPIO 41) and emitters (GPIO 43), and an on-switch/reed card (GPIO 5, active-low).</p>
+<p><span class="label">Data.</span> <code>update(d)</code> keys <code>valve_*</code>, <code>tape_*</code>, <code>reed</code>; missing keys render as &lsquo;&mdash;&rsquo;. <span class="label">Controls.</span> None. <span class="label">Hardware.</span> Observe-only (switch polarity is active-low: 0&nbsp;=&nbsp;active).</p>
+
+<h3>6.4 Sensors</h3>
+<p><span class="label">Purpose.</span> A passive dashboard of every host-readable sensor, each card showing latest + previous reading, a trend arrow, and a ~30&nbsp;s mini-sparkline.</p>
+<p><span class="label">Displays.</span> Blood-air (&micro;V), AC-air (&micro;V), Spot (lux), Line (lux), Pressure (&micro;V), On-switch/Reed (digital), and Humidity/Temperature (SHT4X, &deg;C and %&nbsp;rH). Trend arrow appears only once a non-zero previous value exists.</p>
+<p><span class="label">Data.</span> <code>update(d)</code>, each key guarded by <code>in d</code>; humidity updates only when both <code>temp_c</code> and <code>rh_pct</code> are present. <span class="label">Controls.</span> None. <span class="label">Hardware.</span> Observe-only.</p>
+<p class="note">This is the read-only Monitor variant. The Control app's Sensors tab additionally drives the LED rails and offers cutoff tuning &mdash; see the Control specification.</p>
+
+<h3>6.5 Sampling</h3>
+<p><span class="label">Purpose.</span> Observability for the blood-pump sampling subsystem: reconstructs the sample time-table, tracks live BP hall state and revolutions, and logs every hall transition.</p>
+<p><span class="label">Displays.</span> A Sample Schedule table (#, Offset, Samples, Planned UTC, Actual UTC, status) assembled from round-robin <code>tt_chunk</code> frames; a BP hall summary card (hall state, revolutions, SPR target, last elapsed &micro;s, pulses/batch); and a Hall Switch Events table (Time, Segment&nbsp;s, Pulses, Revolution), newest-first, capped at 500 rows with the top&nbsp;7 tinted to mirror the firmware's 7-deep sample-history deque.</p>
+<p><span class="label">Data.</span> <code>update(d)</code> (schedule, summary, <code>hall_ev</code>). Actual completion times are inferred client-side when <code>tt_idx</code> advances (stamped with <code>dosed_at</code>). <span class="label">Controls.</span> None. <span class="label">Hardware.</span> Observe-only.</p>
+
+<h3>6.6 State Log</h3>
+<p><span class="label">Purpose.</span> An append-only, colour-coded log of every state-machine transition and motor/actuator event, emitted on edge (value change).</p>
+<p><span class="label">Displays.</span> Timestamped (UTC) lines for: main-CPU STATE transitions (blue), AC/BP pump transitions (amber), BP FLUSH cycle (cyan), SESSION sub-state and DOSE STEP (deep orange), AC/BP MOTOR start/stop (green), VALVE and TAPE events (purple), BP DOSE/PARK arm/complete (amber), and SCHEDULE / SESSION START / SAMPLE collected lines (deep orange). Capped at 5000 lines.</p>
+<p><span class="label">Data.</span> <code>update(d)</code> with per-field <code>_prev_*</code> edge detection; state-name maps imported from <code>state_panel.py</code>. <span class="label">Controls.</span> Clear button (clears the text area only). <span class="label">Hardware.</span> Observe-only.</p>
+
+<h3>6.7 Config</h3>
+<p><span class="label">Purpose.</span> A static reference card of firmware/board compile-time constants (pump speeds, timeouts, PID gains, sensor thresholds, dosing/parking geometry, motor/hardware constants).</p>
+<p><span class="label">Displays.</span> Sectioned cards: Blood Pump, AC Pump, PID Gains, Dosing &amp; Parking, Sensor Thresholds, Motor &amp; Hardware, Timeouts &amp; Intervals.</p>
+<p><span class="label">Data.</span> <span class="warn">Hard-coded literals</span> &mdash; no telemetry, no file read. <span class="label">Controls.</span> None. <span class="label">Hardware.</span> None.</p>
+<p class="note">Caveat: because values are transcribed by hand, they can drift from firmware. The newer <span class="label">Board Config</span> tab (&sect;6.8) avoids this by parsing the source file live.</p>
+
+<h3>6.8 Board Config</h3>
+<p class="highlight">New in this revision.</p>
+<p><span class="label">Purpose.</span> A read-only listing of every constant in <code>fluispotter/board_config.py</code> &mdash; the board-type hardware configuration (GPIO pin assignments, DAC registers, I2C addresses, motor physical constants, PWM, motor power/speed, parking, dosing, PID gains, fluid-sensor thresholds, synchronization).</p>
+<p><span class="label">Displays.</span> Section cards (one per <code>board_config.py</code> section header) laid out in two balanced columns, each card listing its <code>NAME = value</code> rows. A header shows the board identity and the live count (e.g. &ldquo;68 constants in 11 sections&rdquo;).</p>
+<p><span class="label">Data.</span> Parses the <code>board_config.py</code> <span class="label">source text</span> at construction (a regex captures section headers and <code>NAME = const(value)</code> lines, preserving grouping and order; the literal value, e.g. <code>0x3a</code>/<code>800_000</code>, is shown verbatim). It never executes the module, so the deployed config is always reflected without drift. <span class="label">Controls.</span> None. <span class="label">Hardware.</span> None (reads a repo file).</p>
+
+<h3>6.9 Log</h3>
+<p><span class="label">Purpose.</span> A raw scrolling view of every JSON frame received, for debugging.</p>
+<p><span class="label">Displays.</span> Each frame as a line, colour-coded (<code>err</code>=red, <code>done</code>=green, <code>res_rev</code>/<code>enc_rev</code>=amber). <span class="label">Data.</span> Fed directly inside <code>_handle_frame</code> for all frames (defined inline in <code>main.py</code> as <code>_LogPanel</code>). <span class="label">Controls.</span> Scroll/select. <span class="label">Hardware.</span> None.</p>
+
+<!-- ============================================================ -->
+<h2>7. Source Layout &amp; Maintenance Notes</h2>
+<p style="min-height: 14px;"><br></p>
+
+<h3>7.1 Directory Layout</h3>
+<table>
+<tr><th>Path</th><th>Contents</th></tr>
+<tr><td><code>monitor/main.py</code></td><td>MainWindow, toolbar, tab registration, frame dispatch, inline <code>_LiveTab</code> + <code>_LogPanel</code>.</td></tr>
+<tr><td><code>monitor/serial_bridge.py</code></td><td>SerialBridge reader thread + <code>find_port()</code>.</td></tr>
+<tr><td><code>monitor/panels/*.py</code></td><td>Per-tab QWidget panels (see &sect;6).</td></tr>
+<tr><td><code>monitor/board_script.py</code></td><td>Shared MicroPython script library &mdash; used by the Control app, not the Monitor app.</td></tr>
+</table>
+
+<h3>7.2 Orphaned / Unused Panel Files</h3>
+<p>The following files exist under <code>monitor/panels/</code> but are <span class="warn">not registered as tabs</span> by <code>monitor/main.py</code>. They are stale or shared-ancestor copies of panels that are actively wired in the Control app; they do not appear in the shipped Monitor UI:</p>
+<table>
+<tr><th>File</th><th>Note</th></tr>
+<tr><td><code>encoder_panel.py</code></td><td>Encoder-fidelity test bench. Active copy lives in the Control app.</td></tr>
+<tr><td><code>event_log_panel.py</code></td><td>On-disk event-store reader. Distinct from the wired <span class="label">State Log</span> tab. Active copy lives in the Control app.</td></tr>
+<tr><td><code>res_map_panel.py</code></td><td>Resistance-map polar visualiser. The Control app ships a newer, divergent copy.</td></tr>
+</table>
+
+<h3>7.3 Maintenance Caveats</h3>
+<p>&bull; The 5184 pulses-per-rev constant is hard-coded in several panels (Charts, VarPanel) rather than imported; keep it in sync with the ULP.</p>
+<p>&bull; The <span class="label">Config</span> tab's values are hand-transcribed; prefer the live <span class="label">Board Config</span> tab as the source of truth.</p>
+<p>&bull; The module docstring's tab list omits the Charts tab and is slightly stale relative to the actual <code>addTab()</code> calls; the tab order in &sect;6 is authoritative.</p>
+<p>&bull; Tab order equals the order of <code>addTab()</code> calls; static tabs (Config, Board&nbsp;Config) must NOT be added to <code>_handle_frame</code>'s update fan-out (they have no <code>update()</code> method).</p>
+
+<p style="min-height: 28px;"><br></p>
+<p class="note">&mdash; End of Monitor Application Specification, Version 1.1 &mdash;</p>
+
+</body>
+</html>

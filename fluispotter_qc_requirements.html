@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Fluispotter Mechanical &amp; Sub-System QC Requirements</title>
+<style type="text/css">
+body { font: 11.0px Arial; margin: 40px; }
+h1 { font: bold 36.0px Arial; color: #1f4e79; text-align: center; margin: 100px 0 10px 0; }
+h2 { font: bold 16.0px Arial; color: #1f4e79; margin: 30px 0 6px 0; }
+h3 { font: bold 13.0px Arial; color: #2e75b6; margin: 20px 0 4px 0; }
+p { font: 11.0px Arial; margin: 0 0 4px 0; }
+table { border-collapse: collapse; margin: 4px 0 8px 0; width: 100%; }
+td, th { border: 1.0px solid #bfbfbf; padding: 3px 6px; font: 10.0px Arial; vertical-align: top; }
+th { font-weight: bold; background-color: #eef3f8; }
+code { font: 9.0px Menlo; }
+.subtitle { font: 20.0px Arial; color: #2e75b6; text-align: center; margin: 0 0 10px 0; }
+.version { font: 12.0px Arial; color: #555555; text-align: center; margin: 15px 0 6px 0; }
+.conf { font: bold 11.0px Arial; color: #cc0000; text-align: center; margin: 0; }
+.company { font: bold 12.0px Arial; color: #1f4e79; text-align: center; margin: 30px 0 6px 0; }
+.email { font: 11.0px Arial; color: #555555; text-align: center; margin: 0; }
+.toc-section { font: bold 10.0px Arial; color: #1f4e79; margin: 8px 0 2px 0; }
+.note { font: 10.0px Arial; color: #555555; margin: 4px 0; }
+.label { font: bold 10.0px Arial; }
+.mech { color: #b06000; font-weight: bold; }
+.elec { color: #1d4ea0; font-weight: bold; }
+.locked { color: #cc0000; font-weight: bold; }
+.open { color: #1d6627; }
+.tbd { color: #b06000; font-weight: bold; }
+</style>
+</head>
+<body>
+<p style="min-height: 14px;"><br></p>
+<h1>FLUISPOTTER</h1>
+<p class="subtitle">Mechanical &amp; Sub-System QC Requirements</p>
+<p class="version">Version 1.2 &nbsp;| &nbsp;2026-07-03</p>
+<p class="conf">CONFIDENTIAL &mdash; Internal Use Only</p>
+<p class="company">Fluispotter ApS</p>
+<p class="email">sten@fluispotter.com</p>
+<p style="min-height: 14px;"><br></p>
+<h2>Contents</h2>
+<p class="toc-section">1. Document Overview</p>
+<p class="toc-section">2. Blood Pump</p>
+<p class="toc-section">3. Automated QC &amp; Traceability</p>
+<h2>1. Document Overview</h2>
+<p>This document collects all testable <b>mechanical</b> and <b>electrical</b> requirements for the Fluispotter device, with the purpose of creating an <b>automated device QC process</b>: each requirement names the measurement method that verifies it and carries machine-readable pass/fail limit(s), so a QC runner can execute it against a physical device without judgement calls. Mechanical requirements are added as we go.</p>
+<p>Each requirement is a single testable shall-statement with a stable ID, a class (<span class="mech">MECH</span> mechanical / <span class="elec">ELEC</span> electrical), a sub-system, a measurement method, and named limits. A limit value of <span class="tbd">TBD</span> marks a requirement whose threshold is not yet fixed &mdash; it is listed but not yet enforceable in automated QC. This document is <b>generated</b> from the machine-readable registry <code>verification/qc_requirements.py</code>; the document and the registry cannot drift apart.</p>
+<p>Each requirement also carries a <b>lock status</b>: a <span class="locked">Locked</span> requirement is frozen &mdash; its text changes only on the owner's explicit instruction, enforced by a content-hash baseline that fails the build on any unsanctioned edit or removal &mdash; whereas an <span class="open">Open</span> requirement may still be revised. New requirements default to Open.</p>
+<table>
+<tr><th>Field</th><th>Value</th></tr>
+<tr><td class="label">Document</td><td>Fluispotter Mechanical &amp; Sub-System QC Requirements</td></tr>
+<tr><td class="label">Version</td><td>1.2</td></tr>
+<tr><td class="label">Date</td><td>2026-07-03</td></tr>
+<tr><td class="label">Requirements</td><td>2 total &mdash; 2 MECH, 0 ELEC</td></tr>
+<tr><td class="label">Lock status</td><td><span class="locked">1 Locked</span> (frozen &mdash; changed only by owner instruction), <span class="open">1 Open</span></td></tr>
+<tr><td class="label">TBD limits</td><td>2 requirement(s) with a TBD threshold &mdash; listed but not yet enforceable in automated QC</td></tr>
+<tr><td class="label">Source of truth</td><td><code>verification/qc_requirements.py</code> (this file is generated)</td></tr>
+</table>
+<h3>Change Log</h3>
+<p class="note">Per-release summaries. For the itemized log of individual requirement changes, see Requirement Change History below.</p>
+<table>
+<tr><th>Version</th><th>Date</th><th>Author</th><th>Change Summary</th></tr>
+<tr><td>1.2</td><td>2026-07-03</td><td>Claude Code</td><td>QCR-102 LOCKED on owner instruction (start-position scan, BP_START_MAX_POWER 3800 frozen; BP_START_HARD_ARC_MAX_EDGES stays TBD inside the locked text — fixing it later requires an owner-authorised re-baseline). 2 reqs, 1 locked.</td></tr>
+<tr><td>1.1</td><td>2026-07-03</td><td>Claude Code</td><td>Added QCR-102 blood-pump startability at every rotor position — full-revolution start-position scan; acceptance: every position starts, breakaway power &lt; BP_START_MAX_POWER (initial 3800), hard-arc width &lt; BP_START_HARD_ARC_MAX_EDGES (TBD). Grounded in the 2026-07-03 worst-case-pump bench scan. 2 reqs.</td></tr>
+<tr><td>1.0</td><td>2026-07-03</td><td>Claude Code</td><td>Initial mechanical &amp; sub-system QC requirements registry, created to collect all testable mechanical and electrical requirements for the automated device QC process.  First requirement: QCR-101 blood-pump placement centered (resistance-map centroid distance, limit TBD). 1 req.</td></tr>
+</table>
+<h3>Requirement Change History</h3>
+<p class="note">Every requirement change (add, modify, lock, unlock, remove) is logged here going forward, newest first. A Locked requirement changes only by the owner's explicit instruction.</p>
+<table>
+<tr><th style="width:9%">Date</th><th style="width:6%">Ver</th><th style="width:14%">Requirement(s)</th><th style="width:9%">Change</th><th style="width:62%">Description</th></tr>
+<tr><td>2026-07-03</td><td>1.2</td><td>QCR-102</td><td>lock</td><td>Locked QCR-102 on owner instruction — startability scan acceptance criteria frozen (BP_START_MAX_POWER 3800; hard-arc width TBD).</td></tr>
+<tr><td>2026-07-03</td><td>1.1</td><td>QCR-102</td><td>add</td><td>Added QCR-102 Blood pump starts at every rotor position — complete start-position scan in mechanical QC; breakaway power &lt; BP_START_MAX_POWER (3800) at every position, no position fails, hard-arc width limit TBD.</td></tr>
+<tr><td>2026-07-03</td><td>1.0</td><td>QCR-101</td><td>add</td><td>Added QCR-101 Blood-pump placement centered — resistance-map centroid distance from theoretical center, dead-point/parking bins excluded, limit BP_CENTER_MAX_DISTANCE = TBD.</td></tr>
+<tr><td>2026-07-03</td><td>1.0</td><td>registry-wide</td><td>process</td><td>Created this QC requirements registry (mechanical &amp; electrical, for the automated device QC process); every requirement change is logged here.</td></tr>
+</table>
+<h2>2. Blood Pump</h2>
+<p>Mechanical requirements on the blood-pump: placement, alignment, and drive mechanics, verified by automated bench measurements.</p>
+<table>
+<tr><th style="width:6%">ID</th><th style="width:12%">Title</th><th style="width:38%">Requirement</th><th style="width:5%">Class</th><th style="width:11%">Method</th><th style="width:13%">Limits</th><th style="width:6%">Status</th><th style="width:9%">Source</th></tr>
+<tr><td><b>QCR-101</b></td><td>Blood-pump placement centered</td><td>The blood pump SHALL be mounted aligned at the mechanical center. Verification: run a resistance map (constant-power drive, 32 segment-timing samples per revolution) over full rotor revolutions and compute the distance between the theoretical center (the polar origin — a perfectly centered pump yields a uniform ring centred on it) and the centroid of the measured values, EXCLUDING the samples around the dead-point / parking position (hall home zone).  The distance SHALL be less than BP_CENTER_MAX_DISTANCE.</td><td><span class="mech">MECH</span></td><td>resistance-map centroid analysis</td><td><code>BP_CENTER_MAX_DISTANCE</code> = <span class="tbd">TBD</span></td><td><span class="open">Open</span></td><td>owner instruction 2026-07-03; ULP test_resistance_map + monitor res_map_panel</td></tr>
+<tr><td><b>QCR-102</b></td><td>Blood pump starts at every rotor position</td><td>The blood pump SHALL start from ANY rotor rest position.  Verification: run a complete START-POSITION SCAN over at least one full revolution (5184 encoder edges) — repeated start / short-run / stop steps (pulsed adaptive-escalation start, ~50 ms run per step so consecutive steps sample the revolution a few edges apart), recording the breakaway power at every step.  Acceptance: (a) EVERY step starts — no rest position fails to start; (b) the breakaway power at every position SHALL be less than BP_START_MAX_POWER (initial limit 3800 of 4095 ≈ 93 % full power, keeping ~300 escalation headroom — set from the 2026-07-03 worst-case-pump bench scan: normal positions start at 2500, a hard compression arc needed 3500–4095, and one dead-center position failed at full power); (c) any contiguous arc of positions with breakaway power above 3000 SHALL be narrower than BP_START_HARD_ARC_MAX_EDGES (TBD — bounds the sticky compression zone, and informs the park offset that keeps the rest position out of it).</td><td><span class="mech">MECH</span></td><td>start-position scan (sweep-start walk)</td><td><code>BP_START_HARD_ARC_MAX_EDGES</code> = <span class="tbd">TBD</span><br><code>BP_START_MAX_POWER</code> = 3800</td><td><span class="locked">Locked</span></td><td>owner instruction 2026-07-03; bench start-position scan — ULP_Test2 test_sweep_start + Control Start Test tab</td></tr>
+</table>
+<h2>3. Automated QC &amp; Traceability</h2>
+<p>The registry is machine-readable: an automated QC runner reads each requirement's <code>method</code> and <code>limits</code> directly from <code>verification/qc_requirements.py</code>, executes the named measurement against the device under test, and passes/fails it against the named limit(s). Requirements whose limits are still <span class="tbd">TBD</span> are reported as NOT-ENFORCEABLE rather than silently passed, so threshold gaps stay visible until fixed from bench data.</p>
+<p class="note">Registry structure, doc mirroring, the lock baseline, and the change history are validated headlessly by the SW verification suite (SWR-513).</p>
+<p style="min-height: 28px;"><br></p>
+<p class="note">&mdash; End of Fluispotter Mechanical &amp; Sub-System QC Requirements, Version 1.2 (generated from verification/qc_requirements.py) &mdash;</p>
+</body>
+</html>

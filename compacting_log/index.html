@@ -1,0 +1,650 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../ci_release_plan/">
+      
+      
+        <link rel="next" href="../multi_mode_ulp/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Compacting Log - Fluispotter</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#compacting-log" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Fluispotter" class="md-header__button md-logo" aria-label="Fluispotter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fluispotter
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Compacting Log
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Fluispotter" class="md-nav__button md-logo" aria-label="Fluispotter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fluispotter
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Reference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../battery_test_2026-07-18/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Battery endurance test — run to power failure (2026-07-16 → 2026-07-18)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bench_run_2026-07-18_10x2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bench acceptance — 10 samples × 2 spots (dry run), 2026-07-18
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bench_run_2026-07-19_8h_dry/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8-hour dry run — 1 pre-session sample + 15 triplet samples, 2026-07-19
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ci_release_plan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CI / Release Process Plan — Fluispotter Firmware &amp; Software
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Compacting Log
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Compacting Log
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#2026-06-08-compaction-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-06-08 — Compaction #1
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compaction-2026-06-15-simple-p-hall-interval-verification-metric" class="md-nav__link">
+    <span class="md-ellipsis">
+      Compaction — 2026-06-15 (Simple-P hall-interval verification metric)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2026-06-30-compaction-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-06-30 — Compaction #2
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2026-07-07-compaction-3-flush-cycle-lightsleep-arc" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-07 — Compaction #3 (flush-cycle + lightsleep arc)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2026-07-13-0920-compaction-during-overnight-alarm-follow-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-13 ~09:20 — compaction during overnight-alarm follow-up
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2026-07-17-evening-compaction-mid-hub-173-wrap-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-17 ~evening — compaction mid hub-1.7.3 wrap-up
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multi_mode_ulp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multi Mode ULP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prompts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    User Prompts Log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../requirements_implementation_map/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Requirements Implementation Map — 2026-07-16 (registry 1.69, 148 requirements)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../summaries/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Summaries
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wdt_lightsleep_usb_investigation_2026-07-20/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GitHub #46 — WDT(3) at lightsleep entry: investigation record (WON'T FIX)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="compacting-log">Compacting Log</h1>
+<p>Append-only record of conversation-compaction events for this project. Each entry
+captures what the compacted (summarized) stretch of work accomplished and what was
+still open at the moment of compaction, so context survives across the summarizer's
+window. Newest entries at the bottom.</p>
+<hr />
+<h2 id="2026-06-08-compaction-1">2026-06-08 — Compaction #1</h2>
+<p><strong>Span:</strong> ULP 1.2.4 positional-PID bench validation → apps hardening → independent
+ULP versioning → DAC-sweep re-add → board_config source-of-truth.</p>
+<p><strong>Delivered before compaction:</strong>
+- ULP <strong>1.2.4</strong> positional integer-tick PID bench-validated (gains kp=300 / ki=120000
+  / kd=0). BUG 1 (AC SPR-20 limit cycle) structurally fixed — no DAC_HALT, no
+  re-init storm, sof=0.
+- <strong>AutomatedSessionVerification (ASV)</strong> app built + committed: runs/monitors a full
+  session, <code>session_history.log</code> append-only START/END rows (SW ver, ULP ver, type,
+  timestamps, pass/fail), read-only continuous serial reader.
+- Control <strong>PID Tuner</strong> tab given live kp/ki/kd set+Apply (matching Pumps tab).
+- <strong>Serial auto-reconnect</strong> added to both Monitor &amp; Control bridges (survives USB
+  re-enumeration); <code>sys.excepthook</code> installed in both apps (no more PyQt6 SIGABRT).
+- <strong>DAC/power audit:</strong> confirmed <code>power = 4095 − DAC</code> everywhere; real BP-not-starting
+  cause was an uncalled <code>_set_bp_direction</code> (DAC7574 CH3 latch) — fixed + deployed.
+- Resistance-map <strong>per-segment HALL ring</strong> (<code>res_hall</code>) deployed (ULP_Test 1.2.5).
+- <strong>Independent ULP versioning</strong> (<code>#ifdef ULP_TEST_BUILD</code> selects patch): ULP_Op vs
+  ULP_Test versioned separately; deploy reports both live versions.</p>
+<p><strong>Open at compaction:</strong>
+- DAC-sweep re-add (<code>test_dac_sweep_enc</code>, TEST id 5) to the TEST binary — code done,
+  deploy blocked by a serial-port race (auto-reconnect app) + a wedged board.
+- PID Tuner tab "no data when running" — suspected <code>pid_tuner_script</code> <code>_BATCH_SIZE=10</code>
+  vs the ULP's N=2 pulses (host-only fix).</p>
+<p><strong>Resolved immediately after compaction (2026-06-08):</strong>
+- Board was wedged (USB-CDC print-block); power-cycled. <strong>Deployed fw 0.1.57</strong> —
+  ULP_Op 1.2.4 / <strong>ULP_Test 1.2.6</strong> (DAC sweep restored), BP self-test PASS.
+- <strong>board_config.py made the single source of the PID defaults:</strong> holds 300/120000/0,
+  pushed to device (persists across reboot); Control <code>pump_panel</code> + <code>pid_tuner_panel</code>
+  now load kp/ki/kd defaults from <code>board_config.py</code> via standalone importlib
+  (micropython.const shim); ULP <code>DEFAULT_*_SCALED</code> documented as a compile-time
+  fallback that mirrors board_config.</p>
+<p><strong>Still open:</strong> PID Tuner no-data fix; commit of the 0.1.57 batch (pending user's go).</p>
+<hr />
+<h2 id="compaction-2026-06-15-simple-p-hall-interval-verification-metric">Compaction — 2026-06-15 (Simple-P hall-interval verification metric)</h2>
+<p><strong>Carried in:</strong> full hardware test (prompt 59) had passed 3/3 green — deploy (10 files
+FNV-verified), SW verification 51/0, MECH 4/4 — then the user redefined the SimpleP
+verification metric: grade SPR on <strong>time between hall revolutions</strong> (true full-rev time),
+not the encoder sampling-interval batch (a 1/324-rev sub-sample swamped by peristaltic
+ripple).</p>
+<p><strong>Done this turn:</strong>
+- <code>output/run_operational_convergence.py</code> — board-side hall-interval SPR (<code>sprh</code>): track
+  last-hall <code>_lh</code> + hall-time <code>_ht</code>, <code>sprh = ticks_diff(now,_ht)/1000/dh</code> per hall increment,
+  emit in the op frame at 25 ms poll; summary reports <code>sprh_mean</code> (first/spin-up interval
+  discarded). Encoder-batch <code>spr</code> retained as a diagnostic column only.
+- <code>verification/tests_mech/test_bench.py</code> — <code>_SUMMARY</code> regex parses <code>sprh_mean</code> +
+  hall-interval count; <code>_run_convergence</code> grades <code>sprh_mean</code> within ±5% of target,
+  requiring ≥3 hall intervals, <code>stop==0</code>, <code>hall&gt;0</code>.
+- <code>verification/requirements.py</code> — SWR-122/123 text now SPECIFIES the hall-interval metric
+  (encoder batch called out as diagnostic-only); registry <code>DOC_VERSION</code> 1.1 → 1.2;
+  <code>docs/fluispotter_sw_requirements.html</code> + <code>.docx</code> regenerated.
+- <strong>Hardware (re-run on the connected board):</strong> AC <code>sprh_mean</code> 19.808 (−0.96%), BP
+  <code>sprh_mean</code> 16.000 (0.00%), both <code>stop=0</code>, ≥3 hall intervals. Formal MECH suite
+  SWR-122/123/124/125 <strong>4/4 PASS</strong>. Pumps reset idle.</p>
+<p><strong>Still open:</strong> commit/push the prompt-59 batch + this hall-metric batch (pending user's go).</p>
+<hr />
+<h2 id="2026-06-30-compaction-2">2026-06-30 — Compaction #2</h2>
+<p><strong>Span:</strong> dose/park bench debugging (post PID-tuner batch) → ULP 1.4.0 rollback
+baseline → park cold-start investigation.</p>
+<p><strong>Delivered before compaction:</strong>
+- <strong>DOSE fix validated</strong> (ULP 1.4.0 Simple-P <code>bp_drive_window</code>, 20-sample session
+  passed clean).
+- <strong>Park "failures" diagnosed as an INVALID TEST</strong> (user insight): park right after
+  determine-parking is a near-no-op (rotor already home). Valid test = move out →
+  stop → park.
+- GPIO-contention hypothesis <strong>refuted</strong> (BP fully ULP-owned; <code>ULPBloodPump</code> stub);
+  CH3 direction-DAC hypothesis <strong>refuted</strong> (same-session determine-parking turned);
+  DAC-override/master-power/stiction all ruled out. Motor runs when manually nudged
+  → hard cold-start/break-free problem.
+- <strong>Rolled back to the 1.4.0 kick-gated park</strong> (commit 5b15450, pushed dev) after the
+  1.5.0/1.6.0/1.7.0 park attempts; 1.6.0 "determine-parking timeout" = dead board
+  (DAC7574 latch), not a regression.
+- Bench USB print-wedge failure mode documented (lightsleep CDC re-enumeration →
+  stale drainer → print flood; power-cycle to recover).</p>
+<p><strong>Still open:</strong> implement the park cold-start by CALLING the existing adaptive
+START_DAC (<code>bp_dose_park_kick</code> → <code>try_kick_start</code>) exactly as the dose does (user:
+"Fact is we know that this method works for starting the motor from complete
+standstill"); deploy; bench-test move-out → stop → park. (Resolved post-compaction
+as ULP 1.8.0.)</p>
+<h2 id="2026-07-07-compaction-3-flush-cycle-lightsleep-arc">2026-07-07 — Compaction #3 (flush-cycle + lightsleep arc)</h2>
+<p>Compacted mid-arc after the FINISH fix (0.1.79) and the election-lightsleep incident.
+Summary carried: SWR-241 FINISH fix bench-validated; 0.1.80 election tape-runaway
+root-caused and rejected → Option A single-owner rebuild on the 0.1.79 base; fault-
+inhibit race + clobber fixes; SWR-242 locked (live hall-tick sync); the continuous-
+pumping bug identified with SWR-243/244 being added+locked and the 2+8 reinstatement
+in progress (git-archaeology agent findings preserved). Post-compaction the arc
+completed cleanly through fw 0.1.86 (see prompts 93-95) — no context loss observed;
+the agent-result handoff (archaeology report arriving after compaction) worked.</p>
+<h2 id="2026-07-13-0920-compaction-during-overnight-alarm-follow-up">2026-07-13 ~09:20 — compaction during overnight-alarm follow-up</h2>
+<p>Context compacted while resuming the 07-12 20:40 wedge-alarm investigation (background monitors had been killed by process exit). Summary preserved: v0.1.99/0.1.100/0.1.101 delivery chain, 42-sample endurance PASS, red-team findings, pending tasks (#113/#114/#118, Mac-sleep repro pair, C-level CDC fix). Post-compaction work: full-event-store discovery + board recovery (see prompts.md #119).</p>
+<h2 id="2026-07-17-evening-compaction-mid-hub-173-wrap-up">2026-07-17 ~evening — compaction mid hub-1.7.3 wrap-up</h2>
+<p>Context compacted immediately after the 1.7.3 stale-ONLINE fix went live (footer verified) but
+before the firmware-repo gitlink commit + prompts entry + user report. Summary preserved: full
+0.1.110→0.1.115 chain, ULP 1.12.0, IMG-4, hub 1.6.x→1.7.3, session-report/metadata/command
+requirements (SWR-277..281, HUBR-312..314), the running ~24h battery session + armed watchers
+(deploy-on-finish PID 8236, session watch log), PAT-rotation + Mirza.txt reminders. Post-
+compaction: resumed cleanly — live-verified OFFLINE badge on the napping board, wrote prompts</p>
+<h1 id="153-committed-the-gitlink-no-context-loss-observed">153, committed the gitlink. No context loss observed.</h1>
+<h2 id="2026-07-23-0720-compaction-mid-48-wedge-recovery">2026-07-23 ~07:20 — compaction mid #48 wedge-recovery</h2>
+<p>Context compacted while diagnosing the second dev.0.5 session wedge (between arming the
+audit-off discriminator and Sten's "Nothing happening on board"). Summary preserved the full</p>
+<h1 id="48-chain-conviction-dev0106-trial-ladder-stack-canary-economics-testop-track-hub">48 chain (conviction, dev.0.1→0.6 trial ladder, stack-canary economics, TestOp track, hub</h1>
+<p>1.14.1, boot-intercept technique), the deque-audit build (fw 0.1.130), open bugs to file, and
+the exact next step (confirm wedge, install dev.0.6, run the audit). Post-compaction: resumed
+seamlessly — canary-evidence read attempted (RTC scrambled by the power-cycle, inconclusive,
+conviction unaffected), dev.0.6 installed via catch-boot, recovery session 6/6 FINISH,
+audit run re-armed end-to-end. No context loss observed; the only stale artifact was a
+pre-compaction monitor whose verdict text still said "dev.0.5" after the dev.0.6 swap
+(corrected in the transcript).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>

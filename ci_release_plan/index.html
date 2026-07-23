@@ -1,0 +1,827 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../bench_run_2026-07-19_8h_dry/">
+      
+      
+        <link rel="next" href="../compacting_log/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>CI / Release Process Plan — Fluispotter Firmware & Software - Fluispotter</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ci-release-process-plan-fluispotter-firmware-software" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Fluispotter" class="md-header__button md-logo" aria-label="Fluispotter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fluispotter
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              CI / Release Process Plan — Fluispotter Firmware &amp; Software
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Fluispotter" class="md-nav__button md-logo" aria-label="Fluispotter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fluispotter
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Reference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../battery_test_2026-07-18/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Battery endurance test — run to power failure (2026-07-16 → 2026-07-18)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bench_run_2026-07-18_10x2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bench acceptance — 10 samples × 2 spots (dry run), 2026-07-18
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bench_run_2026-07-19_8h_dry/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8-hour dry run — 1 pre-session sample + 15 triplet samples, 2026-07-19
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    CI / Release Process Plan — Fluispotter Firmware &amp; Software
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    CI / Release Process Plan — Fluispotter Firmware &amp; Software
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-what-we-ship-and-how-it-builds-today" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. What we ship (and how it builds today)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. What we ship (and how it builds today)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-ci-gaps-found-by-audit-2026-06-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      Current CI gaps (found by audit, 2026-06-12)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-target-pipeline-four-stages" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Target pipeline — four stages
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Target pipeline — four stages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stage-0-pr-gate-ciyml-on-every-push-pr" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stage 0 — PR gate (ci.yml, on every push + PR)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-1-artifact-build-artifactsyml-on-merge-to-master" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stage 1 — Artifact build (artifacts.yml, on merge to master)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-2-bench-hardware-in-the-loop-hilyml-nightly-manual-dispatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stage 2 — Bench hardware-in-the-loop (hil.yml, nightly + manual dispatch)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stage-3-release-releaseyml-on-v-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stage 3 — Release (release.yml, on v* tag)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-versioning-traceability-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Versioning &amp; traceability model
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-component-specific-work-items" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Component-specific work items
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-rollout-phases" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Rollout phases
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compacting_log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compacting Log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multi_mode_ulp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multi Mode ULP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prompts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    User Prompts Log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../requirements_implementation_map/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Requirements Implementation Map — 2026-07-16 (registry 1.69, 148 requirements)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../summaries/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Summaries
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wdt_lightsleep_usb_investigation_2026-07-20/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GitHub #46 — WDT(3) at lightsleep entry: investigation record (WON'T FIX)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="ci-release-process-plan-fluispotter-firmware-software">CI / Release Process Plan — Fluispotter Firmware &amp; Software</h1>
+<p><strong>Version 1.3 — 2026-06-12 — Status: APPROVED; Stage 0 + Phase 2 IMPLEMENTED</strong></p>
+<p>Stage 0 phase 1 shipped (2026-06-12): <code>.github/workflows/ci.yml</code> — lint
+(style frozen in <code>.flake8</code>, bug codes active), the SW verification suite
+(<code>make verify</code> → per-requirement report artifact), Monitor+Control offscreen
+smoke, and the version-bump discipline gate
+(<code>.github/scripts/check_version_bump.py</code>). Requirements registry + doc:
+<code>verification/requirements.py</code> → <code>docs/fluispotter_sw_requirements.html</code>
+(76 requirements, 64 SW / 12 MECH).</p>
+<p>Phase 2 shipped (2026-06-12): <code>ci.yml</code> job <code>ulp-build</code> in the pinned
+<code>espressif/idf:v5.3.2</code> container (matching the bench IDF v5.3.2) — <code>idf.py
+build</code> → <code>output/build_verify_ulp.py</code> (sizes/headroom/libgcc/versions for
+all three images; tool paths now env/PATH-portable in <code>deploy_ulp.py</code>) →
+<code>.github/scripts/check_variables_drift.py</code> (committed address maps must
+match the freshly built ELFs — the stale-address gate). Stage 1:
+<code>.github/workflows/artifacts.yml</code> (master + dispatch) builds the stamped
+firmware image + verified ULP binaries and generates
+<code>release_manifest.json</code> + <code>SHA256SUMS</code> + SBOM via
+<code>.github/scripts/make_manifest.py</code> (commit/submodule SHAs, every component
+version, toolchain, artifact hashes; dirty trees flagged unreleasable).
+KNOWN RED at introduction: the drift gate correctly reports
+<code>test_variables.py</code>/<code>test2_variables.py</code> stale vs source@HEAD (they predate
+the <code>retain</code> pinning; the board's old test binaries still match them) —
+cleared by one sanctioned <code>deploy_ulp.py</code> bench run.</p>
+<p>Decisions (2026-06-12, Sten): (a) bench Mac WILL host a self-hosted runner with
+the board attached — YES; (b) releases move to master-only tagging — YES;
+(c) app packaging/signing (PyInstaller/notarization) — DEFERRED.</p>
+<p>This plan defines a continuous-integration and release process covering all five
+shippable components in this repository, grounded in the build tooling that
+exists today. It is staged so each phase delivers value on its own.</p>
+<hr />
+<h2 id="1-what-we-ship-and-how-it-builds-today">1. What we ship (and how it builds today)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Component</th>
+<th>Built by (today)</th>
+<th>Shipped as</th>
+<th>Version source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>ESP32-S3 MicroPython firmware image</td>
+<td><code>.github/workflows/build.yml</code> on <code>v*</code> tag (ESP-IDF + <code>runtime/micropython</code> fork, <code>FROZEN_MANIFEST=manifest.py</code>)</td>
+<td><code>fluispotter-&lt;tag&gt;.bin</code> GitHub Release asset</td>
+<td>git tag + <code>version.py</code> (git-derived)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ULP pump regulator (3 binaries: <code>pump_regulator</code> / <code>pump_test</code> / <code>pump_test2</code>)</td>
+<td><strong>local only</strong> — <code>idf.py build</code> + <code>output/build_verify_ulp.py</code> gates + <code>variables.py</code> regen</td>
+<td>files copied to board via pyserial raw-REPL</td>
+<td><code>ULP_VERSION_MAJOR/MINOR/PATCH</code> in <code>main/ulp/main.c</code> (per-binary <code>#if</code>)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Monitor &amp; Control desktop apps (PyQt6, macOS arm64)</td>
+<td>not built — <code>.app</code> wrappers run live source via <code>arch -arm64 /usr/local/bin/python3</code></td>
+<td>repo checkout + hand-made <code>launchers/*.app</code></td>
+<td><code>monitor/app_version.py</code>, <code>control/app_version.py</code> (manual bump-per-change) + <code>version.py</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>RPi synchronize-service</td>
+<td>submodule <code>lib/synchronize-service</code> (own <code>setup.py</code>/Makefile/tests, <strong>no CI</strong>)</td>
+<td>manual deploy to RPi</td>
+<td>submodule SHA</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Docs (mkdocs site + spec repos)</td>
+<td><code>documentation.yml</code> on <code>master</code> push → external Pages repo; spec-repo HTML → <code>.docx</code> via <code>textutil</code> locally</td>
+<td>Pages site, <code>.docx</code> to Google Drive</td>
+<td>spec-repo change logs (e.g. device spec 2.11)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="current-ci-gaps-found-by-audit-2026-06-12">Current CI gaps (found by audit, 2026-06-12)</h3>
+<ul>
+<li><strong>No test or lint gate anywhere.</strong> <code>make lint</code> / <code>make test</code> (34 headless unit tests) exist but no workflow runs them. A <code>v*</code> tag releases firmware even if tests fail.</li>
+<li><strong>ULP is not in CI at all</strong> — the safety-relevant pump regulator is built and verified only on a developer machine.</li>
+<li><strong>No version stamping in CI</strong> (<code>make stamp-version</code> never invoked), no checksums, no signing, no SBOM, no record of submodule SHAs/toolchain in the release.</li>
+<li><strong>Reproducibility:</strong> unpinned <code>setup-python</code> version, floating action tags, <code>pip install -r</code> without hashes, <code>ubuntu-latest</code> drift.</li>
+<li><strong>Trigger asymmetry:</strong> docs deploy from <code>master</code>; firmware releases from any <code>v*</code> tag on any commit — releases are not tied to reviewed code.</li>
+<li><strong>Desktop apps:</strong> no packaging, no dependency pinning (<code>&gt;=</code> floors), no tests, stale <code>CFBundleVersion=1.0</code>, launcher depends on the user's shell profile + a global Python.</li>
+<li><strong>Hardware-in-the-loop:</strong> all on-device verification is manual; <code>mpremote</code> drops this board (USB-CDC RTS), so any automated deploy must use the repo's pyserial raw-REPL tools (<code>output/_serial_io.py</code>, <code>deploy_operational_serial.py</code>, <code>run_operational_convergence.py</code>).</li>
+</ul>
+<hr />
+<h2 id="2-target-pipeline-four-stages">2. Target pipeline — four stages</h2>
+<div class="highlight"><pre><span></span><code> Stage 0  PR gate          every push / PR        (headless, GitHub-hosted)
+ Stage 1  Artifact build   merge to master        (headless, GitHub-hosted)
+ Stage 2  Bench HIL        nightly + pre-release  (self-hosted Mac runner + board)
+ Stage 3  Release          v* tag on master       (gated on 0–2 evidence)
+</code></pre></div>
+<h3 id="stage-0-pr-gate-ciyml-on-every-push-pr">Stage 0 — PR gate (<code>ci.yml</code>, on every push + PR)</h3>
+<p>Fast, headless, no secrets beyond the submodule SSH key. All jobs required to merge.</p>
+<ol>
+<li><strong>Lint</strong> — <code>make lint</code>; extend <code>.flake8</code> coverage to <code>monitor/</code> and <code>control/</code>.</li>
+<li><strong>Unit tests</strong> — <code>python3 -m unittest -v test/*.py</code> (already passes headless in &lt;1 s). Run the synchronize-service test suite from the submodule too.</li>
+<li><strong>App smoke (offscreen Qt)</strong> — construct both <code>MainWindow</code>s under <code>QT_QPA_PLATFORM=offscreen</code> on a Linux runner with pinned PyQt6/matplotlib/numpy; assert the window title contains <code>APP_VERSION</code>. (Verified feasible — both apps construct headlessly without a board.)</li>
+<li><strong>Injected-script compile check</strong> — build every <code>board_script.py</code> factory output (<code>MONITOR_SCRIPT</code>, the three PID scripts, sensors, etc.) and <code>compile()</code> the emitted MicroPython. This is the static check that already caught splice errors; make it a permanent gate.</li>
+<li><strong>ULP build + verify</strong> — <code>idf.py build</code> for all three binaries inside the pinned ESP-IDF container, then <code>output/build_verify_ulp.py</code> gates: <strong>no new libgcc</strong>, <strong>stack headroom ≥ 768 B</strong>, operational &lt; 8192 B / test binaries ≤ 4592 B (runtime-load ceiling), version readable.</li>
+<li><strong><code>variables.py</code> drift check</strong> — regenerate the address map from the just-built operational ELF and <code>git diff --exit-code</code> against the committed one. Kills the stale-address bug class at PR time.</li>
+<li><strong>Version-discipline check</strong> — if a PR touches <code>monitor/**</code> or <code>control/**</code> Python, require the matching <code>app_version.py</code> to be bumped in the same PR (simple script gate). Same rule for ULP: touching <code>main/ulp/main.c</code> requires a <code>ULP_VERSION_*</code> bump.</li>
+</ol>
+<h3 id="stage-1-artifact-build-artifactsyml-on-merge-to-master">Stage 1 — Artifact build (<code>artifacts.yml</code>, on merge to <code>master</code>)</h3>
+<p>Everything Stage 0 builds, retained as traceable artifacts:</p>
+<ul>
+<li>Full firmware image (<code>firmware.bin</code>) <strong>with <code>make stamp-version</code> applied first</strong> so the image embeds the git hash/build date.</li>
+<li>The three ULP binaries + the regenerated <code>variables.py</code> / <code>test_variables.py</code> / <code>test2_variables.py</code>.</li>
+<li>The rshell/pyserial-deployable <code>.mpy</code> bundle (<code>make build</code> output).</li>
+<li>A <strong>release manifest</strong> (JSON): git SHA, all submodule SHAs, ESP-IDF + Python + toolchain versions, ULP versions (all three), <code>APP_VERSION</code>s, spec-repo doc versions, SHA-256 of every artifact.</li>
+<li>SBOM (pip freeze of the pinned env + submodule list).</li>
+<li>Upload as a single versioned artifact bundle (retention ≥ 90 days).</li>
+</ul>
+<h3 id="stage-2-bench-hardware-in-the-loop-hilyml-nightly-manual-dispatch">Stage 2 — Bench hardware-in-the-loop (<code>hil.yml</code>, nightly + manual dispatch)</h3>
+<p>Runs on a <strong>self-hosted macOS runner</strong> (the bench Mac) with a devboard permanently attached. Uses only the repo's pyserial tools — never mpremote. Jobs are serialized with a <code>bench-board</code> concurrency group, and the workflow requires the Control/Monitor apps to be closed (check <code>lsof</code> on the port before starting).</p>
+<ol>
+<li>Deploy the Stage-1 operational ULP + firmware bundle (<code>deploy_operational_serial.py</code> pattern: copy, FNV byte-verify, reset).</li>
+<li><strong>Convergence test</strong> — <code>run_operational_convergence.py</code>: AC @ SPR 20 and BP @ SPR 16 must converge (mean within ±5 % of target over the last N revs, <code>motor_stop_events == 0</code>, skip ladder climbing). This is the regression test for the Simple-P regulator.</li>
+<li><strong>Sensor probe</strong> — <code>veml_pressure_probe.py</code>: VEML spot/line return non-zero lux, ADCs in range; flags the known pressure-saturation state.</li>
+<li>Publish a JUnit-style result + raw telemetry log as evidence artifacts; on failure, open a GitHub issue automatically.</li>
+<li>End state: board reset to normal firmware, LED rails off.</li>
+</ol>
+<p>A <strong>pre-release HIL run is mandatory</strong>: the release workflow refuses to publish unless the candidate SHA has a green HIL evidence artifact.</p>
+<h3 id="stage-3-release-releaseyml-on-v-tag">Stage 3 — Release (<code>release.yml</code>, on <code>v*</code> tag)</h3>
+<ul>
+<li>Tag must point at a commit <strong>on <code>master</code></strong> (enforced in the workflow) with green Stage 0–2.</li>
+<li>Rebuild (or promote the Stage-1 artifacts of that exact SHA), attach: firmware image, ULP binaries + variables maps, <code>.mpy</code> bundle, release manifest, <code>SHA256SUMS</code>, HIL evidence bundle, and the spec-repo <code>.docx</code> files (generated in CI from the HTML via pandoc/libreoffice instead of macOS-only <code>textutil</code>, or attached from the repo).</li>
+<li>Release notes generated from the manifest: per-component version table (firmware tag, ULP x3, Monitor/Control APP_VERSIONs, sync-service SHA, spec-doc versions) + changelog entries pulled from the <code>app_version.py</code> changelogs and spec change logs.</li>
+<li>Docs: <code>documentation.yml</code> stays, but drop <code>force_orphan: true</code> so the Pages history is preserved, and pin the Python version.</li>
+</ul>
+<hr />
+<h2 id="3-versioning-traceability-model">3. Versioning &amp; traceability model</h2>
+<p>One release = one <strong>release manifest</strong> that reconciles every independent version
+source. The git tag (<code>vX.Y.Z</code>) is the <em>release</em> version; component versions stay
+independent but are recorded:</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>File</th>
+<th>Discipline</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Release</td>
+<td>git tag <code>v*</code></td>
+<td>tagged on <code>master</code> only</td>
+</tr>
+<tr>
+<td>Build stamp</td>
+<td><code>version.py</code></td>
+<td>CI runs <code>make stamp-version</code>; <strong>dirty-tree (<code>*</code>) builds are unreleasable</strong></td>
+</tr>
+<tr>
+<td>ULP (×3)</td>
+<td><code>main/ulp/main.c</code></td>
+<td>bump enforced by Stage-0 gate; deploy checklist stays</td>
+</tr>
+<tr>
+<td>Monitor / Control</td>
+<td><code>app_version.py</code></td>
+<td>bump-per-change enforced by Stage-0 gate</td>
+</tr>
+<tr>
+<td>Sync service</td>
+<td>submodule SHA</td>
+<td>recorded in manifest; its own tests run in Stage 0</td>
+</tr>
+<tr>
+<td>Spec docs</td>
+<td>HTML change logs</td>
+<td>recorded in manifest</td>
+</tr>
+</tbody>
+</table>
+<p>Reproducibility hardening (applies to every workflow): pin <code>python-version</code>,
+pin action tags to SHAs, <code>pip install --require-hashes</code> from a lock file,
+record the ESP-IDF tools digest, and verify submodule SHAs against the gitlink
+(no floating branches).</p>
+<hr />
+<h2 id="4-component-specific-work-items">4. Component-specific work items</h2>
+<p><strong>Desktop apps</strong> — make them releasable: pin app dependencies (<code>==</code> like the
+firmware requirements), add the offscreen smoke + a small unit-test seam for
+<code>board_script</code> factories and the sensors classify logic; later, package with
+PyInstaller (arm64) so the <code>.app</code> stops depending on <code>/usr/local/bin/python3</code>,
+the user's shell profile, and the repo path; sync <code>CFBundleVersion</code> from
+<code>APP_VERSION</code> at package time; sign + notarize when distribution beyond the
+bench is needed.</p>
+<p><strong>RPi synchronize-service</strong> — add its test suite to Stage 0; build a wheel in
+Stage 1; deploy to the hub via a tagged release + <code>pip install</code> (replacing the
+manual update queue) once the bench flow is trusted.</p>
+<p><strong>ULP/firmware</strong> — containerize the ESP-IDF build (image pinned by digest) so
+PR builds are fast and identical to release builds; keep
+<code>check_ulp_memory.sh</code> + <code>build_verify_ulp.py</code> as the single source of build
+gates.</p>
+<hr />
+<h2 id="5-rollout-phases">5. Rollout phases</h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Scope</th>
+<th>Effort</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1 — Quick wins</strong></td>
+<td><code>ci.yml</code> with lint + unit tests + app smoke + injected-script compile; pin docs workflow; drop <code>force_orphan</code></td>
+<td>~1 day</td>
+<td>A merge gate exists at all</td>
+</tr>
+<tr>
+<td><strong>2 — Build completeness</strong></td>
+<td>ULP build+verify in CI, <code>variables.py</code> drift gate, version-discipline gates, Stage-1 artifacts + manifest + checksums</td>
+<td>~2–3 days</td>
+<td>Releases become traceable &amp; reproducible</td>
+</tr>
+<tr>
+<td><strong>3 — Bench HIL</strong></td>
+<td>Self-hosted Mac runner + convergence/sensor suites, evidence artifacts</td>
+<td>~2–4 days incl. bench setup</td>
+<td>Regulator regressions caught before release</td>
+</tr>
+<tr>
+<td><strong>4 — Release governance</strong></td>
+<td><code>release.yml</code> gating on evidence, release manifest/notes, app packaging + signing, sync-service wheel deploy</td>
+<td>~1 week</td>
+<td>Push-button, audit-ready releases</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Decisions needed from you:</strong> (a) confirm the bench Mac can run a self-hosted
+runner with the board permanently attached; (b) whether releases should move to
+<code>master</code>-only tagging now (you currently work on <code>dev</code>); (c) whether app
+packaging (PyInstaller/signing) is wanted in phase 4 or deferred.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>
