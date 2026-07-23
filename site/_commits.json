@@ -1,5 +1,17 @@
 [
 {
+"hash": "2657bbc0833ff238e5cbe696eaa2d5619541a53c",
+"date": "2026-07-23",
+"subject": "Merge: fw 0.1.142 SWR-299 CPU-side #48 defense",
+"body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
+"hash": "a570479fab51e95b572675d216f1ad8dc3d8fe1b",
+"date": "2026-07-23",
+"subject": "fw 0.1.142 + SWR-299: #48 CPU-side pad-clock defense (owner 'go')",
+"body": "Live battery re-occurrence 2026-07-23: PWRON boot at unplug, AC blind\nfrom the calibration->AC-bag boundary, SPR7+SPR20 kick-retry stagger\n(hall=0, dac=HALT).  The withdrawn ULP DEFEND_CLOCK is replaced by a\nCPU-side variant that cannot reproduce #53:\n\n- pump_regulator.defend_pad_clock(): ONE-SHOT IRQ-bracketed RMW\n  re-asserting SENS_IOMUX_CLK_EN; a few calls per minute, not 1 kHz,\n  and the operational ULP never touches the SENS block (main.c body\n  stays TESTOP-guarded no-op).\n- Called before EVERY pump start reaching the ULP (AC/BP enable, dose,\n  park wrappers + the four direct BP_PARKING/BP_DOSING mem32 pokes) and\n  after every runtime digital-claim site (post-handover hygiene pair,\n  hall-wake Pin+EXT1 arm, fluid-measure belt).  fluispotter.py uses a\n  lazy-import proxy so module side effects stay out of early boot.\n- SWR-299 registered (DOC 1.93) + TestPadClockDefense (3 tests).\n- Stale proximity anchor in the SWR-129-era retire test fixed (it\n  matched a header comment, not the _ulp.start() call).\n\nAcceptance gate before the battery campaign: >= 2 h radio-hot soak at\nthe zero-WDT baseline + recovery-boot motor trials.\n\nmake verify: exit 0, 165 requirements, 143 PASS / 0 FAIL.  Lint green.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
 "hash": "1a223ec25425811ec93bc6979262850ce12ce896",
 "date": "2026-07-23",
 "subject": "Merge: SWR-298 + true-green verification fixes",
@@ -1786,17 +1798,5 @@
 "date": "2026-06-10",
 "subject": "Monitor.app: add application icon",
 "body": "Set CFBundleIconFile to AppIcon and add Resources/AppIcon.icns so the macOS\nMonitor launcher shows a proper icon in the Dock and Finder.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
-},
-{
-"hash": "b30e96fd7dacd6316f9d5f1cd10a325230a04770",
-"date": "2026-06-10",
-"subject": "ULP Test2: regulators-only binary to fix PID-Tuner board crash",
-"body": "Pressing Run in the PID Tuner (Simple-P or test-tune) hard-crashed the board,\nneeding a power-cycle. Root cause (evidence-confirmed via serial capture, not a\nbrownout): pump_regulator.py's _load_and_start writes the ULP image into RTC\nslow memory past the firmware's 4096 B ULP reservation. Once pump_test.bin grew\nto 5584 B (Simple-P added ~1 KB) it overran live MicroPython RTC memory at\nruntime, corrupting it. The deploy swap-test missed it because it runs on a\nfresh-boot board, before that region is live.\n\nFix: a third, regulators-only ULP image (pump_test2.bin, ULP_Test2 1.3.0,\n3148 B) with only test_pid_regulate + test_p_regulate; the four heavier\ndiagnostics are gated out via ULP_TEST2_BUILD. The PID Tuner (both Test and\nSimple-P modes) swaps in this small image, staying well under the ~4592 B\nruntime RTC-load ceiling. Operational + full test binaries stay byte-identical.\n\n- main.c: #ifndef ULP_TEST2_BUILD around the 4 diagnostics (in both their\n  #ifdef ULP_TEST_BUILD blocks) + dispatch; ULP_Test2 version 1.3.0.\n- main_test2.c: new image source (ULP_TEST_BUILD + ULP_TEST2_BUILD).\n- deploy_ulp.py: build/deploy/map all three binaries; TEST2_MAX_BYTES=4592\n  ceiling check; test2_variables.py mapgen.\n- monitor/board_script.py, control/main.py, control/board_script.py: _ULP_TEST2\n  + _swap_in_test2; the two regulation scripts run from pump_test2.bin.\n- serial_bridge.py: serial write_timeout (non-blocking inject).\n\nBench-validated on AC + BP via pyserial deploy: no crash, both regulate, both\nfinish clean. AC converges to the 16 s/rev goal at the Kp (step_per_pct)\nmultiplier ~5 (holding power ~480), settling near the measurement-noise floor.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
-},
-{
-"hash": "7479f3428ed8f48b26a2137eee28008150733ed8",
-"date": "2026-06-09",
-"subject": "PID-tuning toolchain + Sensors tab (ULP_Test 1.2.9, fw 0.1.62)",
-"body": "Firmware — ULP_Test image only; ULP_Operational unchanged (byte-identical, 1.2.4):\n- Re-added test_dac_sweep_enc; added TEST_PID_REGULATE bench-tuning harness with\n  runtime kp/ki/kd, measurement window N, error deadband and start power.\n- Run length counts HALL revolutions; deadband-vs-stall hardening; skip the first\n  encoder rising edge (turn-on jitter) with per-measurement encoder cycling.\n- Independently versioned 1.2.5 -> 1.2.9. board_config DEFAULT_*_SCALED documented\n  as the operational fallback that mirrors board_config.py.\n\nControl app:\n- New Sensors tab: per-pair LED enable switches, live sparklines, env readouts.\n- PID Tuner: Operational | Test-binary mode selector with N / deadband / run-\n  revolution knobs; per-hall-rev polar traces; errors and chart in RC ticks;\n  measured-tick and resulting-power histograms (Test mode) renewed per rotation;\n  PID parameters logged at run start; config editable offline.\n- pump_panel + pid_tuner_panel default gains sourced from board_config.py.\n\nMonitor/host scripts:\n- sensors_monitor_script and pid_regulate_tune_script; PID-tuner N=2 batch fix.\n\ndocs: prompt log + new compacting log.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 }
 ]

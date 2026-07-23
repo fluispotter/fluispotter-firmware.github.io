@@ -1,26 +1,40 @@
 {
- "generated_at": "2026-07-23T16:58:12+00:00",
- "firmware_version": "0.1.141",
+ "generated_at": "2026-07-23T17:26:54+00:00",
+ "firmware_version": "0.1.142",
  "ulp_operational": "1.15.0",
  "hub_service": null,
  "requirements": {
-  "doc_version": "1.92",
-  "total": 164
+  "doc_version": "1.93",
+  "total": 165
  },
  "ci": [
-  {
-   "workflowName": "ci",
-   "headBranch": "dev",
-   "conclusion": "",
-   "status": "in_progress",
-   "updatedAt": "2026-07-23T16:57:59Z"
-  },
   {
    "workflowName": "Documentation",
    "headBranch": "dev",
    "conclusion": "",
    "status": "in_progress",
-   "updatedAt": "2026-07-23T16:57:53Z"
+   "updatedAt": "2026-07-23T17:26:33Z"
+  },
+  {
+   "workflowName": "ci",
+   "headBranch": "dev",
+   "conclusion": "",
+   "status": "in_progress",
+   "updatedAt": "2026-07-23T17:26:33Z"
+  },
+  {
+   "workflowName": "ci",
+   "headBranch": "dev",
+   "conclusion": "failure",
+   "status": "completed",
+   "updatedAt": "2026-07-23T17:01:04Z"
+  },
+  {
+   "workflowName": "Documentation",
+   "headBranch": "dev",
+   "conclusion": "success",
+   "status": "completed",
+   "updatedAt": "2026-07-23T16:58:18Z"
   },
   {
    "workflowName": "Documentation",
@@ -77,26 +91,12 @@
    "conclusion": "failure",
    "status": "completed",
    "updatedAt": "2026-07-23T12:37:44Z"
-  },
-  {
-   "workflowName": "ci",
-   "headBranch": "dev",
-   "conclusion": "failure",
-   "status": "completed",
-   "updatedAt": "2026-07-23T12:31:31Z"
-  },
-  {
-   "workflowName": "ci",
-   "headBranch": "dev",
-   "conclusion": "failure",
-   "status": "completed",
-   "updatedAt": "2026-07-23T12:19:12Z"
   }
  ],
  "latest_commit": {
-  "hash": "1a223ec25425811ec93bc6979262850ce12ce896",
+  "hash": "2657bbc0833ff238e5cbe696eaa2d5619541a53c",
   "date": "2026-07-23",
-  "subject": "Merge: SWR-298 + true-green verification fixes",
+  "subject": "Merge: fw 0.1.142 SWR-299 CPU-side #48 defense",
   "body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
  }
 }
