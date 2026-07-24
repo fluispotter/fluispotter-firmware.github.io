@@ -1,5 +1,54 @@
 [
  {
+  "number": 58,
+  "title": "Recovery resumes on a stale-but-plausible clock — schedule runs hours behind wall time, sanity gates pass it",
+  "state": "OPEN",
+  "created": "2026-07-24",
+  "closed": null,
+  "seen_on": "fw 0.1.142, operational ULP 1.15.0, runtime image v1.25.0-12.ga83202261 (IMG-4), hub service 1.14.3, USB replug after PPK2 power loss (2026-07-24 09:1x)",
+  "fix": "associated requirements: SWR-256, SWR-283, SWR-295, SWR-296; fix: none yet",
+  "fw": "0.1.142",
+  "ulp": "1.15.0",
+  "image": "v1.25.0-12.ga83202261, IMG-4",
+  "hub": "1.14.3",
+  "swrs": [
+   "SWR-256",
+   "SWR-283",
+   "SWR-295",
+   "SWR-296"
+  ]
+ },
+ {
+  "number": 57,
+  "title": "PPK2 logger's watchdog-exit de-powers the DUT mid-run (rig fault); + WiFi drops and never live-re-associates (buffering masks it)",
+  "state": "OPEN",
+  "created": "2026-07-24",
+  "closed": null,
+  "seen_on": "fw 0.1.142, operational ULP 1.15.0 (map fnv 0xc5bd43c1), runtime image v1.25.0-12.ga83202261 (IMG-4, 2026-07-16), hub service 1.14.3, PPK2 source power / USB detached (2026-07-24 02:22–05:02)",
+  "fix": "related: battery-endurance silent stop 2026-07-18, #46 (closed as USB-attached artifact — this occurrence was USB-DETACHED); fix: none yet — SWR-245 lightsleep-path investigation required before the next unattended run",
+  "fw": "0.1.142",
+  "ulp": "1.15.0",
+  "image": "v1.25.0-12.ga83202261, IMG-4",
+  "hub": "1.14.3",
+  "swrs": [
+   "SWR-245"
+  ]
+ },
+ {
+  "number": 56,
+  "title": "BP does not stop at park — repeated park attempts, pump keeps turning past the dead-point",
+  "state": "OPEN",
+  "created": "2026-07-24",
+  "closed": null,
+  "seen_on": "fw 0.1.142, operational ULP 1.15.0 (map fnv 0xc5bd43c1), runtime image v1.25.0-12.ga83202261 (IMG-4, 2026-07-16), hub service 1.14.3, USB power, resumed-after-freeze session with stale device clock (2026-07-24)",
+  "fix": "fix: none yet — investigate after the session is concluded (board evidence intact)",
+  "fw": "0.1.142",
+  "ulp": "1.15.0",
+  "image": "v1.25.0-12.ga83202261, IMG-4",
+  "hub": "1.14.3",
+  "swrs": []
+ },
+ {
   "number": 55,
   "title": "AC SPR-20 dry-run restall cycle: stall flag every ~3 s with successful re-regulation between",
   "state": "OPEN",

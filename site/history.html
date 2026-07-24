@@ -34,9 +34,28 @@
 </div>
 
 <section id="tab-git">
-  <div class="history-meta">300 commits &middot; 234 with detailed bodies &middot; newest first</div>
+  <div class="history-meta">300 commits &middot; 233 with detailed bodies &middot; newest first</div>
   <div class="timeline">
     <div class="commit">
+  <div class="commit-head">
+    <span class="commit-date">2026-07-24</span>
+    <span class="commit-hash">9c102de9</span>
+  </div>
+  <div class="commit-subject">Merge: docs issues page — dry-run findings</div>
+  
+</div><div class="commit">
+  <div class="commit-head">
+    <span class="commit-date">2026-07-24</span>
+    <span class="commit-hash">0ec92d23</span>
+  </div>
+  <div class="commit-subject">docs site: issues page refreshed with the 2026-07-24 dry-run findings (#55-58)</div>
+  <div class="commit-body">#57 retitled to the rig fault (logger de-powers DUT) + WiFi-reconnect gap;
+#58 refined to power-loss-resume clock; #55 in-session confirmation; #56
+BP-reports-parked-while-turning signature. All four stamped fw 0.1.142 /
+op ULP 1.15.0 / IMG-4 / hub 1.14.3.
+
+Co-Authored-By: Claude Fable 5 &lt;noreply@anthropic.com&gt;</div>
+</div><div class="commit">
   <div class="commit-head">
     <span class="commit-date">2026-07-23</span>
     <span class="commit-hash">80a8390e</span>
@@ -4174,43 +4193,6 @@ Co-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;</div>
   <div class="commit-body">Set the Sensors-tab spot/line classification cutoff defaults to 300 / 400 lx
 (from a live VEML6035 read: spot background ~357 lx, line background ~462 lx),
 replacing the earlier 200 lx placeholders so the cutoff lines land near real data.
-
-Co-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;</div>
-</div><div class="commit">
-  <div class="commit-head">
-    <span class="commit-date">2026-06-11</span>
-    <span class="commit-hash">6f969fc9</span>
-  </div>
-  <div class="commit-subject">feat(apps): add live Board Config tab to Monitor and Control</div>
-  <div class="commit-body">New monitor/panels/board_config_panel.py and control/panels/board_config_panel.py
-render every constant in fluispotter/board_config.py grouped by its section
-headers. A self-contained source-text parser (regex over the U+2500 section
-headers and NAME = const(value) lines) preserves grouping + declaration order
-and shows values verbatim (0x3a, 800_000, 5184), so the tab never drifts from
-the deployed config. Parses the source text only (no module exec), so it works
-on desktop CPython without the micropython.const import.
-
-Wired into monitor/main.py (after Config) and control/main.py (after
-Diagnostics) following each app&#x27;s panel conventions; static, read-only, no
-serial bridge. Verified: parser extracts all 68 constants (= ground truth).
-
-Co-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;</div>
-</div><div class="commit">
-  <div class="commit-head">
-    <span class="commit-date">2026-06-11</span>
-    <span class="commit-hash">2472b49e</span>
-  </div>
-  <div class="commit-subject">docs: add Monitor &amp; Control app spec repos; spec §4A.6 board_config (v2.11)</div>
-  <div class="commit-body">Add two living application specifications under docs/, matching the
-fluispotter_spec_repo style and versioning/change-log discipline:
-- monitor_spec_repo.html (v1.0): passive pyserial telemetry viewer; 9 tabs.
-- control_spec_repo.html (v1.0): raw-REPL injection, 3 ULP binaries, modes;
-  14 tabs. Each covers architecture, threading, data handling, hardware
-  interaction, and a per-tab reference (incl. the new Board Config tab).
-
-Bump fluispotter_spec_repo to v2.11: new §4A.6 Board Configuration Constants
-listing the firmware board_config.py values (68 const / 11 sections), now
-also surfaced live in a Board Config tab in both apps.
 
 Co-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;</div>
 </div>

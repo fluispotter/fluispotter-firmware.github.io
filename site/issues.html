@@ -35,6 +35,42 @@
 <tr><th>#</th><th>Title</th><th>State</th><th>Opened</th><th>Firmware</th>
 <th>ULP</th><th>Image</th><th>Hub</th><th>Requirements</th><th>Fix</th></tr>
 <tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/58">#58</a></td>
+  <td class="issue-title">Recovery resumes on a stale-but-plausible clock — schedule runs hours behind wall time, sanity gates pass it</td>
+  <td><span class="ci-badge warn">OPEN</span></td>
+  <td>2026-07-24</td>
+  <td>0.1.142</td>
+  <td>1.15.0</td>
+  <td>v1.25.0-12.ga83202261, IMG-4</td>
+  <td>1.14.3</td>
+  <td class="issue-swrs">SWR-256, SWR-283, SWR-295, SWR-296</td>
+  <td class="issue-fix">associated requirements: SWR-256, SWR-283, SWR-295, SWR-296; fix: none yet</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/57">#57</a></td>
+  <td class="issue-title">PPK2 logger&#x27;s watchdog-exit de-powers the DUT mid-run (rig fault); + WiFi drops and never live-re-associates (buffering masks it)</td>
+  <td><span class="ci-badge warn">OPEN</span></td>
+  <td>2026-07-24</td>
+  <td>0.1.142</td>
+  <td>1.15.0</td>
+  <td>v1.25.0-12.ga83202261, IMG-4</td>
+  <td>1.14.3</td>
+  <td class="issue-swrs">SWR-245</td>
+  <td class="issue-fix">related: battery-endurance silent stop 2026-07-18, #46 (closed as USB-attached artifact — this occurrence was USB-DETACHED); fix: none yet — SWR-245 lightsleep-path investigation required before the next unattended run</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/56">#56</a></td>
+  <td class="issue-title">BP does not stop at park — repeated park attempts, pump keeps turning past the dead-point</td>
+  <td><span class="ci-badge warn">OPEN</span></td>
+  <td>2026-07-24</td>
+  <td>0.1.142</td>
+  <td>1.15.0</td>
+  <td>v1.25.0-12.ga83202261, IMG-4</td>
+  <td>1.14.3</td>
+  <td class="issue-swrs">&mdash;</td>
+  <td class="issue-fix">fix: none yet — investigate after the session is concluded (board evidence intact)</td>
+</tr>
+<tr>
   <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/55">#55</a></td>
   <td class="issue-title">AC SPR-20 dry-run restall cycle: stall flag every ~3 s with successful re-regulation between</td>
   <td><span class="ci-badge warn">OPEN</span></td>

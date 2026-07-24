@@ -1,5 +1,17 @@
 [
 {
+"hash": "9c102de943b88e2bf1766fc6e88a794f8519f2ea",
+"date": "2026-07-24",
+"subject": "Merge: docs issues page — dry-run findings",
+"body": ""
+},
+{
+"hash": "0ec92d23e94278ba2283a3e85b9147ae53d7ebe1",
+"date": "2026-07-24",
+"subject": "docs site: issues page refreshed with the 2026-07-24 dry-run findings (#55-58)",
+"body": "#57 retitled to the rig fault (logger de-powers DUT) + WiFi-reconnect gap;\n#58 refined to power-loss-resume clock; #55 in-session confirmation; #56\nBP-reports-parked-while-turning signature. All four stamped fw 0.1.142 /\nop ULP 1.15.0 / IMG-4 / hub 1.14.3.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
+},
+{
 "hash": "80a8390e86fef1ff7914d809e43c6d5f19a32276",
 "date": "2026-07-23",
 "subject": "Merge: evening logs",
@@ -1786,17 +1798,5 @@
 "date": "2026-06-11",
 "subject": "tune(sensors): seed spot/line lux cutoffs from live bench read",
 "body": "Set the Sensors-tab spot/line classification cutoff defaults to 300 / 400 lx\n(from a live VEML6035 read: spot background ~357 lx, line background ~462 lx),\nreplacing the earlier 200 lx placeholders so the cutoff lines land near real data.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
-},
-{
-"hash": "6f969fc9bbb3d1bd1c410b7ebce22763bd94bfb3",
-"date": "2026-06-11",
-"subject": "feat(apps): add live Board Config tab to Monitor and Control",
-"body": "New monitor/panels/board_config_panel.py and control/panels/board_config_panel.py\nrender every constant in fluispotter/board_config.py grouped by its section\nheaders. A self-contained source-text parser (regex over the U+2500 section\nheaders and NAME = const(value) lines) preserves grouping + declaration order\nand shows values verbatim (0x3a, 800_000, 5184), so the tab never drifts from\nthe deployed config. Parses the source text only (no module exec), so it works\non desktop CPython without the micropython.const import.\n\nWired into monitor/main.py (after Config) and control/main.py (after\nDiagnostics) following each app's panel conventions; static, read-only, no\nserial bridge. Verified: parser extracts all 68 constants (= ground truth).\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
-},
-{
-"hash": "2472b49e4ad5fe8c839bc62a2db8777c9b81dc67",
-"date": "2026-06-11",
-"subject": "docs: add Monitor & Control app spec repos; spec §4A.6 board_config (v2.11)",
-"body": "Add two living application specifications under docs/, matching the\nfluispotter_spec_repo style and versioning/change-log discipline:\n- monitor_spec_repo.html (v1.0): passive pyserial telemetry viewer; 9 tabs.\n- control_spec_repo.html (v1.0): raw-REPL injection, 3 ULP binaries, modes;\n  14 tabs. Each covers architecture, threading, data handling, hardware\n  interaction, and a per-tab reference (incl. the new Board Config tab).\n\nBump fluispotter_spec_repo to v2.11: new §4A.6 Board Configuration Constants\nlisting the firmware board_config.py values (68 const / 11 sections), now\nalso surfaced live in a Board Config tab in both apps.\n\nCo-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 }
 ]
