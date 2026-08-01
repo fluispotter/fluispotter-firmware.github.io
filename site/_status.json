@@ -1,11 +1,18 @@
 {
- "generated_at": "2026-08-01T10:55:06+00:00",
+ "generated_at": "2026-08-01T11:01:36+00:00",
  "firmware_version": "0.1.161",
  "ulp_operational": "1.24.2",
  "hub_service": null,
  "requirements": {
   "doc_version": "1.102",
-  "total": 176
+  "total": 176,
+  "verification": {
+   "field_verified": 21,
+   "bench_tested": 0,
+   "tested": 134,
+   "not_tested": 21,
+   "ci_suite": "sw"
+  }
  },
  "ci": [
   {
@@ -13,14 +20,28 @@
    "headBranch": "dev",
    "conclusion": "",
    "status": "in_progress",
-   "updatedAt": "2026-08-01T10:54:52Z"
+   "updatedAt": "2026-08-01T11:01:13Z"
   },
   {
    "workflowName": "Documentation",
    "headBranch": "dev",
    "conclusion": "",
    "status": "in_progress",
-   "updatedAt": "2026-08-01T10:54:44Z"
+   "updatedAt": "2026-08-01T11:01:13Z"
+  },
+  {
+   "workflowName": "ci",
+   "headBranch": "dev",
+   "conclusion": "failure",
+   "status": "completed",
+   "updatedAt": "2026-08-01T10:57:39Z"
+  },
+  {
+   "workflowName": "Documentation",
+   "headBranch": "dev",
+   "conclusion": "success",
+   "status": "completed",
+   "updatedAt": "2026-08-01T10:55:16Z"
   },
   {
    "workflowName": "Build",
@@ -77,26 +98,12 @@
    "conclusion": "success",
    "status": "completed",
    "updatedAt": "2026-07-23T20:02:21Z"
-  },
-  {
-   "workflowName": "Documentation",
-   "headBranch": "dev",
-   "conclusion": "success",
-   "status": "completed",
-   "updatedAt": "2026-07-23T19:42:23Z"
-  },
-  {
-   "workflowName": "ci",
-   "headBranch": "dev",
-   "conclusion": "failure",
-   "status": "completed",
-   "updatedAt": "2026-07-23T19:44:47Z"
   }
  ],
  "latest_commit": {
-  "hash": "ffb1f85f79ff82218f54fa26bd56061a5913faee",
+  "hash": "b9094530a7462dd7ba67dec114bab0689ace2a52",
   "date": "2026-08-01",
-  "subject": "Verification Status report (reqs vs tested vs verified vs version) + spec 2.33",
-  "body": "NEW verification/gen_verification_status.py — the owner-asked evidence\nreport. Scores every requirement into four levels from machine-read\nsources only (registry + reports/report.json + testlog/test_runs.db):\nNOT TESTED, TESTED (automated CI test = a claim check against the\nsource), BENCH-TESTED (board-driving tests_mech suite), FIELD-VERIFIED\n(a CONCLUDED testlog run cites the ID — real hardware), and stamps each\nhardware proof with the firmware version of the run that produced it.\nAlso emits the locked-but-no-hardware-evidence gap list and a\nprovenance caveat (a suite=sw report cannot yield BENCH results, so\nthat 0 is a statement about the run, not the bench suite). Outputs\ndocs/fluispotter_verification_status.html + reports/\nverification_status.json; wired into `make verify` and a standalone\n`make verification-status`.\n\nAt fw 0.1.161 / DOC 1.102: 176 requirements, 155 tested, 21\nFIELD-VERIFIED, 21 untested.\n\nLocal site: the report is listed on the Requirements page and its\nheadline appears on the front-page status card (docs/site/\n_refresh_data.py now folds the rollup into _status.json; _build_site.py\nrenders it and registers the document).\n\nSpec repo 2.33: new §5.6.5 Session Robustness — Bounded Waits,\nDeadlines & Entry Ordering (SWR-324/325/326/327), covering the\nsilent-wedge closure, the field-found loading-deadline anchor defect\n(#66) with the \"cadence is a test dimension\" rule, catch-up policy,\nthe recovery forfeit trail, and the entry kick-settle (#67, tripwire\narmed). Restored the missing TOC entries for 5.6.3/5.6.4/5.6.5. .docx\nregenerated; Drive copy updated in place.\n\nmake verify: 176 requirements, 153 PASS / 0 FAIL.\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
+  "subject": "docs site: front-page verification card survives CI (committed rollup)",
+  "body": "reports/ is gitignored, so the Documentation job had no\nverification_status.json to fold into _status.json and the published\nfront page rendered without the verification card (the report itself\nand its Requirements-page listing were live and correct). The\ngenerator now also emits docs/verification_rollup.json — small,\ncommitted — and _refresh_data.py prefers it, falling back to the local\nreports/ artifact when present.\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
  }
 }

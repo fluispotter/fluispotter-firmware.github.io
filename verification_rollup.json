@@ -1,0 +1,10 @@
+{
+ "doc_version": "1.102",
+ "firmware": "0.1.161",
+ "total": 176,
+ "field_verified": 21,
+ "bench_tested": 0,
+ "tested": 134,
+ "not_tested": 21,
+ "ci_suite": "sw"
+}

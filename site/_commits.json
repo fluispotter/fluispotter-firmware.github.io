@@ -1,5 +1,11 @@
 [
 {
+"hash": "b9094530a7462dd7ba67dec114bab0689ace2a52",
+"date": "2026-08-01",
+"subject": "docs site: front-page verification card survives CI (committed rollup)",
+"body": "reports/ is gitignored, so the Documentation job had no\nverification_status.json to fold into _status.json and the published\nfront page rendered without the verification card (the report itself\nand its Requirements-page listing were live and correct). The\ngenerator now also emits docs/verification_rollup.json — small,\ncommitted — and _refresh_data.py prefers it, falling back to the local\nreports/ artifact when present.\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
+},
+{
 "hash": "ffb1f85f79ff82218f54fa26bd56061a5913faee",
 "date": "2026-08-01",
 "subject": "Verification Status report (reqs vs tested vs verified vs version) + spec 2.33",
@@ -1791,12 +1797,6 @@
 "hash": "52397df2380e6feb047022e75eb57ff24847f584",
 "date": "2026-07-11",
 "subject": "deploy scripts: ship main.py (the resume-aware gate lives there — caught during the 0.1.101 deploy)",
-"body": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
-},
-{
-"hash": "a38854ca0c0710bbcf288e65c1b16138e13c836e",
-"date": "2026-07-10",
-"subject": "docs: prompts 113-116 (20-sample proof, wedge fix, boot-loop, red team, 0.1.101)",
 "body": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 }
 ]

@@ -39,6 +39,21 @@
     <div class="commit">
   <div class="commit-head">
     <span class="commit-date">2026-08-01</span>
+    <span class="commit-hash">b9094530</span>
+  </div>
+  <div class="commit-subject">docs site: front-page verification card survives CI (committed rollup)</div>
+  <div class="commit-body">reports/ is gitignored, so the Documentation job had no
+verification_status.json to fold into _status.json and the published
+front page rendered without the verification card (the report itself
+and its Requirements-page listing were live and correct). The
+generator now also emits docs/verification_rollup.json — small,
+committed — and _refresh_data.py prefers it, falling back to the local
+reports/ artifact when present.
+
+Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</div>
+</div><div class="commit">
+  <div class="commit-head">
+    <span class="commit-date">2026-08-01</span>
     <span class="commit-hash">ffb1f85f</span>
   </div>
   <div class="commit-subject">Verification Status report (reqs vs tested vs verified vs version) + spec 2.33</div>
@@ -4491,13 +4506,6 @@ Co-Authored-By: Claude Fable 5 &lt;noreply@anthropic.com&gt;</div>
     <span class="commit-hash">52397df2</span>
   </div>
   <div class="commit-subject">deploy scripts: ship main.py (the resume-aware gate lives there — caught during the 0.1.101 deploy)</div>
-  <div class="commit-body">Co-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;</div>
-</div><div class="commit">
-  <div class="commit-head">
-    <span class="commit-date">2026-07-10</span>
-    <span class="commit-hash">a38854ca</span>
-  </div>
-  <div class="commit-subject">docs: prompts 113-116 (20-sample proof, wedge fix, boot-loop, red team, 0.1.101)</div>
   <div class="commit-body">Co-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;</div>
 </div>
   </div>
