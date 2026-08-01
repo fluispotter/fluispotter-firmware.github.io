@@ -1,0 +1,1427 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../ulp_fold_behavioural_audit/">
+      
+      
+        <link rel="next" href="../wdt_lightsleep_usb_investigation_2026-07-20/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>Design Note — ULP Cooperative Scheduler (non-blocking single main loop) - Fluispotter</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#design-note-ulp-cooperative-scheduler-non-blocking-single-main-loop" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Fluispotter" class="md-header__button md-logo" aria-label="Fluispotter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fluispotter
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Design Note — ULP Cooperative Scheduler (non-blocking single main loop)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Fluispotter" class="md-nav__button md-logo" aria-label="Fluispotter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fluispotter
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Reference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../battery_test_2026-07-18/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Battery endurance test — run to power failure (2026-07-16 → 2026-07-18)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bench_run_2026-07-18_10x2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bench acceptance — 10 samples × 2 spots (dry run), 2026-07-18
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bench_run_2026-07-19_8h_dry/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8-hour dry run — 1 pre-session sample + 15 triplet samples, 2026-07-19
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ci_release_plan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CI / Release Process Plan — Fluispotter Firmware &amp; Software
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compacting_log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compacting Log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multi_mode_ulp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multi Mode ULP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prompts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    User Prompts Log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../requirements_implementation_map/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Requirements Implementation Map — 2026-07-16 (registry 1.69, 148 requirements)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../summaries/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Summaries
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../test_runs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fluispotter test-run register
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ulp_1.17.0_verification_status/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Verification status — operational ULP 1.17.0 (the promoted cooperative scheduler)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ulp_fold_behavioural_audit/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ULP fold — behavioural audit against the operational code
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Design Note — ULP Cooperative Scheduler (non-blocking single main loop)
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Design Note — ULP Cooperative Scheduler (non-blocking single main loop)
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Problem
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-proposal" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Proposal
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Proposal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-encoder-counting-spike-result-2026-07-24-the-counter-is-cpu-side-not-ulp-side" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1 Encoder counting — spike result (2026-07-24): the counter is CPU-side, not ULP-side
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#21a-probe-result-2026-07-24-bench-decisive-the-ulp-cannot-read-pcnt" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.1a PROBE RESULT (2026-07-24, bench, DECISIVE): the ULP CANNOT read PCNT
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-loop-skeleton-stens-structure-refined" class="md-nav__link">
+    <span class="md-ellipsis">
+      2.2 Loop skeleton (Sten's structure, refined)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-adversarial-check-no-reason-for-the-ulp-to-sleep-at-all" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Adversarial check — "no reason for the ULP to sleep at all"
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-loop-rate-requirement-with-hardware-counters" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Loop-rate requirement (with hardware counters)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-interactions-and-cautions" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Interactions and cautions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-what-it-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. What it fixes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-migration-staged-the-ulp-is-the-safety-critical-frozen-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Migration (staged — the ULP is the safety-critical frozen core)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Open questions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-increment-1-non-blocking-park-first-testop-build-spec" class="md-nav__link">
+    <span class="md-ellipsis">
+      9. Increment 1 — non-blocking PARK (first TestOp build spec)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Increment 1 — non-blocking PARK (first TestOp build spec)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-what-blocks-today-op-1150-bp_tick-case-bp_parking" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.1 What blocks today (op 1.15.0, bp_tick() case BP_PARKING)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-decomposition-one-bounded-window-per-tick" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.2 Decomposition — one bounded window per tick
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-what-this-fixes-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.3 What this fixes / changes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#94-acceptance-bench-ab-testop-vs-frozen-operational" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.4 Acceptance (bench A/B, TestOp vs frozen operational)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#95-status-dev07-built-on-board-proven-2026-07-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      9.5 STATUS — dev.0.7 built + on-board proven (2026-07-24)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-increments-23-dosecoast-calibrate-dev08-on-board-proven-2026-07-25" class="md-nav__link">
+    <span class="md-ellipsis">
+      10. Increments 2–3 (dose/coast) + Calibrate — dev.0.8, on-board proven (2026-07-25)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-the-fold-dev010-one-continuous-main-loop-all-states-per-pass-2026-07-25-on-board-proven" class="md-nav__link">
+    <span class="md-ellipsis">
+      11. THE FOLD — dev.0.10, one continuous main loop, all states per-pass (2026-07-25, on-board proven)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. THE FOLD — dev.0.10, one continuous main loop, all states per-pass (2026-07-25, on-board proven)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#111-dev011-the-clean-fold-nothing-blocks-the-skip-ladder-is-back-2026-07-25-on-board-proven" class="md-nav__link">
+    <span class="md-ellipsis">
+      11.1 dev.0.11 — the CLEAN fold: nothing blocks + the skip ladder is back (2026-07-25, on-board proven)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112-dev012-hall-dev013-stall-recovery-closing-the-op-parity-gaps-2026-07-25" class="md-nav__link">
+    <span class="md-ellipsis">
+      11.2 dev.0.12 hall + dev.0.13 stall recovery — closing the op-parity gaps (2026-07-25)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-promotion-to-operational-op-1170-2026-07-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      12. PROMOTION TO OPERATIONAL — op 1.17.0 (2026-07-26)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. PROMOTION TO OPERATIONAL — op 1.17.0 (2026-07-26)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#121-how-it-is-switched" class="md-nav__link">
+    <span class="md-ellipsis">
+      12.1 How it is switched
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#122-calibration-the-firmware-contract-is-unchanged" class="md-nav__link">
+    <span class="md-ellipsis">
+      12.2 Calibration — the firmware contract is UNCHANGED
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#123-gates-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      12.3 Gates (host)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#124-deployment-coupling-important" class="md-nav__link">
+    <span class="md-ellipsis">
+      12.4 Deployment coupling (IMPORTANT)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wdt_lightsleep_usb_investigation_2026-07-20/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GitHub #46 — WDT(3) at lightsleep entry: investigation record (WON'T FIX)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="design-note-ulp-cooperative-scheduler-non-blocking-single-main-loop">Design Note — ULP Cooperative Scheduler (non-blocking single main loop)</h1>
+<p><strong>Status:</strong> Proposal / design (branch <code>ulp-scheduler-redesign</code>)
+<strong>Date:</strong> 2026-07-24
+<strong>Author:</strong> Sten (concept) + Claude (analysis)
+<strong>Scope:</strong> <code>esp32/pump_regulator/main/ulp/main.c</code> operational binary; companion firmware
+in <code>fluispotter/pump_regulator.py</code> / <code>fluispotter/fluispotter.py</code>.
+<strong>Motivates fixes for:</strong> #48 (pad-clock blindness), #55 (silent AC restall), #56 (BP
+park reports done while turning).</p>
+<hr />
+<h2 id="1-problem">1. Problem</h2>
+<p>The operational ULP is <strong>already a 1 ms cooperative dispatcher</strong> — <code>set_wakeup_period(1000)</code>
+(<code>pump_regulator.py:349</code>); <code>main()</code> runs <code>ac_tick(); bp_tick();</code> then halts and sleeps. For
+steady-state regulation nothing holds the controller. <strong>But dose, coast, and park break that
+model:</strong> one <code>bp_tick()</code> invocation spins internally for the <em>whole</em> operation. The op 1.12.0
+comment states it verbatim:</p>
+<blockquote>
+<p>"BP_DOSING / BP_DOSE_COAST / BP_PARKING block the ULP for the whole dose (~10 s), coast
+(5 s) and park (≤30 s), so <code>ac_tick()</code> never ran there." (SWR-271)</p>
+</blockquote>
+<p><code>ac_busy_regulate()</code> is a hack bolted on to service the AC <em>inside</em> the BP's spin. Those
+multi-second blocking windows are where every current bug lives:</p>
+<ul>
+<li><strong>#56</strong> — the park spins for seconds; the pad-clock gate persists through the final HALT →
+  DAC7574 holds its last DRIVE value → motor keeps turning while a level-based hall read
+  latches "home found" → clean park reported, no timeout.</li>
+<li><strong>#55</strong> — <code>ac_busy_regulate</code> deliberately skips stall detection; the silent-anticoagulant
+  window exists <em>only because</em> BP hogs the loop during dose/park.</li>
+<li><strong>#48 dev.0.4</strong> — the deep <code>dose→coast→park→ac_busy</code> call chains blew the ULP stack canary.</li>
+</ul>
+<p>The disease is the blocking window, not any single bug.</p>
+<h2 id="2-proposal">2. Proposal</h2>
+<p>A single <strong>flat, non-blocking cooperative main loop</strong> on the ULP. Every function is a state
+serviced by <em>one small step per iteration</em>; nothing spins internally for more than a few µs.
+All long operations (dose advance, coast, park, kick, stall recovery) become persistent
+sub-state advanced one step per loop. Priority is service <em>ordering</em>, not preemption: both
+motors are must-service-every-loop (no starvation — this deletes <code>ac_busy_regulate</code>);
+telemetry and adaptive tuning are the deferrable slack near a deadline.</p>
+<h3 id="21-encoder-counting-spike-result-2026-07-24-the-counter-is-cpu-side-not-ulp-side">2.1 Encoder counting — spike result (2026-07-24): the counter is CPU-side, not ULP-side</h3>
+<p>Git archaeology of Mirza's counter work (spike, "the hardware counter Mirza tested last year")
+settles this and it is <strong>not</strong> what the premise assumed:</p>
+<ul>
+<li>Mirza implemented hardware pulse counting <strong>May 24 – June 6, 2025</strong> (<code>2a85510</code> "Experimental
+  micropython build with esp32 pcnt" → <code>9d318c9</code> "Build micropython v1.25.0 with esp32 pulse
+  counter" → <code>20edbe0</code> "Initial pcnt implementation" → <code>0c265ab</code> "Refactor pulse counter
+  initialization"). It is <strong>CPU-side <code>esp32.PCNT</code></strong> — the <code>PumpEncoder</code> wrapper
+  (<code>pulse_counter.init/.value/.start/.stop</code>) in <code>fluispotter.py</code>, needing a custom MicroPython
+  v1.25.0 build with the esp32 PCNT module. It comes from the era when the pumps were regulated
+  in MicroPython <strong>on the main CPU</strong>.</li>
+<li><strong>No ULP commit has ever used a hardware counter</strong> — verified across all branches and all
+  history. The ULP RISC-V regulator (from <code>1aa9d2c</code>, 2026-04-02, the first Claude-era ULP code)
+  has <strong>always bit-banged</strong> the encoder via <code>ulp_riscv_gpio_get_level</code> (5184 steps/rev
+  quadrature, polled in busy windows). <code>esp32.PCNT</code> still exists in <code>fluispotter.py</code> but is the
+  CPU-side leftover from before the ULP offload.</li>
+</ul>
+<p>So "hardware counters are available to the ULP" was a <strong>conflation</strong>: the counter was real but
+lived on the CPU; when regulation moved to the ULP it was left behind and the ULP bit-bangs.</p>
+<h3 id="21a-probe-result-2026-07-24-bench-decisive-the-ulp-cannot-read-pcnt">2.1a PROBE RESULT (2026-07-24, bench, DECISIVE): the ULP CANNOT read PCNT</h3>
+<p>Built a TESTOP peripheral-read probe (a <code>TEST_PEEK</code> that loads <code>*(uint32_t*)peek_addr</code> from the
+ULP and publishes the value; probe-only mode so no deep stack / no canary confound) and ran it
+live on the idle board. Address matrix, ULP-read vs CPU-read of the same register:</p>
+<table>
+<thead>
+<tr>
+<th>Register</th>
+<th>Domain</th>
+<th>CPU read</th>
+<th>ULP read</th>
+<th>Match</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RTC_CNTL_STORE0 <code>0x60008050</code></td>
+<td>RTC (control)</td>
+<td><code>0xCAFE1234</code></td>
+<td><code>0xCAFE1234</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td>RTC_CNTL_STORE1 <code>0x60008054</code></td>
+<td>RTC (control)</td>
+<td><code>0x1234ABCD</code></td>
+<td><code>0x1234ABCD</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td>PCNT_DATE <code>0x600170FC</code></td>
+<td>HP/APB</td>
+<td><code>0x18072600</code></td>
+<td><strong><code>0x600170FC</code></strong></td>
+<td>❌</td>
+</tr>
+<tr>
+<td>PCNT_U0_CNT <code>0x60017030</code></td>
+<td>HP/APB</td>
+<td><code>0x00000000</code></td>
+<td><strong><code>0x60017030</code></strong></td>
+<td>❌</td>
+</tr>
+<tr>
+<td>SYSTEM_DATE <code>0x600C0FFC</code></td>
+<td>HP/APB</td>
+<td><code>0x02101220</code></td>
+<td><code>0xF0EF4545</code></td>
+<td>❌</td>
+</tr>
+<tr>
+<td>UART0_DATE <code>0x60000078</code></td>
+<td>HP/APB</td>
+<td><code>0x03700000</code></td>
+<td><code>0x8F7516FD</code></td>
+<td>❌</td>
+</tr>
+</tbody>
+</table>
+<p>The ULP reads <strong>RTC-domain</strong> registers perfectly (both controls exact) but <strong>every HP/APB
+peripheral read fails</strong> — and for PCNT the ULP returned <em>the address itself</em> (<code>0x600170FC</code> for
+addr <code>0x600170FC</code>), the textbook signature of a load that never reaches the bus. <strong>Conclusion:
+the ESP32-S3 ULP RISC-V cannot access the HP peripheral register space; PCNT is unreachable from
+the ULP.</strong> (Probe: <code>scratchpad/ulp_peek_probe3.py</code>; reusable "can the ULP read address X" tool.)</p>
+<p><strong>Therefore the fully non-blocking, one-tiny-step-per-loop endpoint (Sten's counter-compare
+loop) is NOT feasible with PCNT. The redesign is bounded to the HYBRID</strong> (§7 step 2 / §2.1
+below): keep bit-banging the encoder, but in <em>short bounded</em> poll windows (one edge-batch, tens
+of ms) with a fair dispatcher, instead of blocking for seconds. All the correctness wins survive;
+only the "read a counter each loop instead of polling" optimisation is off the table.</p>
+<p>Residual (low-probability) avenue: an RTC-domain counting mechanism the ULP <em>can</em> reach (the ULP
+reads RTC fine) — but no RTC-domain pulse counter is wired to the encoders, so this needs new
+hardware/routing, out of scope for a firmware redesign.</p>
+<p>Consequences for this design (endpoint now <strong>decided = HYBRID</strong>, per §2.1a):
+- The <strong>correctness wins</strong> (non-blocking, no AC starvation, closed-loop park — #48/#55/#56) need
+  <strong>no</strong> hardware counter: bounded bit-bang poll windows (the hybrid, §7 step 2) deliver them.
+  Counting stays exact by keeping the poll window short enough to catch every edge (Sten's
+  "faster than ½ edge time"), just no longer for <em>seconds</em>.
+- The <strong>fully non-blocking, one-tiny-step-per-loop</strong> endpoint (Sten's counter-compare loop, §2.2)
+  is <strong>ruled out</strong>: §2.1a proved the ULP cannot read PCNT. §2.2 below therefore describes the
+  hybrid shape — the MoveTo <code>counter</code> is the ULP's own bit-bang edge tally maintained inside a
+  bounded per-window poll, not a hardware-counter register read.</p>
+<h3 id="22-loop-skeleton-stens-structure-refined">2.2 Loop skeleton (Sten's structure, refined)</h3>
+<div class="highlight"><pre><span></span><code>loop (while any pump ACTIVE):
+    now = rtc_ticks()
+
+    # --- hall flags: EDGE/motion-gated, not bare level (see §4, #56) ---
+    if bp_hall rising AND bp_encoder advanced:  set BP_HALL flag
+    if ac_hall rising AND ac_encoder advanced:  set AC_HALL flag
+    service BP_HALL / AC_HALL flags   # revolution count, home detect
+
+    # --- BP: highest priority is a MoveTo (dose advance / park) ---
+    if BP.move_to_active:
+        # a MoveTo is SimpleP-toward-a-target, NOT a bare counter watch:
+        regulate BP speed toward target SPR (SimpleP, measured dt)
+        if BP.counter &gt;= BP.move_target:   call BP.move_handler()   # HALT + next sub-state
+    else:
+        service BP SimpleP (hold speed / idle)
+
+    # --- AC: always serviced, every loop (never starved) ---
+    if AC.move_to_active: ... same shape ...
+    else: service AC SimpleP
+
+    # DAC writes only when the command value CHANGES (see §5, #53 contention)
+</code></pre></div>
+<p>Key refinements to the raw sketch:</p>
+<ol>
+<li><strong>MoveTo is not an either/or with SimpleP.</strong> A dose advance must <em>regulate speed</em>
+   (SimpleP) <em>while</em> watching the counter — otherwise the move runs open-loop. MoveTo =
+   "SimpleP toward a target, stop at the target," not "watch a counter instead of regulating."</li>
+<li><strong>Hall flags must be edge/motion-gated, not bare level.</strong> The current level test
+   (<code>bp_hall == ACTIVE_LEVEL</code>) is exactly what lets a frozen-high read false-latch "home" in
+   #56. Flag on the <em>rising transition</em> AND require encoder motion since the last home, so a
+   stuck level cannot report a park.</li>
+<li><strong>Closed-loop stop.</strong> <code>bp_parked</code> / <code>bp_hall_detected</code> must be gated on
+   <code>bp_park_enc_total &gt; 0</code> (real encoder motion) — a zero-motion "park" can never report
+   success. This is the structural cure for #56 and should ship even ahead of the full
+   scheduler.</li>
+</ol>
+<h2 id="3-adversarial-check-no-reason-for-the-ulp-to-sleep-at-all">3. Adversarial check — "no reason for the ULP to sleep at all"</h2>
+<p>The proposal came with: <em>"we should not use 1 ms ticks; no good reason for the ULP to be
+sleeping at all."</em> Checked adversely, this is <strong>directionally right but wrong as an absolute.</strong></p>
+<p><strong>The correctness win is from NON-BLOCKING, which is orthogonal to sleeping.</strong> Everything §2
+buys — bounded gate exposure, no AC starvation, closed-loop park, shallow stack — comes from
+"each iteration does one small step and returns." You get all of it whether the loop spins
+continuously OR wakes fast, does one step, and sleeps. "Never sleep" and "never block" are
+different properties; only the second one fixes the bugs.</p>
+<p><strong>Where never-sleeping genuinely helps (narrow, real):</strong> stop-precision latency. If the loop
+duty-cycles at period T, worst-case MoveTo overshoot includes up to T of sleep before the loop
+notices <code>counter &gt;= target</code>. Spinning continuously removes that sleep-period jitter — the only
+latency left is one loop iteration. So <em><em>spin continuously </em>while actively moving/regulating</em>
+** for tight dose/park stop precision. Valid — but scoped to active motion.</p>
+<p><strong>Where never-sleeping hurts:</strong> battery endurance. This is a battery device with a spec'd
+endurance (44 h at ~24.9 mA average, 2026-07-18). Most of a session's wall-clock time is
+<em>idle</em> — flush REST (8 min pump-off), between-sample gaps, AWAIT_SESSION. During those windows
+a continuously-spinning ULP burns core current (est. ~0.5–1 mA continuous vs ~0.1 mA at the
+current ~10 % duty) for <strong>zero</strong> benefit — there is nothing to regulate. Against a small idle
+budget that is a meaningful percentage hit, and it is pure waste.</p>
+<p><strong>Verdict:</strong> <em>Don't sleep while working; sleep while idle.</em> Kill the 1 ms blocking-tick model
+(the user is right that it is bad), but make ULP activity <strong>state-driven</strong>:</p>
+<ul>
+<li><strong>Any pump ACTIVE</strong> (regulating / dosing / parking / moving / kicking): run the fast
+  non-blocking loop continuously — no <code>set_wakeup_period</code> gaps, minimum stop latency.</li>
+<li><strong>Both pumps IDLE</strong>: drop to a low-power path (sleep, or a slow heartbeat tick) co-scheduled
+  with the CPU's own lightsleep, woken by a CPU command flag or a hall event.</li>
+</ul>
+<p>This keeps the endurance win <em>and</em> deletes the blocking windows. "1 ms tick" dies; "sleep"
+survives, but only for genuine idle.</p>
+<h2 id="4-loop-rate-requirement-with-hardware-counters">4. Loop-rate requirement (with hardware counters)</h2>
+<ul>
+<li><strong>Counting</strong>: exact regardless of loop rate (hardware counter). No "faster than edge time"
+  needed just to not lose edges.</li>
+<li><strong>Stop precision</strong> (the MoveTo overshoot): worst-case overshoot ≈ (edge rate at the stop
+  speed) × (loop period + HALT latency). Dose metering happens at slow controlled speed
+  (SPR 16–20), so the edge rate at the stop point is low and even a modest loop rate overshoots
+  by &lt;1 edge. The requirement bites only if you must stop precisely <em>during fast motion</em>.
+  Sten's "faster than ½ edge time" is the right rule and, at dose speed, is easily met.</li>
+<li><strong>Control response</strong>: SimpleP must use <strong>measured dt</strong> (<code>rtc_ticks</code> delta per iteration),
+  not an assumed fixed timestep, because a continuous loop has variable iteration time. The
+  code already publishes <code>ulp_now_ticks</code> every pass — extend that to the control law.</li>
+</ul>
+<h2 id="5-interactions-and-cautions">5. Interactions and cautions</h2>
+<ul>
+<li><strong>#53 (INT_WDT storm) — do NOT resurrect the ULP-side clock defense.</strong> #53 was the 1 kHz
+  SENS RMW (<code>DEFEND_CLOCK</code>) from the ULP colliding with CPU interrupts-masked SENS writers. A
+  faster loop must NOT re-assert <code>SENS_IOMUX_CLK_EN</code> from the ULP. Keep clock defense
+  <strong>CPU-side</strong> (SWR-299) and extend it to cover the park poll loops (the #56 gap). The
+  scheduler shrinks #48's blast radius (a gate hits one step, not a 30 s window) but does not
+  by itself stop the CPU clearing the gate.</li>
+<li><strong>RTC-domain bus contention scales with loop rate.</strong> The DAC7574 writes go over RTC I²C
+  (GPIO1/2, RTC pads). A faster loop writing the DAC every iteration increases RTC-domain
+  traffic competing with CPU <code>rtc_gpio</code> claims — the same contention family as #53. Mitigate:
+  <strong>write the DAC only when the commanded value changes</strong>, not every iteration.</li>
+<li><strong>Stack headroom (helps op 1.16.0).</strong> A flat dispatcher with persistent sub-state is
+  <em>shallower</em> than today's deep <code>dose→coast→park→ac_busy</code> chains — directly easing the 768 B
+  canary gate that has blocked op 1.16.0. The <code>.stack_canary</code> sentinel + firmware per-tick
+  check stay armed through the migration.</li>
+<li><strong>Dose-volume accuracy is non-negotiable.</strong> Dose = an exact encoder-edge count = patient
+  safety (anticoagulant-diluted blood). The MoveTo handler must stop on the hardware count with
+  bounded overshoot and record actual-vs-target; regression A/B must prove exact volume parity
+  vs the current binary.</li>
+</ul>
+<h2 id="6-what-it-fixes">6. What it fixes</h2>
+<table>
+<thead>
+<tr>
+<th>Bug</th>
+<th>Mechanism today</th>
+<th>Under the scheduler</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>#56 BP park</td>
+<td>multi-second park spin; gate persists through HALT; level hall latches "home"</td>
+<td>park is per-loop steps; HALT re-issued each loop; hall edge/motion-gated; <code>bp_parked</code> gated on encoder motion (closed loop)</td>
+</tr>
+<tr>
+<td>#55 silent AC</td>
+<td><code>ac_busy_regulate</code> skips stall detection inside BP's spin</td>
+<td>AC is a first-class per-loop state; <code>ac_busy_regulate</code> deleted; stall detection always live</td>
+</tr>
+<tr>
+<td>#48 blast radius</td>
+<td>gate clears → 30 s blind window</td>
+<td>gate clears → one step; next loop re-reads/re-issues</td>
+</tr>
+<tr>
+<td>op 1.16.0 headroom</td>
+<td>deep call chains near 768 B gate</td>
+<td>flat dispatcher is shallower</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7-migration-staged-the-ulp-is-the-safety-critical-frozen-core">7. Migration (staged — the ULP is the safety-critical frozen core)</h2>
+<ol>
+<li><strong>Now, low-risk (fw 0.1.143, own track):</strong> land the closed-loop #55/#56 fixes without the
+   rewrite — gate <code>bp_parked</code> on <code>bp_park_enc_total &gt; 0</code>, extend <code>defend_pad_clock()</code> into the
+   park poll loops, add the AC stall-count audit. Stops the bleeding.</li>
+<li><strong>Prototype on the TestOp track</strong> (<code>pump_testop.bin</code>, MAJOR 9): build the non-blocking
+   dispatcher; operational binary stays frozen until proven. Start with the
+   dose/coast/park steps (the blocking windows), keep SimpleP math intact.</li>
+<li><strong>Bench A/B acceptance</strong> before any roll-in: regulation parity (convergence, overshoot),
+   <strong>exact dose volume</strong> vs current, park-at-dead-point (SWR-132), AC never starved,
+   canary/headroom green, ≥2 h radio-hot soak at the zero-WDT baseline, recovery-boot motor
+   trials. Then bump operational and roll in.</li>
+</ol>
+<h2 id="8-open-questions">8. Open questions</h2>
+<ul>
+<li><strong>[ANSWERED 2026-07-24, §2.1 + §2.1a]</strong> Mirza's counter was CPU-side <code>esp32.PCNT</code>, never
+  ULP-side. The bench peek probe then PROVED the ULP RISC-V cannot read PCNT (or any HP/APB
+  peripheral) — RTC-domain reads exact, all HP reads fail. <strong>Endpoint = HYBRID, decided.</strong></li>
+<li>Idle-sleep trigger: exact "both pumps idle" predicate and wake source (CPU command flag vs
+  hall EXT1) that co-schedules ULP sleep with CPU lightsleep without reintroducing a wake gap
+  during an active MoveTo.</li>
+<li>SimpleP re-tuning: does variable-dt control need gain adjustment vs the fixed-batch model?</li>
+<li>DAC write-on-change: confirm the DAC7574 holds its register between writes (it does) so
+  skipping unchanged writes is safe.</li>
+</ul>
+<hr />
+<h2 id="9-increment-1-non-blocking-park-first-testop-build-spec">9. Increment 1 — non-blocking PARK (first TestOp build spec)</h2>
+<p><strong>Why park first:</strong> it is the simplest of the three blocking operations, it directly
+fixes #56 (BP reports parked while turning), and it frees AC from the park-window
+starvation half of #55 — all in one contained, benchable slice. Operational binary
+stays frozen; this lands on TestOp (MAJOR 9) and only rolls in after bench A/B.</p>
+<h3 id="91-what-blocks-today-op-1150-bp_tick-case-bp_parking">9.1 What blocks today (op 1.15.0, <code>bp_tick()</code> <code>case BP_PARKING</code>)</h3>
+<p>Two internal loops run the whole park in ONE <code>bp_tick()</code> invocation:
+1. <strong>Drive loop</strong> — <code>while (bp_parking &amp;&amp; !hall_found &amp;&amp; bp_park_enc_total &lt; PARK_ENC_TICK_LIMIT
+   &amp;&amp; rtc_ticks() &lt; bp_park_deadline)</code> calling <code>bp_drive_window(op_p_pulse_count, …, watch_hall)</code>
+   repeatedly (≤30 s). <code>ac_busy_regulate()</code> is called inside it to keep AC alive — the hack.
+2. <strong>Offset coast</strong> — <code>while (remaining &gt; 0 &amp;&amp; rtc_ticks() &lt; t_offset_end)</code> counting
+   <code>bp_park_offset_ticks + bp_park_user_offset</code> edges past the hall, under power (≤5 s).</p>
+<p><code>bp_drive_window()</code> itself is the <strong>bounded atomic unit</strong> (collects ≤<code>op_p_pulse_count</code>
+edges or times out at <code>calc_meas_timeout_us</code>, ~tens of ms) — it must busy-poll to catch
+fast edges (bit-bang; §2.1a proved no HW counter). It is the loops <em>around</em> it that block.</p>
+<h3 id="92-decomposition-one-bounded-window-per-tick">9.2 Decomposition — one bounded window per tick</h3>
+<p>Split <code>BP_PARKING</code> into two sub-states; do <strong>at most one <code>bp_drive_window()</code> (or one
+offset window) per <code>bp_tick()</code></strong>, then return so <code>ac_tick()</code> runs on the next invocation.
+All loop-carried state is already <code>_PRIV</code> static (<code>bp_park_enc_total</code>, <code>bp_park_deadline</code>,
+<code>bp_park_last_level</code>, <code>bp_has_started</code>, <code>bp_recovery_signaled</code>) — persists across ticks
+for free; add <code>bp_park_offset_remaining</code>, <code>bp_park_offset_deadline</code>, <code>bp_park_already_home</code>.</p>
+<div class="highlight"><pre><span></span><code>BP_PARKING (drive):                         # one window/tick
+  if !bp_parking: halt+enc_off; BP_IDLE; break
+  hall_found = (bp_hall_edge_service(0) == ACTIVE_LEVEL)     # continuing check
+  if hall_found:            -&gt; enter_offset_or_complete(already_home)
+  elif enc_total&gt;=LIMIT or rtc&gt;=deadline: -&gt; complete(timeout)
+  else:
+    if bp_dose_park_kick():                 # still spinning up? retry next tick
+      edges = bp_drive_window(op_p_pulse_count, &amp;bp_park_last_level, true, &amp;hall_found)
+      bp_park_enc_total += edges
+      if edges==0 and !hall_found: signal MOTOR_STOP_BP; bp_has_started=false
+      if hall_found: -&gt; enter_offset_or_complete(already_home=false)
+    break                                   # AC serviced next tick
+
+BP_PARK_OFFSET:                             # one window/tick (new sub-state)
+  if !bp_parking: -&gt; complete(cancelled)
+  drive one bounded offset window: count edges into bp_park_offset_remaining--
+  if bp_park_offset_remaining==0 or rtc&gt;=bp_park_offset_deadline: -&gt; complete(success)
+  break
+
+complete(reason):                           # halt + closed-loop verify + publish
+  DAC_HALT; BP_ENABLE=0; BP_ENC_ENABLE=0; bp_dac_value=DAC_HALT
+  # ── #56 CLOSED-LOOP STOP: prove the motor actually stopped ──
+  quiescent = post_halt_encoder_quiet(POST_HALT_CHECK_US ~50ms)   # no edges after halt
+  bp_hall_detected = hall_found ? 1 : 0
+  bp_parked = (hall_found &amp;&amp; bp_parking_calibrated
+               &amp;&amp; (already_home || bp_park_enc_total &gt; 0)          # not blind
+               &amp;&amp; quiescent) ? 1 : 0                               # actually stopped
+  if hall_found &amp;&amp; !quiescent: motor_stop_events |= MOTOR_STOP_BP  # halt didn&#39;t take → fault, not silent
+  bp_parking=0; bp_pump_running=0; BP_IDLE; wakeup_main_cpu()
+</code></pre></div>
+<h3 id="93-what-this-fixes-changes">9.3 What this fixes / changes</h3>
+<ul>
+<li><strong>#56 (reports parked while turning):</strong> two new gates at complete — <code>bp_park_enc_total&gt;0</code>
+  (park wasn't blind) AND a <code>POST_HALT</code> encoder-quiescence re-read (the halt actually took;
+  catches the pad-gate-swallowed-HALT / stuck-DAC case). A non-stopping "park" now reports
+  <code>bp_parked=0</code> and raises <code>MOTOR_STOP_BP</code> instead of a silent success.</li>
+<li><strong>#55 (park-window half):</strong> <code>ac_busy_regulate</code>/<code>ac_busy_hall_service</code> are <strong>removed from the
+  park path</strong> — AC is serviced by the normal <code>ac_tick()</code> between windows now, with its full
+  stall detection live (no silent window). <code>ac_busy_hall_service</code> stays <em>inside</em>
+  <code>bp_drive_window</code> only (the ~tens-of-ms window still needs AC-hall capture).</li>
+<li><strong>#48 blast radius:</strong> the ULP returns to <code>main()</code> every ~window, so the firmware-side
+  <code>defend_pad_clock()</code> (SWR-299) park-poll re-assert can actually cover the park — impossible
+  while the ULP blocked 30 s in one shot.</li>
+<li><strong>Headroom:</strong> deleting the deep <code>park → ac_busy_regulate → run_simple_p</code> chain from the park
+  path <em>reduces</em> max stack depth on that path — expected to <em>recover</em> headroom (helps op 1.16.0).</li>
+</ul>
+<h3 id="94-acceptance-bench-ab-testop-vs-frozen-operational">9.4 Acceptance (bench A/B, TestOp vs frozen operational)</h3>
+<p>Autonomously provable: compiles; <code>build_verify_ulp</code> headroom ≥ operational; state machine
+transitions + non-block verified via the peek/telemetry (no motor). <strong>Bench-gated (needs the
+owner driving pumps):</strong> (1) parks AT the dead-point every time (SWR-132); (2) closed-loop stop —
+a deliberately gate-blinded park reports <code>bp_parked=0</code>+fault, never silent success; (3) AC never
+starved during park (its stall events now appear if they occur); (4) park time + overshoot within
+tolerance vs operational; (5) ≥20 park cycles, zero regression. Only then roll into operational
++ bump op version. Increments 2 (dose) and 3 (flush drive / coast) follow the identical pattern.</p>
+<h3 id="95-status-dev07-built-on-board-proven-2026-07-24">9.5 STATUS — dev.0.7 built + on-board proven (2026-07-24)</h3>
+<p>Autonomous gates <strong>PASS</strong>. Built on the TestOp track (dev.0.7, wire MAJOR 9). The frozen
+operational binary is <strong>byte-identical</strong> (<code>BP_PARK_OFFSET</code> enumerator is TESTOP-guarded; proven
+by op-preprocess diff = 0 and op-binary sha <code>23c471f1…</code> compared vs a570479). On-board command
+channel proof (<code>scratchpad/dev07_verify.py</code>): writing <code>BP_PARKING=1</code> drives the new state machine
+<code>IDLE → BP_PARKING → IDLE</code>, one bounded <code>bp_drive_window()</code> per tick (ULP keeps ticking — I read
+state and cancel mid-park), encoder accumulates, hall is detected, and the #56 closed-loop gate
+correctly withholds <code>bp_parked</code> without calibration. Canary clean throughout.</p>
+<p>Two findings worth carrying forward:</p>
+<ul>
+<li><strong>The "canary trips (ovf=1)" scare was a verify-harness bug, not headroom.</strong> Loading
+  <code>/pump_testop.bin</code> while the board still ran the <em>operational</em> <code>variables.py</code> made
+  <code>_load_and_start</code>'s stack pattern-fill clamp to the operational canary (184 B too low),
+  clobbering the testop binary's <code>gpio_initialized</code> + canary → spurious latched <code>ovf=1</code>. The real
+  testop deploy (<code>deploy_testop_serial</code>) writes the matching <code>testop_variables.py</code>, so the boot
+  path is correct; only the ad-hoc runtime-swap harness had to patch <code>ULP_STACK_CANARY</code>.</li>
+<li><strong>Headroom is tight: the deep park chain needs 384 B and overflows at 368.</strong> dev.0.7 keeps
+  DEFEND_CLOCK retired partly to free those 16 B (SWR-299 already moved the pad-clock defense
+  CPU-side). This is the concrete argument for Increments 2–3: decomposing the dose/coast blocking
+  loops removes the deep chains and grows <em>real</em> stack margin, so the ~4 B margin here stops being
+  a constraint. Until then the deep DOSE path is unverified on the TestOp binary at 384 B.</li>
+</ul>
+<p><strong>Control-app compat:</strong> <code>FLUISPOTTER_ULP_MAP=testop</code> points the whole Control app at
+<code>testop_variables.py</code> (default operational, production path unchanged); the connect-time check
+expects MAJOR 9 and fails safe on a map/board mismatch. Owner drives pump + park from there.</p>
+<p>Bench gates (1)–(5) remain owner-driven (need the motor). Deploy for the bench test:
+<code>python3 output/deploy_testop_serial.py</code> then power-cycle when it says WAITING; launch the Control
+app with <code>FLUISPOTTER_ULP_MAP=testop</code>.</p>
+<h2 id="10-increments-23-dosecoast-calibrate-dev08-on-board-proven-2026-07-25">10. Increments 2–3 (dose/coast) + Calibrate — dev.0.8, on-board proven (2026-07-25)</h2>
+<p><strong>Increments 2–3 — non-blocking dose + coast.</strong> <code>BP_DOSING</code> and <code>BP_DOSE_COAST</code> were the last
+ULP-owning while-loops (~10 s dose, 1 s coast). Decomposed to one bounded window per tick; the AC is
+serviced by <code>ac_tick()</code> between windows, so the in-loop <code>ac_busy_regulate</code> slice is dropped from the
+testop dose. That removed <code>ac_busy_regulate</code>'s <em>only</em> testop caller, so <code>--gc-sections</code> reclaimed the
+whole function — <strong>testop stack headroom 384 → 768 B</strong> (the decompose-first move that bought the room
+for calibration, exactly as §9.5 predicted). Zero new <code>.bss</code> (dose/coast reuse existing vars).
+On-board: dose ran <code>DOSING→COAST→IDLE</code> with <code>INITIALIZED</code> advancing every poll (0 frozen = never
+blocks), coast = <code>DOSE_COAST_US</code> exactly, canary clean.</p>
+<p><strong>Calibrate Parking — <code>BP_PARK_CAL</code> (enum 6), the cooperative decomposition of
+<code>test_determine_parking</code>.</strong> Command <code>bp_park_calibrating</code> (CPU sets, ULP clears). Spins up through the
+adaptive <code>bp_dose_park_kick</code> — the <em>fixed</em> <code>PARK_CAL_DAC</code> alone cannot break the rotor free of a hard
+spot, only the escalating kick can (that was the first live failure: motor never turned) — then holds
+<code>PARK_CAL_DAC</code> and measures the hall-active bracket over the 4-phase sweep (A reach / B exit / C
+full-rev / D bracket; hall <strong>active-LOW</strong>). Publishes <code>bp_hall_bracket_ticks</code> + <code>bp_park_offset_ticks =
+bracket/2</code> only when the full rev lands in the locked <code>[4992,5376]</code> gate (SWR-119/120); the CPU sets
+<code>bp_parking_calibrated</code> (SWR-129). The blocking <code>test_determine_parking</code> is now <code>#ifndef
+ULP_TESTOP_BUILD</code> (reclaims its ~0.7 KB .text; SWR-503 already scopes it operational-only).</p>
+<p><em>Gap-undercount finding:</em> counting encoder edges across cooperative-window gaps undercounts by
+<code>≈ gap × PULSES_PER_REV / window</code> (~250 edges at a 40 ms window — right on the gate floor). Cal runs
+pre-session (AC idle), so it uses a larger <code>CAL_WIN_US</code> (200 ms) window → undercount ~50, <code>enc_total</code>
+comfortably inside the gate. The bracket/offset stay self-consistent with the park's own edge counting
+(the offset error from the window-size mismatch is &lt; 1°).</p>
+<p>On-board: dose non-blocking PASS; calibration <strong>3/3 PASS</strong> (brackets 366–384, spread 18, offset =
+bracket/2 each, <code>enc_total</code> 5098–5111 all in gate, non-blocking, canary clean, headroom 512 B). Full
+<strong>Control-app path</strong> end-to-end (the Parking panel's <code>determine_parking_script</code> in testop mode):
+calibrate → <code>bracket=369 offset=184</code> → <code>bp_parking_calibrated=1</code> → park at bracket centre →
+<strong><code>parked=1</code></strong>. Operational binary byte-identical throughout; <code>make verify</code> 143/0.</p>
+<p><strong>Owner bench test:</strong> <code>python3 output/deploy_testop_serial.py</code> (power-cycle when it says WAITING) →
+Control app with <code>FLUISPOTTER_ULP_MAP=testop</code> → Parking tab → <strong>Calibrate Parking</strong>. Remaining
+owner-gated: confirm the calibrated park lands visually centred in the hall zone, and ≥N calibrate/park
+cycles with a stable bracket.</p>
+<h2 id="11-the-fold-dev010-one-continuous-main-loop-all-states-per-pass-2026-07-25-on-board-proven">11. THE FOLD — dev.0.10, one continuous main loop, all states per-pass (2026-07-25, on-board proven)</h2>
+<p>Sten's directive: <em>"Why not drop the windows we are replacing? Just build from the ground up. only
+the nonblocking functions."</em> The dev.0.7–0.9 ladder kept each state's internal window and only wrapped
+a continuous loop around them (F1) — which was <strong>headroom-negative</strong> (the loop's code cost pushed the
+testop canary to 368 B, <em>below</em> the ~450 B the cal's spin-up chain needs; the cal canary-tripped). The
+fold does the opposite: it <strong>deletes</strong> the blocking regulators and rebuilds every state on one
+per-pass primitive.</p>
+<p><strong>Model.</strong> <code>main()</code> runs <code>ac_tick(); bp_tick();</code> back-to-back in a <code>do { … } while (!sched_idle())</code>
+loop (dev.0.9), sleeping one wake period only when both pumps are idle. Every moving state now does
+<strong>one encoder (+hall) read per pass</strong> instead of a bounded window:</p>
+<ul>
+<li><code>seg_pass(seg_t*, …)</code> — the single generic drive core. Reads the encoder once; on a rising edge it
+  accumulates a Simple-P segment of <code>op_p_pulse_count</code> intervals and, when the segment closes, applies
+  the <strong>unchanged</strong> <code>run_simple_p</code> law + writes the DAC. Thin <code>bp_drive_pass</code>/<code>ac_drive_pass</code> wrappers
+  bind it to each pump's vars. <code>seg_stalled()</code> = no edge for the SPR-scaled first-edge window.</li>
+<li><code>BP_DOSING</code>/<code>BP_DOSE_COAST</code>/<code>BP_PARKING</code>/<code>BP_PARK_OFFSET</code>/<code>BP_PARK_CAL</code> <strong>and</strong> <code>AC_RUNNING</code>/
+  <code>BP_RUNNING</code> all call the per-pass primitive. Target-crossing is edge-exact (no window overshoot);
+  the loop polls ~20 kHz, far faster than edges arrive, so counting is <strong>gap-free</strong>.</li>
+<li>The <strong>only</strong> blocking helper kept is the ≤50 ms adaptive kick (<code>try_kick_start</code>, via
+  <code>bp_dose_park_kick</code>/<code>ac_kick</code>) — the load-bearing spin-up that breaks the dead-point free. Untouched.</li>
+</ul>
+<p><strong>Headroom by DELETION (the whole point).</strong> With no per-pass caller left, <code>--gc-sections</code> drops
+<code>regulate_pump</code> (800 B), <code>bp_drive_window</code> (510 B), <code>sample_encoder</code> (inlined into the kick),
+<code>ac_busy_regulate</code> + <code>ac_busy_hall_service</code> — ~1.5 KB. <strong>Testop headroom 368 → 1804 B</strong> (4× the cal's
+peak). No shaving the loop, no touching the kick.</p>
+<p><strong>The continuous-loop I2C trap (critical).</strong> A bit-banged ULP I2C DAC write costs <strong>~1 ms</strong>. Any
+DAC write done <em>every pass</em> throttles the loop below the edge rate → gross undercount (first cal run:
+<code>enc_total</code> 1288 vs 5184, at only 485 passes/s). The DAC latches, so: the cal writes <code>PARK_CAL_DAC</code>
+<strong>once</strong> (guarded on <code>bp_dac_value</code>), and <code>AC_IDLE</code>/<code>BP_IDLE</code> skip the redundant per-pass HALT once
+stopped. After that the cal loop runs ~20 kHz and counts gap-free. <code>seg_pass</code> already writes only on a
+segment close (~1/16 edges), so steady regulation is unaffected. <strong>PARK_CAL no longer needs
+<code>CAL_WIN_US</code></strong> — gap-free polling ends the §10 edge-undercount at its source.</p>
+<p><strong>On-board proof (dev.0.10, all canary-clean, headroom held):</strong>
+- <strong>Cal:</strong> <code>enc_total 5180 ≈ PULSES_PER_REV 5184</code> (gap-free, <em>more</em> accurate than §10's windowed
+  5098–5111), bracket 380, offset 190 = bracket/2, in the <code>[4992,5376]</code> gate, phases [0,1,2,3].
+- <strong>Dose:</strong> 1003/1000 edges (edge-exact + coast) → IDLE.
+- <strong>Park:</strong> drove 3783 edges → <code>hall=1</code>, closed-loop <strong><code>parked=1</code></strong>.
+- <strong>BP-RUN / AC-RUN:</strong> both RUNNING, DAC regulating (BP ~1400, AC ~2100), <code>bp_last_pulse_count=16</code>
+  (segments closing → <code>run_simple_p</code> firing).</p>
+<p>Operational binary <strong>byte-identical</strong> (sha <code>23c471f1…</code>, all fold code <code>#ifdef ULP_TESTOP_BUILD</code>);
+<code>make verify</code> 143/0.</p>
+<h3 id="111-dev011-the-clean-fold-nothing-blocks-the-skip-ladder-is-back-2026-07-25-on-board-proven">11.1 dev.0.11 — the CLEAN fold: nothing blocks + the skip ladder is back (2026-07-25, on-board proven)</h3>
+<p>Both dev.0.10 deferrals landed, closing the fold out (Sten: <em>"Skip ladder and fold in the kick to be
+non-blocking — we want this clean"</em>).</p>
+<p><strong>(1) The last blocking helper is gone.</strong> <code>try_kick_start</code>'s ≤50 ms blocking <code>sample_encoder</code> wait is
+folded into a per-pass first-edge kick (<code>try_kick_pass</code>): the SAME escalating continuous hold (drive at
+<code>*dac_start</code>, +power+persist every ~50 ms without a first edge, motor never de-energized —
+SWR-132 / 1.9.0) spread across continuous-loop passes.  With no caller left, <code>--gc-sections</code> drops
+<code>try_kick_start</code> AND <code>sample_encoder</code> — <strong>the ULP now blocks nowhere.</strong>  (<code>bp_dose_park_kick</code> is
+<code>#ifdef</code>-split: op keeps <code>try_kick_start</code>, byte-identical.)</p>
+<p><strong>(2) The skip ladder is restored — battery profile back.</strong> The pure-continuous dev.0.10 loop spun the
+CPU whenever a pump ran (<code>sched_idle</code> only slept when everything was idle), a real regression vs the
+old sleep-between-ticks model.  dev.0.11 reintroduces the adaptive skip in folded AC/BP RUNNING: after
+each closed Simple-P segment the encoder is held OFF for the ladder interval, expressed as a
+<strong>wall-clock deadline</strong> (<code>*_skip_hold_until</code>) not a pass count — robust because a count would blow
+through while the <em>other</em> pump keeps the loop spinning.  <code>sched_idle()</code> now returns true (sleep one
+wake period) whenever every active pump is idle or inside a skip-hold, and false (spin gap-free) only
+while a pump is actively measuring — so the loop bursts fast to catch the N edges, then sleeps through
+the hold (hall still serviced per wake).  Dose/park/cal never skip, so they stay edge-exact.</p>
+<p>Headroom 1804 → <strong>956 B</strong> (the kick fold + ladder cost ~850 B; still 2× the cal peak).  On-board
+(canary clean throughout): park → <code>parked=1</code>, cal <code>enc_total 5162 ≈ 5184</code> in-gate (bracket 360, offset
+180), BP+AC steady regulation through the ladder.  Op byte-identical; <code>make verify</code> 143/0.  Owed: a
+PPK2 measurement to quantify the skip-hold power saving over a long run (the cadence is correct now;
+the number is owner-gated).</p>
+<h3 id="112-dev012-hall-dev013-stall-recovery-closing-the-op-parity-gaps-2026-07-25">11.2 dev.0.12 hall + dev.0.13 stall recovery — closing the op-parity gaps (2026-07-25)</h3>
+<p>A verify pass over the op function table (Sten: "verify all op functions are implemented") found the
+8 dropped op funcs all reimplemented per-pass, but two capability gaps:</p>
+<p><strong>dev.0.12 — hall monitored constantly (SWR-289 strict).</strong> The fold counted BP hall only in RUNNING +
+PARKING; the per-pass <code>bp_drive_pass</code> didn't stamp the ring the way op's <code>bp_drive_window</code> did, so
+DOSING/COAST/OFFSET/CAL were hall-blind.  Fix: hoist <code>bp_hall_edge_service</code> to the <strong>top of the
+continuous loop</strong> — one call per pass, every state (counting unconditional; CPU-wake still gated to
+RUNNING; folded PARKING reads <code>bp_hall_switch</code>; op keeps its per-state call via <code>#ifndef</code>).  On-board:
+a &gt;1-rev dose ticked <code>bp_hall_revolutions</code> 0→1 at ~5184 edges <em>while <code>bp_state==DOSING</code></em>.</p>
+<p><strong>dev.0.13 — non-blocking stall power-cycle.</strong> Folded RUNNING re-kicked a mid-run stall immediately;
+op <code>regulate_pump</code> first power-cycles the DAC7574 driver (DAC-halt + motor/encoder off + 200 ms) to
+clear a latch (<code>bp_dead_after_crash</code>).  Fix: <code>seg_recover()</code> does the halt + a <code>seg_t.recover_until</code>
+deadline; the stalled pump's own drive is <strong>held off</strong> for the 200 ms (<code>sched_idle</code> treats it like a
+skip-hold), then the per-pass kick re-drives.</p>
+<blockquote>
+<p><strong>"Sleeps through" is the wrong word — the loop is NOT suspended for 200 ms</strong> (Sten asked exactly
+this: <em>"do we not service the AC pump then during that sleep?"</em>).  The recovery deadline gates only
+the recovering pump's own drive.  The main loop keeps running: <code>ac_tick()</code> and <code>bp_tick()</code> are still
+called every pass and hall is still serviced at the loop top.  If the OTHER pump is measuring, the
+loop spins at full rate and that pump is serviced with zero added latency; if nothing else has work,
+<code>sched_idle()</code> returns true and the loop sleeps <strong>one wake period (~1 ms) at a time</strong>, re-servicing
+both pumps on every wake.  So the AC is never starved — and this is strictly BETTER than op, whose
+<code>regulate_pump</code> sat in a genuinely blocking 200 ms delay with the AC unserviced throughout.</p>
+</blockquote>
+<p>Dose/park keep the immediate re-kick (matching
+op — only op RUNNING power-cycled).  Headroom 620 B; cal <code>enc_total 5184</code> in-gate; op byte-identical;
+no false recovery in a normal BP+AC run.  (A real mid-run driver latch can't be forced on the bench;
+the path is op-parity + proven not to false-trigger.)</p>
+<h2 id="12-promotion-to-operational-op-1170-2026-07-26">12. PROMOTION TO OPERATIONAL — op 1.17.0 (2026-07-26)</h2>
+<p>Owner call ("promote to operational"), taken because the promoted binary is the one that actually
+ships: a TestOp run validates the <em>logic</em>, but only the operational image validates the artifact, its
+headroom, and its contract with the real firmware.</p>
+<h3 id="121-how-it-is-switched">12.1 How it is switched</h3>
+<p>One macro, defined near the top of <code>main.c</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#if !defined(ULP_TEST_BUILD) &amp;&amp; !defined(ULP_TEST2_BUILD)</span>
+<span class="cp">#define ULP_FOLD_BUILD 1</span>
+<span class="cp">#endif</span>
+</code></pre></div>
+<p>All 24 fold guards were renamed <code>ULP_TESTOP_BUILD</code> → <code>ULP_FOLD_BUILD</code>, so the fold now compiles into
+<strong>both</strong> the operational binary and the TestOp image.  <strong>Rollback is that one line</strong> — commenting it
+out restores the 1.15.0 per-wake tick + blocking windows, which remain in the file under
+<code>#ifndef ULP_FOLD_BUILD</code>.  Deliberately NOT promoted (still <code>#ifdef ULP_TESTOP_BUILD</code>): the three
+vestigial <code>DEFEND_CLOCK</code> blocks (the <code>soc/sens_reg.h</code> include, the no-op macro, its call site) — that
+is the retired #48 defense and the convicted #53 cause, and it stays out of the operational image.
+The switch is scoped away from <code>pump_test</code>/<code>pump_test2</code>, which exclude the regulation entirely; letting
+fold state link into them would shift their maps for code they never run.</p>
+<h3 id="122-calibration-the-firmware-contract-is-unchanged">12.2 Calibration — the firmware contract is UNCHANGED</h3>
+<p>The fold replaced the blocking <code>test_determine_parking()</code> with the non-blocking <code>BP_PARK_CAL</code> state,
+which the Control app drove via <code>bp_park_calibrating</code>.  The firmware's <code>_state_calibration</code>, however,
+calibrates by writing <code>test_request = TEST_DETERMINE_PARKING</code> and then polling for <code>TEST_NONE</code>.  So as
+the operational binary the fold answers <strong>that</strong> contract directly:</p>
+<ul>
+<li><code>BP_IDLE</code> enters <code>BP_PARK_CAL</code> on <code>bp_park_calibrating || test_request == TEST_DETERMINE_PARKING</code>
+  (both triggers converge on the one flag, so the exit paths stay single-path);</li>
+<li><strong>every</strong> exit — cancel, 30 s deadline, success, sweep-fail — clears <code>test_request = TEST_NONE</code>.
+  This is required twice over: it is the firmware's completion signal, AND leaving it set would
+  re-trigger calibration from <code>BP_IDLE</code> on the very next pass (an endless cal loop).</li>
+</ul>
+<p>Published results are unchanged: <code>bp_hall_bracket_ticks</code>, <code>bp_park_offset_ticks = bracket/2</code>
+(SWR-119/120), <code>bp_park_enc_total</code>.  <strong>No firmware change is needed.</strong></p>
+<h3 id="123-gates-host">12.3 Gates (host)</h3>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>op version</td>
+<td><strong>1.17.0</strong> (1.16.0 is burned/quarantined — the DEFEND_CLOCK build)</td>
+</tr>
+<tr>
+<td>op size</td>
+<td>7088 B (was 7268 B — the blocking regulators GC out)</td>
+</tr>
+<tr>
+<td><strong>op stack headroom</strong></td>
+<td><strong>596 B — vs 568 B for the 1.15.0 baseline it replaces (+28 B)</strong></td>
+</tr>
+<tr>
+<td>libgcc helpers</td>
+<td>none</td>
+</tr>
+<tr>
+<td><code>make verify</code></td>
+<td>143 PASS / <strong>0 FAIL</strong> (305 tests)</td>
+</tr>
+<tr>
+<td>variables drift gate</td>
+<td><strong>OK</strong> — op/test/test2 maps all regenerated and matching</td>
+</tr>
+<tr>
+<td>op binary artifact</td>
+<td>refreshed; byte-identity check passes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>On the 596 B headroom warning.</strong> <code>build_verify_ulp.py</code> warns under 768 B and fails under 512 B, so
+596 B is a warning, not a failure — and the 1.15.0 binary this replaces sits at <strong>568 B</strong>, i.e. the
+warning is inherited, not introduced, and the fold <em>improves</em> it.  The number also understates the
+change: headroom is the space the call stack grows into, and the fold's whole point is that the deep
+<code>bp_tick → bp_drive_window → regulate_pump → run_simple_p → i2c</code> chain behind the #48 overflow class
+is gone — a flat loop needs less of that space than the chain it replaces.  (For contrast, the
+quarantined 1.16.0 was 552 B, i.e. <em>worse</em> than baseline.)  A live stack low-water measurement during
+calibration — the deepest operation — is the right way to convert this from an argument into a number,
+and is part of the deploy gate.</p>
+<h3 id="124-deployment-coupling-important">12.4 Deployment coupling (IMPORTANT)</h3>
+<p>The op symbol table changed: <strong>4 added</strong> (<code>BP_PARK_CALIBRATING</code>, <code>BP_CAL_PHASE/REV/BRACKET</code>), <strong>0
+removed</strong> (so every name the firmware imports still resolves), <strong>83 moved</strong>.  Addresses shift on every
+build, so the binary and <code>fluispotter/variables.py</code> <strong>must be deployed together</strong> — shipping the new
+binary against the old map would point every <code>mem32</code> access at the wrong address.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>

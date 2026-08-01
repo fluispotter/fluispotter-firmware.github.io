@@ -1,0 +1,725 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../ulp_1.17.0_verification_status/">
+      
+      
+        <link rel="next" href="../ulp_scheduler_design/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>ULP fold — behavioural audit against the operational code - Fluispotter</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ulp-fold-behavioural-audit-against-the-operational-code" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Fluispotter" class="md-header__button md-logo" aria-label="Fluispotter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fluispotter
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ULP fold — behavioural audit against the operational code
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Fluispotter" class="md-nav__button md-logo" aria-label="Fluispotter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fluispotter
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Reference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../battery_test_2026-07-18/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Battery endurance test — run to power failure (2026-07-16 → 2026-07-18)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bench_run_2026-07-18_10x2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bench acceptance — 10 samples × 2 spots (dry run), 2026-07-18
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bench_run_2026-07-19_8h_dry/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8-hour dry run — 1 pre-session sample + 15 triplet samples, 2026-07-19
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ci_release_plan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CI / Release Process Plan — Fluispotter Firmware &amp; Software
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compacting_log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compacting Log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multi_mode_ulp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multi Mode ULP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prompts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    User Prompts Log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../requirements_implementation_map/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Requirements Implementation Map — 2026-07-16 (registry 1.69, 148 requirements)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../summaries/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Summaries
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../test_runs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fluispotter test-run register
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ulp_1.17.0_verification_status/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Verification status — operational ULP 1.17.0 (the promoted cooperative scheduler)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    ULP fold — behavioural audit against the operational code
+  </span>
+  
+
+      </a>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ulp_scheduler_design/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Design Note — ULP Cooperative Scheduler (non-blocking single main loop)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wdt_lightsleep_usb_investigation_2026-07-20/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GitHub #46 — WDT(3) at lightsleep entry: investigation record (WON'T FIX)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="ulp-fold-behavioural-audit-against-the-operational-code">ULP fold — behavioural audit against the operational code</h1>
+<p><strong>Method.</strong> For every operational function the fold replaced, compare its <em>actual
+code</em> — statement by statement, including side effects, statement order, and the
+timing environment each statement runs in — against the fold implementation.
+Comments in <code>main.c</code> are <strong>not evidence</strong>: several are stale and three wrong
+root-causes on 2026-07-26 came from trusting them.</p>
+<p><strong>Coverage.</strong> Three independent passes: (A) <code>regulate_pump</code> / <code>bp_drive_window</code> /
+<code>stop_pump</code>; (B) AC service / <code>sched_idle</code> / entry-exit actions / park calibration;
+(C) an adversarial pass tasked with <em>refuting</em> A's first-draft findings. Line
+numbers were derived with <code>grep -n</code>/<code>awk</code> — the Read tool was observed silently
+dropping a 16-line block, which is why early drafts cited numbers 16 too low.</p>
+<p><strong>Status of the first draft: 1 of 4 clean.</strong> Corrections are recorded below rather
+than deleted, because the way they were wrong is the reusable lesson.</p>
+<hr />
+<h1 id="ranked-findings">RANKED FINDINGS</h1>
+<h2 id="tier-1-correctness-safety">Tier 1 — correctness / safety</h2>
+<h3 id="1-the-park-stop-verify-measures-a-de-energised-floating-encoder">1. The park stop-verify measures a de-energised, floating encoder</h3>
+<p><code>bp_park_complete</code> disables <code>BLOOD_PUMP_ENCODER_ENABLE_GPIO</code> (2441) and <em>then</em> runs
+its 50 ms "did the rotor stop?" measurement (2446-2451). <code>init_input</code> (1311-1316)
+disables both pull-up and pull-down, so the pin <strong>floats</strong> throughout.
+Two branches, both wrong: a stable float ⇒ <code>quiescent</code> always true ⇒ <strong><code>bp_parked</code>
+granted to a rotor that never stopped and the <code>MOTOR_STOP_BP</code> at 2461-2463 can never
+fire</strong> — precisely the silent success the check was written to eliminate; a noisy
+float ⇒ spurious fault on every park. Owner-confirmed working parks on dev.0.13 are
+consistent with the always-true branch. <strong>Fold-only code. CONFIRMED.</strong></p>
+<h3 id="2-the-dac7574-is-never-re-asserted-and-a-reload-can-drive-uncommanded">2. The DAC7574 is never re-asserted, and a reload can drive uncommanded</h3>
+<p>Op wrote the DAC unconditionally every batch (1839, 2356) <strong>and</strong> wrote <code>DAC_HALT</code>
+on every idle tick via <code>stop_pump</code> (1750, reached from 1936 / 2809). The fold writes
+only on change (2568-2583) and guards the idle HALT away (1933, 2804-2807). The
+software mirror becomes the only record of the hardware register, with no
+reconciliation. A swallowed write — I²C NACK, or <code>SENS_IOMUX_CLK_EN</code> gated across it
+(#48) — is now <strong>permanent</strong>; worst case a swallowed HALT leaves the motor driving
+while the mirror reads HALT, and both guards then <em>refuse</em> to re-issue it.
+Additionally, after a crash the CPU reloads fresh <code>.data</code> (<code>bp_dac_value = DAC_HALT</code>,
+769-770) while the chip may still hold a driving value, and <code>try_kick_pass</code> raises
+<code>enable_gpio</code> (2630) ~1 ms <strong>before</strong> writing its own DAC value (2633) — a brief
+uncommanded burst at the pre-reset power. <strong>CONFIRMED.</strong>
+<em>Owner decision 2026-07-26: change-gating is intended ("only write the DAC if
+regulation is needed"). The lost re-assert is therefore accepted, not a bug to undo —
+but <code>seg_recover</code>'s explicit power-cycle is now the ONLY thing that can clear a latch.</em></p>
+<h3 id="3-test_determine_parking-no-longer-pre-empts-and-test_none-no-longer-cancels">3. <code>TEST_DETERMINE_PARKING</code> no longer pre-empts, and <code>TEST_NONE</code> no longer cancels</h3>
+<p>Op dispatched it at the top of <code>main()</code> before <code>ac_tick</code>/<code>bp_tick</code>, from any BP state
+(4822). The fold reads <code>test_request</code> <strong>only</strong> inside <code>case BP_IDLE:</code> (2769); there is
+no BP_RUNNING → BP_PARK_CAL edge. If the firmware writes the request while
+<code>bp_pump_running == 1</code>, the ULP never enters calibration, never writes <code>TEST_NONE</code>,
+and <strong>the firmware's documented poll blocks forever</strong>. Separately the fold's cancel
+check tests <code>bp_park_calibrating</code> (3327) and ignores <code>test_request</code>, so a CPU
+cancelling via <code>TEST_NONE</code> — the idiom every other test uses — cannot stop it; the
+motor drives to the 30 s deadline. <strong>CONFIRMED.</strong>
+<em>This qualifies the "calibration contract proven end-to-end" claim: it holds only
+because the firmware happens to idle the BP first.</em></p>
+<h3 id="4-stall-de-duplication-destroyed-in-running-ungated-cpu-wakes-at-36-hz">4. Stall de-duplication destroyed in RUNNING — ungated CPU wakes at ~3.6 Hz</h3>
+<p>Op latched the flag on the stall (<code>*recovery_signaled = true</code>, 1875) <strong>and</strong> passed a
+<em>separate local</em> <code>start_signaled</code> into the relaunch kick (1883-1886) specifically so
+the kick could not clobber the stall dedupe (its own comment, 1879-1881). The fold's
+stall branches (2878-2882 BP, 2033-2037 AC) contain the <code>if (!..._recovery_signaled)</code>
+guard with <strong>no assignment</strong>, and pass the <em>shared</em> flag into <code>try_kick_pass</code> (2129,
+2734), which clears it on every successful kick (2658). A marginal pump then cycles
+stall → 200 ms recover → successful kick (clears flag) → stall at ~280 ms, emitting
+<code>MOTOR_STOP_*</code> + <code>wakeup_main_cpu()</code> <strong>~3.6×/s</strong> where op emitted one per episode.
+The file's own SWR-289 note (2219-2228) records that ungated wakes latch the RTC CPU
+interrupt for the next <code>lightsleep()</code> — the #46 kill path, Fisher p≈0.02.
+<strong>CONFIRMED by all three passes.</strong> Dose/park omit the latch in op too — parity, not a
+regression; the regression is confined to the two RUNNING states.</p>
+<h3 id="5-stale-recovery_signaled-can-suppress-fault-reporting-entirely">5. Stale <code>recovery_signaled</code> can suppress fault reporting entirely</h3>
+<p>Op cleared it on every idle tick (2809 → 1747). The fold's guarded BP_IDLE never
+clears it, and <code>bp_cal_halt</code> (2473-2480) and the park-cancel (3121-3128) both leave it
+set. A later spin-up failure then hits <code>if (!*signaled)</code> == false ⇒ <strong>no
+<code>MOTOR_START_FAIL_BP</code>, no CPU wake, for the whole episode</strong> — a silently non-starting
+pump. <strong>CONFIRMED.</strong> <em>This also means "only one escalation was logged" cannot
+distinguish "escalation stopped" from "escalation continued unreported".</em></p>
+<h3 id="6-turn-on-skip-is-per-arm-not-per-window-1-edge-start-accept-from-window-2">6. Turn-on skip is per-ARM, not per-WINDOW ⇒ 1-edge start accept from window 2</h3>
+<p><code>s-&gt;skipped = 0</code> occurs only in the arm branch (2637); the escalation branch
+(2664-2680) re-arms only <code>kick_deadline</code>. So window 1 requires 2 rising edges and
+<strong>windows 2…N require 1</strong>. Op re-entered <code>sample_encoder</code> fresh each tick, enforcing
+its 3-edge bar on <em>every</em> window. A single noise edge then fakes a start → drive arms
+→ no motion → stall → re-kick → escalate. <strong>CONFIRMED.</strong></p>
+<h2 id="tier-2-robustness-battery">Tier 2 — robustness / battery</h2>
+<h3 id="7-bp_dosing-past-its-deadline-spins-the-core-at-100-and-blocks-calibration">7. <code>BP_DOSING</code> past its deadline spins the core at 100% and blocks calibration</h3>
+<p><code>sched_idle</code> returns false for BP_DOSING unconditionally (4733-4734). Once
+<code>bp_dose_deadline</code> passes, no branch drives, kicks, coasts or exits — the halt at 2967
+is a no-op after the first pass and nothing clears <code>bp_dosing</code> (deliberate, 2968-2970).
+The do/while therefore never terminates: 100% duty against a ~24.9 mA budget until the
+CPU adjudicates. Op returned and slept. <strong>Chained:</strong> because <code>test_request</code> is served
+only from BP_IDLE (finding 3), a BP wedged here <strong>also blocks calibration forever</strong>.
+<strong>CONFIRMED</strong> (duration bounded by firmware; unbounded if the CPU faults with
+<code>bp_dosing</code> set).</p>
+<h3 id="8-ac-service-during-bp-moving-states-lost-its-rate-limit-cap-and-dose-tail-guard">8. AC service during BP moving states lost its rate limit, cap and dose-tail guard</h3>
+<p>Op's in-window AC slice was deliberately crippled: 1 per 16 BP windows
+(<code>AC_BUSY_EVERY</code>, ~0.8 s), a 150 ms hard cap (<code>AC_BUSY_CAP_US</code>), a 160-edge
+<code>AC_BUSY_DOSE_GUARD</code> so no slice could land on the dose target crossing, required
+<code>ac_has_started</code>, and it could <strong>not</strong> kick, stall-recover or walk the ladder
+(2204-2207). The fold runs the full <code>ac_tick</code> every pass (4841): it may kick (2015),
+power-cycle (2038), toggle the AC encoder enable (2028) and write the DAC <strong>anywhere,
+including on the last dose edge</strong>. The lost implicit guarantee is uninterrupted BP
+polling near the target. Mitigated by change-gated writes (2568-2583) and by
+<code>seg_pass</code> being a <em>level</em> comparator — at 16 s/rev (3.09 ms/edge, ~1.54 ms high
+phase) a 1 ms block cannot hide a rising edge. <strong>CONFIRMED DIVERGENCE; edge loss
+SUSPECTED and target-dependent</strong> (below ~5 s/rev the high phase drops under 1 ms).</p>
+<h3 id="9-park-cancel-is-a-partial-stop">9. Park-cancel is a partial stop</h3>
+<p>Op used the full <code>stop_pump</code> (3166-3170). The fold (3121-3128) halts the DAC and GPIOs
+but leaves <code>has_started</code>, <code>recovery_signaled</code>, <code>integral_scaled</code>, <code>prev_error</code>,
+<code>max_power</code>, <code>min_power</code> stale. A firmware park-cancel then carries
+<code>bp_has_started == true</code> into BP_IDLE. <strong>CONFIRMED.</strong></p>
+<h3 id="10-bp_park_complete-busy-spins-50-ms-in-the-nothing-blocks-fold">10. <code>bp_park_complete</code> busy-spins 50 ms in the "nothing blocks" fold</h3>
+<p>2448-2451, with no <code>bp_hall_edge_service</code> and no <code>ac_tick</code> — a 50 ms blind window on
+both hall counters, once per park. Bounded (hall arcs ~1.2 s) but it contradicts the
+fold's headline claim. <strong>CONFIRMED DIVERGENCE.</strong></p>
+<h2 id="tier-3-telemetry">Tier 3 — telemetry</h2>
+<ol>
+<li><strong><code>max_power</code>/<code>min_power</code> never re-armed</strong> after a dose or park (guarded BP_IDLE
+    at 2804-2807 never runs again), so per-run extremes become session-cumulative —
+    and the fold <em>added</em> dose/park excursions to them via <code>seg_pass</code> (2566-2567).</li>
+<li><strong><code>last_pulse_count</code> frozen at 16</strong>, published only on a segment close (2561-2562);
+    op published every batch including <code>count == 0</code> (1821, 1900, 2348). The "0 pulses"
+    stall signature is no longer observable by the host monitor.</li>
+<li><strong><code>start_attempts</code> and <code>ac_busy_slices</code> are permanently zero</strong> — their only
+    increments (1794, 2294) are in functions with no fold call sites.</li>
+</ol>
+<h2 id="tier-4-documentation-defects-these-caused-real-wrong-diagnoses">Tier 4 — documentation defects (these caused real wrong diagnoses)</h2>
+<ol>
+<li><strong>The op 1.18.0 changelog claims two fixes the binary does not contain.</strong> Entries
+    (2) SANE HANDOVER and (3) DECAY at 512-517 describe <code>kick_handover</code>, which has
+    <strong>zero call sites</strong> (declared 1921, defined 2698-2706) — withdrawn in dev.0.15
+    after it destabilised the AC. The escalation ratchet those entries claim to fix is
+    <strong>still live</strong>, in <em>both</em> builds (fold 2670-2677, op 1711-1724 → <code>bp_seed_pid</code>
+    2103-2107). <strong>The ratchet is therefore NOT a fold regression.</strong></li>
+<li><strong><code>bp_tick</code>'s header (2423-2428)</strong> — "called once per <code>main()</code> invocation… ensuring
+    AC is serviced again on the next invocation" — is the load-bearing statement about
+    servicing cadence and is now false (it runs once per <em>loop pass</em>, 4842).</li>
+<li><code>DOSE_COAST_US</code> is 1 s; comments at 567 and 3053 say 5 s. Full doc blocks remain
+    for <code>bp_drive_window</code> (2298-2310) and <code>ac_busy_regulate</code> (2193-2207) which no
+    longer ship.</li>
+</ol>
+<hr />
+<h1 id="corrections-to-the-first-draft">CORRECTIONS TO THE FIRST DRAFT</h1>
+<ul>
+<li><strong>F1 (stale step-4b comment) — conclusion right, evidence rotten.</strong> Cited 762-768
+  (unrelated declarations; the header is 1626-1650) and then "refuted a stale comment
+  with a fresher comment". The load-bearing evidence is the <em>absence</em> of any
+  de-energize in 1690-1728. It also audits dead code: <code>try_kick_start</code> ships in no
+  regulating image.</li>
+<li><strong>F2 (start bar) — right, but understated.</strong> Op = 3 edges; fold = 2 <strong>only in
+  window 1</strong>, then 1 (see finding 6).</li>
+<li><strong>F3 (kick edges lost to I²C) — REFUTED.</strong> A 50 ms kick window holds 16-50 edges and
+  needs 2; at most one AC write (spacing ≥62 ms) can land in it; and <code>seg_pass</code>
+  compares <em>levels</em>, so a 1 ms block cannot hide a 3.09 ms edge. Off by ~2 orders of
+  magnitude. "Bit-banged" was also wrong — it is the RTC <strong>hardware</strong> I²C master. The
+  "corroboration" only proved the AC was regulating. Survives only as finding 8's
+  target-dependent suspicion.</li>
+<li><strong>F4 (<code>stall_edge</code> before the skip) — fact true, defect refuted, comparison false.</strong>
+  <code>seg_reset</code> sets <code>stall_edge</code> on the same pass the encoder powers up (2525), so the
+  discarded edge moves the deadline by milliseconds. And op does the same thing —
+  <code>sample_encoder</code> sets <code>seen_edge = true</code> at 1389 <em>before</em> its skip check at 1390.
+  <em>Caveat retained:</em> this holds for a dead motor. A rotor dithering against a hard spot
+  emits edges, and those do keep refreshing <code>stall_edge</code>, which is finding 5's
+  companion path.</li>
+</ul>
+<h1 id="checked-and-not-a-regression-do-not-re-investigate">CHECKED AND NOT A REGRESSION — do not re-investigate</h1>
+<ul>
+<li><strong>Dose ledger edge accounting</strong> — both consume exactly 3 rising edges before counting
+  resumes, including after a stall re-arm (op 1388-1397 + 2145; fold 2653-2660 + 2532 +
+  2551-2554).</li>
+<li><strong>Skip-ladder magnitude</strong> — op held N ticks, fold holds N ms, ULP wake period = 1 ms.</li>
+<li><strong>Hall wake gating</strong> — identical (op 2844, fold 4840); SWR-289 counting is
+  unconditional in both, and the fold counts in <em>more</em> states.</li>
+<li><strong><code>sched_idle</code> sleeping through the 200 ms recovery</strong> — op <em>blocked</em> with no hall
+  service; the fold sleeps and still services hall each wake. Improvement.</li>
+<li><strong>Park "already home" latched at entry</strong> (2415) vs op recomputing per tick — fixes a
+  boundary case where op skipped the centre offset. Improvement.</li>
+<li><strong><code>bp_enter_park_cal</code> clears <code>bp_parked</code></strong> (2497); op's <code>test_determine_parking</code> did
+  not, leaving <code>bp_parked == 1</code> while spinning off home. Improvement.</li>
+<li><strong>BP_PARK_CAL acceptance criteria</strong> — all nine present and identical, including the
+  full-rev gate 4992..5376 and <code>offset = bracket/2</code>.</li>
+<li><strong>Entry-action state</strong> — <code>has_started</code>, <code>recovery_signaled</code>, <code>first_update</code>,
+  integral/prev_error are cleared/seeded by all four entry helpers. Parity.</li>
+<li><strong><code>drive_armed</code>, <code>recover_until</code>, <code>skip_hold_until</code> not cleared by some helpers</strong> —
+  asymmetric but no reachable stale-flag path.</li>
+<li><strong>The merged <code>seg_t.skipped</code> field</strong> is safe across the kick↔drive split (no
+  reachable <code>has_started == false &amp;&amp; drive_armed == 1</code>). The unsafe sharing is <em>within</em>
+  the kick phase — finding 6.</li>
+<li><strong><code>last_p_err_pct</code> cross-pump</strong> — written and consumed in the same branch, AC strictly
+  before BP. Safe.</li>
+<li><strong>No unsigned-underflow findings</strong> — <code>rtc_ticks</code> latches via TIME_UPDATE (no tearing);
+  all deadline maths is monotonic uint64; the decrements and clamps are guarded.</li>
+</ul>
+<h1 id="process-finding">PROCESS FINDING</h1>
+<p>The original parity check compared <strong>function lists</strong> and reported complete parity.
+It cannot detect a lost timing guarantee (finding 8), a missing assignment (4, 5), a
+reordered statement, or a check measuring a de-energised pin (1). Behavioural
+equivalence must be argued from code, per statement, with the timing environment
+included — and any diagnosis that will drive a code change must survive an
+adversarial pass, which here refuted the first draft's headline finding.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>

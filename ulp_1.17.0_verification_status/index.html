@@ -9,8 +9,10 @@
       
       
       
-        <link rel="prev" href="../ulp_scheduler_design/">
+        <link rel="prev" href="../test_runs/">
       
+      
+        <link rel="next" href="../ulp_fold_behavioural_audit/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -18,7 +20,7 @@
     
     
       
-        <title>GitHub #46 — WDT(3) at lightsleep entry: investigation record (WON'T FIX) - Fluispotter</title>
+        <title>Verification status — operational ULP 1.17.0 (the promoted cooperative scheduler) - Fluispotter</title>
       
     
     
@@ -62,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#github-46-wdt3-at-lightsleep-entry-investigation-record-wont-fix" class="md-skip">
+        <a href="#verification-status-operational-ulp-1170-the-promoted-cooperative-scheduler" class="md-skip">
           Skip to content
         </a>
       
@@ -98,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              GitHub #46 — WDT(3) at lightsleep entry: investigation record (WON'T FIX)
+              Verification status — operational ULP 1.17.0 (the promoted cooperative scheduler)
             
           </span>
         </div>
@@ -373,10 +375,30 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../ulp_1.17.0_verification_status/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Verification status — operational ULP 1.17.0 (the promoted cooperative scheduler)
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -385,6 +407,71 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#a-the-headline-gates-verified-on-this-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      A. The headline gates — verified on this build
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#b-the-real-gap-7-requirements-that-pass-but-do-not-verify-the-shipping-binary" class="md-nav__link">
+    <span class="md-ellipsis">
+      B. THE REAL GAP — 7 requirements that PASS but do not verify the shipping binary
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#c-requirements-with-no-automated-verification-at-all-22-not-tested" class="md-nav__link">
+    <span class="md-ellipsis">
+      C. Requirements with no automated verification at all (22 NOT-TESTED)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#d-what-the-live-20-sample-dry-run-contributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      D. What the live 20-sample dry run contributes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bottom-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bottom line
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -433,30 +520,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    GitHub #46 — WDT(3) at lightsleep entry: investigation record (WON'T FIX)
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../wdt_lightsleep_usb_investigation_2026-07-20/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -465,89 +532,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#mechanism" class="md-nav__link">
-    <span class="md-ellipsis">
-      Mechanism
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#campaign-results" class="md-nav__link">
-    <span class="md-ellipsis">
-      Campaign results
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-discriminator" class="md-nav__link">
-    <span class="md-ellipsis">
-      The discriminator
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#diagnostic-infrastructure-built-retained-permanent" class="md-nav__link">
-    <span class="md-ellipsis">
-      Diagnostic infrastructure built (retained, permanent)
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#not-fixed-deliberately" class="md-nav__link">
-    <span class="md-ellipsis">
-      Not fixed, deliberately
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bench-protocol" class="md-nav__link">
-    <span class="md-ellipsis">
-      Bench protocol
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reopen-if" class="md-nav__link">
-    <span class="md-ellipsis">
-      Reopen if
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -567,93 +551,148 @@
                   
 
 
-<h1 id="github-46-wdt3-at-lightsleep-entry-investigation-record-wont-fix">GitHub #46 — WDT(3) at lightsleep entry: investigation record (WON'T FIX)</h1>
-<p>Closed 2026-07-20 by owner decision: <strong>bench-only artifact, requires an
-attached USB-CDC host. Production devices have no USB and are not exposed.</strong></p>
-<h2 id="mechanism">Mechanism</h2>
-<p>ESP-IDF's light-sleep entry flushes the console TX with interrupts
-disabled. With a USB-CDC host attached but not draining (a Mac with no
-terminal on the port — every bench session), the flush cannot complete,
-the interrupts-off window exceeds the 1000 ms IWDT timeout, and the SoC
-resets with cause 3. The firmware's own nap path wrote to that console
-on both sides of the sleep.</p>
-<h2 id="campaign-results">Campaign results</h2>
+<h1 id="verification-status-operational-ulp-1170-the-promoted-cooperative-scheduler">Verification status — operational ULP 1.17.0 (the promoted cooperative scheduler)</h1>
+<p><strong>Build under assessment:</strong> operational <code>pump_regulator.bin</code>, ULP <strong>1.17.0</strong>, 7088 B,
+596 B stack headroom, built from <code>main.c</code> with <code>ULP_FOLD_BUILD</code> defined.
+<strong>Assessed:</strong> 2026-07-26. <strong>Question asked:</strong> <em>which requirements have NOT been verified on
+the new build?</em></p>
+<p><code>make verify</code> reports <strong>143 PASS / 0 FAIL / 22 NOT-TESTED (305 tests)</strong>. That headline is
+true but not sufficient, because a green suite can still be green for the wrong reason. The
+three categories below separate what is genuinely evidenced for 1.17.0 from what is not.</p>
+<hr />
+<h2 id="a-the-headline-gates-verified-on-this-build">A. The headline gates — verified on this build</h2>
 <table>
 <thead>
 <tr>
-<th>Campaign</th>
-<th>Firmware</th>
-<th>Sample-ends</th>
-<th>Fires</th>
-<th>Crumbs</th>
+<th>Gate</th>
+<th>Evidence</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>1</td>
-<td>0.1.119</td>
-<td>50 (FINISH)</td>
-<td>4</td>
-<td>— (pre-instrument)</td>
+<td>ULP builds, sized, no forbidden libgcc helpers</td>
+<td><code>build_verify_ulp.py</code>: 7088 B, <code>libgcc=[]</code></td>
 </tr>
 <tr>
-<td>2</td>
-<td>0.1.120 rev 3</td>
-<td>~20</td>
-<td>2</td>
-<td>10, 7</td>
+<td>Address maps match the built ELFs (op + test + test2)</td>
+<td>variables drift gate <strong>OK</strong> (all three were stale <em>before</em> this change)</td>
 </tr>
 <tr>
-<td>3</td>
-<td>0.1.121 (radio gating)</td>
-<td>40</td>
-<td>3</td>
-<td>12, 8, 12</td>
+<td>Operational binary artifact matches source</td>
+<td>byte-identity check <strong>YES</strong></td>
 </tr>
 <tr>
-<td>4</td>
-<td>0.1.122 rev 4</td>
-<td>2</td>
-<td>1</td>
-<td><strong>22 (inside machine.lightsleep)</strong></td>
+<td>Requirement registry / doc / lock discipline</td>
+<td>SWR-501, 502, 503, 508, 509, 510, 511, 512, 513, 514 PASS</td>
+</tr>
+<tr>
+<td>ULP version discipline</td>
+<td><code>ulp_version</code> reads 1.17.0 on-board and in the hub log</td>
 </tr>
 </tbody>
 </table>
-<p>Rate ~1 in 13 sample-ends throughout — the radio-gating fix (0.1.121)
-did <strong>not</strong> change it, which refuted the radio hypothesis honestly.</p>
-<h2 id="the-discriminator">The discriminator</h2>
+<hr />
+<h2 id="b-the-real-gap-7-requirements-that-pass-but-do-not-verify-the-shipping-binary">B. THE REAL GAP — 7 requirements that PASS but do <strong>not</strong> verify the shipping binary</h2>
+<p><code>verification/tests_sw/test_ulp_source.py</code> verifies the ULP by <strong>static analysis of the
+source text of <code>main.c</code></strong>. The promotion did not delete the old blocking implementation — it
+left it in place under <code>#ifndef ULP_FOLD_BUILD</code> so the rollback stays one line. So those
+functions are <strong>still in the file</strong> and the tests still find them and still pass — but they
+are <strong>compiled out of the binary we ship</strong>.</p>
+<p>These requirements are therefore <strong>not evidenced for 1.17.0</strong>; their automated evidence
+describes the rolled-back 1.15.0 path:</p>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Test asserts on (compiled out of 1.17.0)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SWR-109</strong></td>
+<td><code>ac_busy_hall_service</code></td>
+</tr>
+<tr>
+<td><strong>SWR-116</strong></td>
+<td><code>regulate_pump</code></td>
+</tr>
+<tr>
+<td><strong>SWR-126</strong></td>
+<td><code>regulate_pump</code>, <code>sample_encoder</code>, <code>try_kick_start</code></td>
+</tr>
+<tr>
+<td><strong>SWR-127</strong></td>
+<td><code>bp_drive_window</code></td>
+</tr>
+<tr>
+<td><strong>SWR-128</strong></td>
+<td><code>bp_drive_window</code></td>
+</tr>
+<tr>
+<td><strong>SWR-271</strong></td>
+<td><code>ac_busy_hall_service</code>, <code>ac_busy_regulate</code>, <code>bp_drive_window</code>, <code>try_kick_start</code></td>
+</tr>
+<tr>
+<td><strong>SWR-289</strong></td>
+<td><code>ac_busy_regulate</code>, <code>bp_drive_window</code></td>
+</tr>
+</tbody>
+</table>
+<p>Also: <code>TestAdaptiveKickStart.setUpClass</code> binds <code>try_kick_start</code>, so <strong>every</strong> test in that
+class is analysing the retired kick rather than the per-pass <code>try_kick_pass</code> that 1.17.0
+actually uses.</p>
+<p><strong>Important distinction.</strong> This does <em>not</em> mean the requirements are violated. In most cases
+the fold satisfies the intent <em>more</em> strongly than the code being asserted on — SWR-271 (AC
+must be serviced during BP operations) is the clearest example: the fold services <code>ac_tick()</code>
+on <strong>every loop pass in every state</strong>, which is strictly better than the <code>ac_busy_regulate</code>
+hack the test looks for. SWR-289 likewise: hall is serviced at the top of every pass in every
+state, versus the per-window calls the test asserts. What is missing is <strong>evidence</strong>, not
+necessarily <strong>conformance</strong>.</p>
+<p><strong>Recommended remedy</strong> (requires owner sign-off — the registry is locked, SWR-511):
+re-point these tests at the fold constructs (<code>seg_pass</code>, <code>try_kick_pass</code>, the loop-top
+<code>bp_hall_edge_service</code>, <code>sched_idle</code>) and, better, make the source tests <strong>build-aware</strong> so
+they analyse only the code that survives <code>ULP_FOLD_BUILD</code>. Until that is done, treat these 7
+as <em>unverified on 1.17.0</em> regardless of the green suite.</p>
+<hr />
+<h2 id="c-requirements-with-no-automated-verification-at-all-22-not-tested">C. Requirements with no automated verification at all (22 NOT-TESTED)</h2>
+<p>Unchanged by this promotion — these were already NOT-TESTED — but several are exactly the
+behaviours the fold rewrote, so they matter more than usual here.</p>
+<p><strong>Bench/hardware (MECH) — the fold rewrote the code behind all of these:</strong>
+SWR-111 (no-start kick escalation), SWR-113 (running-stall recovery), SWR-120 (park at hall-zone
+centre), SWR-121 (dose handshake with coast capture), SWR-122 (AC bench convergence),
+SWR-123 (BP bench convergence), SWR-124 (AC slow-setpoint stability), SWR-125 (live sensors).</p>
+<p><strong>Deploy/self-test (MECH):</strong> SWR-504, SWR-505, SWR-506, SWR-507.</p>
+<p><strong>Software, untested:</strong> SWR-240, SWR-242, SWR-282, SWR-284, SWR-293 (WITHDRAWN), SWR-298.</p>
+<p><strong>Hub REST (separate repo):</strong> SWR-401, SWR-402, SWR-403, SWR-404.</p>
+<hr />
+<h2 id="d-what-the-live-20-sample-dry-run-contributes">D. What the live 20-sample dry run contributes</h2>
+<p>Run <strong>2026-07-25-001</strong> (see <code>testlog/</code>) is the first session-level evidence for 1.17.0 and
+covers, as <em>live</em> rather than static evidence:</p>
 <ul>
-<li>44 h battery endurance run, <strong>USB DISCONNECTED</strong>: thousands of naps,
-  <strong>zero</strong> watchdog resets.</li>
-<li>Every USB-attached campaign: ~1 in 13 sample-ends.</li>
+<li><strong>Calibration</strong> — the rewired <code>test_request = TEST_DETERMINE_PARKING</code> → <code>BP_PARK_CAL</code> →
+  <code>TEST_NONE</code> contract, driven by unmodified firmware (SWR-119/120/129 territory).
+  Already observed: <strong>passed on attempt 2, failed attempt 1 with <code>bp-no-full-rev</code></strong> — logged
+  as a major deviation, not yet root-caused.</li>
+<li><strong>Dose + park + coast</strong> per sample ×20 (SWR-121 territory), <strong>BP/AC regulation</strong>
+  (SWR-122/123), <strong>kick escalation</strong> from the parked dead-point (SWR-111/132).</li>
+<li><strong>Hall/deque completeness</strong> with <code>DEQUE_AUDIT=1</code> already enabled on the board (SWR-289) —
+  the live counterpart to the static evidence lost in category B.</li>
+<li><strong>Stability</strong>: reboot/WDT count with USB <strong>detached</strong>, so any reset is a real finding and
+  not the known #46 USB-attached bench artifact.</li>
 </ul>
-<p>Same firmware family, same nap code, same motors — the attached
-non-draining host is the only variable that tracks the failure.</p>
-<h2 id="diagnostic-infrastructure-built-retained-permanent">Diagnostic infrastructure built (retained, permanent)</h2>
+<p>A clean 20/20 does <strong>not</strong> close category B — static evidence and live evidence answer
+different questions — but it is the strongest available evidence that the promoted scheduler
+performs the operations those requirements govern.</p>
+<hr />
+<h2 id="bottom-line">Bottom line</h2>
 <ul>
-<li><strong>SWR-293 breadcrumb</strong> (ULP 1.14.0 <code>cpu_breadcrumb</code> + fw 0.1.120+): a
-  CPU-owned word inside the ULP's mapped region, survives WDT resets,
-  captured by the loader before the image reload wipes it, surfaced in
-  the <code>Boot: reset cause</code> event as <code>breadcrumb=&lt;step&gt;</code>. Steps 1–13 name
-  the site; 20–24 walk the nap path line by line.</li>
-<li>Rev 1 (RTC user memory) was WITHDRAWN — it collided with the ULP and
-    froze the parking path. Lesson recorded in the requirement: liveness
-    ticks + canary are NOT sufficient to exonerate a shared-RAM write;
-    the parking path must be exercised.</li>
-<li><strong>SWR-292</strong> commit-before-IDLE: verified across all four campaigns —
-  <strong>zero audit-trail loss</strong> through every reset.</li>
+<li>Nothing FAILS.</li>
+<li><strong>7 requirements (SWR-109, 116, 126, 127, 128, 271, 289) are green against code the shipping
+  binary does not contain</strong> — the one thing a reader of "143 PASS / 0 FAIL" would not guess,
+  and the item that most deserves owner attention.</li>
+<li>22 remain NOT-TESTED, 8 of them bench behaviours the fold rewrote.</li>
+<li>Fixing category B means editing requirement-tagged tests, which is owner-gated.</li>
 </ul>
-<h2 id="not-fixed-deliberately">Not fixed, deliberately</h2>
-<p>fw 0.1.123 (commit <code>a76d64f</code>, gate green, <strong>undeployed</strong>) implements the
-console-silent nap path + latched-sink veto. Deploy it only if quieter
-bench runs are wanted; it is not a product fix.</p>
-<h2 id="bench-protocol">Bench protocol</h2>
-<p>Long USB-attached sessions will show ~1-in-13 self-recovered WDT resets.
-Recovery is exact and no data is lost. Detach USB for clean runs, or
-accept them.</p>
-<h2 id="reopen-if">Reopen if</h2>
-<p>A WDT(3) appears on a device with <strong>no USB attached</strong> — then read the
-boot event's <code>breadcrumb</code> and follow the step map.</p>
 
 
 

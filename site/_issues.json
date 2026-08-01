@@ -1,5 +1,156 @@
 [
  {
+  "number": 67,
+  "title": "Session-entry WDT(3): reboot fires between 'Sample N scheduled' and 'Entering session loop' (flash write + power-save arm + hot radio) — 2 of last 3 entries; masked by seamless recovery",
+  "state": "OPEN",
+  "created": "2026-07-31",
+  "closed": null,
+  "seen_on": null,
+  "fix": null,
+  "fw": null,
+  "ulp": null,
+  "image": null,
+  "hub": null,
+  "swrs": [
+   "SWR-257",
+   "SWR-295"
+  ]
+ },
+ {
+  "number": 66,
+  "title": "SWR-324d loading deadline armed at preload entry — every >5-min-cadence scheduled sample abandoned seconds BEFORE its own schedule (fw 0.1.157/158; fixed 0.1.159)",
+  "state": "CLOSED",
+  "created": "2026-07-31",
+  "closed": "2026-07-31",
+  "seen_on": null,
+  "fix": null,
+  "fw": null,
+  "ulp": null,
+  "image": null,
+  "hub": null,
+  "swrs": [
+   "SWR-324",
+   "SWR-325"
+  ]
+ },
+ {
+  "number": 65,
+  "title": "Power-restore resume of run 011 was consumed by the queued reset_session — conclude-while-dead protocol + overdue catch-up policy",
+  "state": "CLOSED",
+  "created": "2026-07-30",
+  "closed": "2026-07-30",
+  "seen_on": null,
+  "fix": null,
+  "fw": null,
+  "ulp": null,
+  "image": null,
+  "hub": null,
+  "swrs": [
+   "SWR-257",
+   "SWR-258",
+   "SWR-324"
+  ]
+ },
+ {
+  "number": 64,
+  "title": "Hub: no Session Report for sessions that never reach FINISH — reports required for EVERY session ending (power loss, reset, supersede)",
+  "state": "CLOSED",
+  "created": "2026-07-30",
+  "closed": "2026-07-30",
+  "seen_on": null,
+  "fix": null,
+  "fw": null,
+  "ulp": null,
+  "image": null,
+  "hub": null,
+  "swrs": []
+ },
+ {
+  "number": 63,
+  "title": "Boot unconditionally rewrites the MCP79410 RTC to 2000-01-01 — battery-backed wall clock silently discarded every boot",
+  "state": "OPEN",
+  "created": "2026-07-30",
+  "closed": null,
+  "seen_on": null,
+  "fix": null,
+  "fw": null,
+  "ulp": null,
+  "image": null,
+  "hub": null,
+  "swrs": [
+   "SWR-256",
+   "SWR-295"
+  ]
+ },
+ {
+  "number": 62,
+  "title": "Session pump-revolution statistics corrupt across warm-boot attach (BP over-counts, AC under-counts)",
+  "state": "CLOSED",
+  "created": "2026-07-28",
+  "closed": "2026-07-28",
+  "seen_on": null,
+  "fix": null,
+  "fw": null,
+  "ulp": null,
+  "image": null,
+  "hub": null,
+  "swrs": [
+   "SWR-318"
+  ]
+ },
+ {
+  "number": 61,
+  "title": "Post-recovery dose wedge: 'Collecting' then silence — CPU alive, BP_DOSING never armed; AC kept pumping via ULP autonomy (session 25)",
+  "state": "CLOSED",
+  "created": "2026-07-28",
+  "closed": "2026-07-30",
+  "seen_on": "fw 0.1.148 + ULP TestOp dev.0.23 + image v0.1.147-img6, session 25, USB power (battery pack disconnected), 2026-07-28 ~14:04-14:35 UTC.",
+  "fix": null,
+  "fw": "0.1.148",
+  "ulp": "dev.0.23",
+  "image": null,
+  "hub": null,
+  "swrs": [
+   "SWR-246"
+  ]
+ },
+ {
+  "number": 60,
+  "title": "AC pump must keep pumping across in-session reboots (clotting risk) — attach-don't-restart boot + wait-out-the-busy-task WDT",
+  "state": "CLOSED",
+  "created": "2026-07-28",
+  "closed": "2026-07-28",
+  "seen_on": null,
+  "fix": null,
+  "fw": null,
+  "ulp": null,
+  "image": null,
+  "hub": null,
+  "swrs": [
+   "SWR-215",
+   "SWR-250",
+   "SWR-274",
+   "SWR-295"
+  ]
+ },
+ {
+  "number": 59,
+  "title": "#46 playbook is inert: crumb=0 on all 3 battery WDTs — stamping opt-in + no checkpoint at the death window + ids reused across versions",
+  "state": "OPEN",
+  "created": "2026-07-28",
+  "closed": null,
+  "seen_on": "fw 0.1.143 + ULP TestOp dev.0.22, run 2026-07-27-004 (session 22), battery, USB detached, 2026-07-27/28. Blocks the playbook in #46.",
+  "fix": null,
+  "fw": "0.1.143",
+  "ulp": "dev.0.22",
+  "image": null,
+  "hub": null,
+  "swrs": [
+   "SWR-292",
+   "SWR-293"
+  ]
+ },
+ {
   "number": 58,
   "title": "Recovery resumes on a stale-but-plausible clock — schedule runs hours behind wall time, sanity gates pass it",
   "state": "OPEN",
@@ -65,9 +216,9 @@
  {
   "number": 54,
   "title": "IMG-4 runtime image freezes main.py — filesystem /main.py NEVER executes; every main.py deploy since 2026-07-16 was silently dead",
-  "state": "OPEN",
+  "state": "CLOSED",
   "created": "2026-07-23",
-  "closed": null,
+  "closed": "2026-07-30",
   "seen_on": "IMG-4 v1.25.0-12.ga83202261 (2026-07-16) + fw 0.1.132/0.1.133 (2026-07-23 discovery)",
   "fix": null,
   "fw": "0.1.132",
@@ -79,9 +230,9 @@
  {
   "number": 53,
   "title": "WDT(3) BOOT LOOP on battery in AWAIT_CALIBRATION: reboot every 1.5-4 min, board cannot leave the acquire state — highest-rate WDT manifestation yet",
-  "state": "OPEN",
+  "state": "CLOSED",
   "created": "2026-07-23",
-  "closed": null,
+  "closed": "2026-07-28",
   "seen_on": null,
   "fix": null,
   "fw": null,
@@ -96,9 +247,9 @@
  {
   "number": 52,
   "title": "Session recovery without NTP resumes on a year-2000 clock — schedule becomes unreachable, session silently stops dosing",
-  "state": "OPEN",
+  "state": "CLOSED",
   "created": "2026-07-23",
-  "closed": null,
+  "closed": "2026-07-30",
   "seen_on": null,
   "fix": null,
   "fw": null,
@@ -144,9 +295,9 @@
  {
   "number": 49,
   "title": "SWR-258 AC-first enforcement waits UNBOUNDED for AC revolutions — a pump-dead ULP wedges the session forever at sample 0",
-  "state": "OPEN",
+  "state": "CLOSED",
   "created": "2026-07-23",
-  "closed": null,
+  "closed": "2026-07-30",
   "seen_on": "fw 0.1.130 + TestOp dev.0.5 (2026-07-23, wedges 04:53 + 07:03); the unbounded-wait path itself ships since the SWR-258 enforcement (fw 0.1.11x)",
   "fix": null,
   "fw": "0.1.130, 0.1.11",
@@ -160,9 +311,9 @@
  {
   "number": 48,
   "title": "Motors run wild after USB-attached reboots: global RTC-pad register-clock gate blinds the ULP (encoder + enables dead)",
-  "state": "OPEN",
+  "state": "CLOSED",
   "created": "2026-07-23",
-  "closed": null,
+  "closed": "2026-07-28",
   "seen_on": "fw 0.1.126–0.1.130 + fw 0.1.140 (battery re-occurrence 2026-07-23: PWRON boot at USB unplug, AC blind from the calibration→AC-bag boundary, SPR 7 + SPR 20 kick-retry stagger), TestOp dev.0.1–dev.0.6, operational ULP 1.15.0 (map fnv 0xc5bd43c1), runtime image v1.25.0-12.ga83202261 (IMG-4, 2026-07-16), hub service 1.14.1–1.14.3, board overlay DEQUE_AUDIT=1 (hash b895f748), battery + USB power (2026-07-20..23)",
   "fix": "fix: TestOp dev.0.6 tick-top DEFEND_CLOCK (retired — caused #53, op ULP 1.16.0 patch quarantined) → CPU-side pad-clock defense fw 0.1.142 per SWR-299 (2026-07-23; acceptance in progress: 3 recovery-boot motor trials + ≥2 h radio-hot soak), TestOp dev track per SWR-114",
   "fw": "0.1.126–0.1.130, 0.1.140",
@@ -177,9 +328,9 @@
  {
   "number": 47,
   "title": "ULP liveness != ability to drive a pump (DAC latch class) — diagnosis shipped, reload escalation refuted",
-  "state": "OPEN",
+  "state": "CLOSED",
   "created": "2026-07-19",
-  "closed": null,
+  "closed": "2026-07-30",
   "seen_on": "fw 0.1.125, ULP 1.13.0 (2026-07-20); latch class first seen 2026-06-27 (#29)",
   "fix": null,
   "fw": "0.1.125",
@@ -212,9 +363,9 @@
  {
   "number": 45,
   "title": "Resumed session is silent, unreachable and never doses: no syncs, no store commits, load never completes",
-  "state": "OPEN",
+  "state": "CLOSED",
   "created": "2026-07-09",
-  "closed": null,
+  "closed": "2026-07-30",
   "seen_on": "fw 0.1.103 (2026-07-09); probable root cause identified 2026-07-23 = #52 (recovery on an unsynced year-2000 clock)",
   "fix": null,
   "fw": "0.1.103",
@@ -230,9 +381,9 @@
  {
   "number": 44,
   "title": "WDT reset seconds after SESSION entry (recurring session-start reboot class — now with hard evidence)",
-  "state": "OPEN",
+  "state": "CLOSED",
   "created": "2026-07-09",
-  "closed": null,
+  "closed": "2026-07-30",
   "seen_on": "fw 0.1.103 (2026-07-09)",
   "fix": "SWR-265 serialization fix fw 0.1.104, field-proven 20/20 zero resets 2026-07-13 — candidate for closure on owner confirmation",
   "fw": "0.1.103",
@@ -246,9 +397,9 @@
  {
   "number": 43,
   "title": "Unpersisted-session window at SESSION entry: reset during entry sync silently loses the session",
-  "state": "OPEN",
+  "state": "CLOSED",
   "created": "2026-07-09",
-  "closed": null,
+  "closed": "2026-07-30",
   "seen_on": "fw 0.1.103 (2026-07-09); commit-before-IDLE (SWR-292) landed fw 0.1.118 — the entry-window remainder is what stays open",
   "fix": null,
   "fw": "0.1.103, 0.1.118",
@@ -328,9 +479,9 @@
  {
   "number": 38,
   "title": "MicroPython image: ULP-RISCV wake never cuts machine.lightsleep short (suspected CONFIG_ULP_COPROC_TYPE choice in the S3 build)",
-  "state": "OPEN",
+  "state": "CLOSED",
   "created": "2026-07-08",
-  "closed": null,
+  "closed": "2026-07-28",
   "seen_on": "fw 0.1.91-0.1.96, MicroPython image runtime v1.25.0-8 (2026-07-08); wake_on_ulp proven dead, EXT1 hall-pin wake is the workaround since fw 0.1.96",
   "fix": null,
   "fw": "0.1.91-0.1.96, 0.1.96",
@@ -344,9 +495,9 @@
  {
   "number": 37,
   "title": "Device/Hub stops syncing or loses connection during session; hub intermittently returns Internal Server Error",
-  "state": "OPEN",
+  "state": "CLOSED",
   "created": "2026-07-06",
-  "closed": null,
+  "closed": "2026-07-30",
   "seen_on": "fw 0.1.9x, hub 1.1.x (2026-07-06); overlaps the #50 dark-boot class",
   "fix": null,
   "fw": "0.1.9",
@@ -449,9 +600,9 @@
  {
   "number": 30,
   "title": "BP fails to start at hard rotor positions (compression arc; dead-center fails at full power)",
-  "state": "OPEN",
+  "state": "CLOSED",
   "created": "2026-07-03",
-  "closed": null,
+  "closed": "2026-07-30",
   "seen_on": "fw ~0.1.73, ULP Test2 1.4.1 (2026-07-03 A/B bench); dead-point-park interaction proven 2026-07-13",
   "fix": null,
   "fw": null,
@@ -463,9 +614,9 @@
  {
   "number": 29,
   "title": "Crash latches DAC7574 — soft/WDT reset cannot recover the blood pump (power-cycle only)",
-  "state": "OPEN",
+  "state": "CLOSED",
   "created": "2026-07-03",
-  "closed": null,
+  "closed": "2026-07-30",
   "seen_on": "fw 0.1.7x, ULP 1.4.0 (2026-07-03; DAC7574-latch class present since ~2026-06-27)",
   "fix": null,
   "fw": "0.1.7",
@@ -477,9 +628,9 @@
  {
   "number": 28,
   "title": "Device allows start of session even if calibration of Park fails",
-  "state": "OPEN",
+  "state": "CLOSED",
   "created": "2026-07-03",
-  "closed": null,
+  "closed": "2026-07-30",
   "seen_on": "fw ~0.1.73 (2026-07-03)",
   "fix": null,
   "fw": null,
@@ -491,9 +642,9 @@
  {
   "number": 27,
   "title": "AC must be under active control during Dose and Park",
-  "state": "OPEN",
+  "state": "CLOSED",
   "created": "2026-07-03",
-  "closed": null,
+  "closed": "2026-07-30",
   "seen_on": "fw ~0.1.73, ULP 1.4.0 (2026-07-03); design gap, unchanged through ULP 1.15.0",
   "fix": null,
   "fw": null,
@@ -505,9 +656,9 @@
  {
   "number": 26,
   "title": "Resume session on fail not working",
-  "state": "OPEN",
+  "state": "CLOSED",
   "created": "2026-07-03",
-  "closed": null,
+  "closed": "2026-07-30",
   "seen_on": "fw ~0.1.73, ULP 1.3.3-1.4.0 (2026-07-03 bench)",
   "fix": null,
   "fw": null,

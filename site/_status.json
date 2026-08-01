@@ -1,26 +1,68 @@
 {
- "generated_at": "2026-07-24T17:02:40+00:00",
- "firmware_version": "0.1.142",
- "ulp_operational": "1.15.0",
+ "generated_at": "2026-08-01T10:55:06+00:00",
+ "firmware_version": "0.1.161",
+ "ulp_operational": "1.24.2",
  "hub_service": null,
  "requirements": {
-  "doc_version": "1.93",
-  "total": 165
+  "doc_version": "1.102",
+  "total": 176
  },
  "ci": [
-  {
-   "workflowName": "Documentation",
-   "headBranch": "dev",
-   "conclusion": "",
-   "status": "in_progress",
-   "updatedAt": "2026-07-24T17:02:16Z"
-  },
   {
    "workflowName": "ci",
    "headBranch": "dev",
    "conclusion": "",
    "status": "in_progress",
-   "updatedAt": "2026-07-24T17:02:17Z"
+   "updatedAt": "2026-08-01T10:54:52Z"
+  },
+  {
+   "workflowName": "Documentation",
+   "headBranch": "dev",
+   "conclusion": "",
+   "status": "in_progress",
+   "updatedAt": "2026-08-01T10:54:44Z"
+  },
+  {
+   "workflowName": "Build",
+   "headBranch": "v0.1.147-img6",
+   "conclusion": "success",
+   "status": "completed",
+   "updatedAt": "2026-07-28T11:33:35Z"
+  },
+  {
+   "workflowName": "Build",
+   "headBranch": "v0.1.145-img5",
+   "conclusion": "success",
+   "status": "completed",
+   "updatedAt": "2026-07-28T10:25:44Z"
+  },
+  {
+   "workflowName": "Build",
+   "headBranch": "v0.1.145-img5",
+   "conclusion": "failure",
+   "status": "completed",
+   "updatedAt": "2026-07-28T10:13:57Z"
+  },
+  {
+   "workflowName": "Build",
+   "headBranch": "v0.1.145-img5",
+   "conclusion": "failure",
+   "status": "completed",
+   "updatedAt": "2026-07-28T10:03:55Z"
+  },
+  {
+   "workflowName": "Documentation",
+   "headBranch": "dev",
+   "conclusion": "success",
+   "status": "completed",
+   "updatedAt": "2026-07-24T17:02:48Z"
+  },
+  {
+   "workflowName": "ci",
+   "headBranch": "dev",
+   "conclusion": "failure",
+   "status": "completed",
+   "updatedAt": "2026-07-24T17:05:00Z"
   },
   {
    "workflowName": "ci",
@@ -49,54 +91,12 @@
    "conclusion": "failure",
    "status": "completed",
    "updatedAt": "2026-07-23T19:44:47Z"
-  },
-  {
-   "workflowName": "Documentation",
-   "headBranch": "dev",
-   "conclusion": "success",
-   "status": "completed",
-   "updatedAt": "2026-07-23T17:27:01Z"
-  },
-  {
-   "workflowName": "ci",
-   "headBranch": "dev",
-   "conclusion": "failure",
-   "status": "completed",
-   "updatedAt": "2026-07-23T17:29:26Z"
-  },
-  {
-   "workflowName": "ci",
-   "headBranch": "dev",
-   "conclusion": "failure",
-   "status": "completed",
-   "updatedAt": "2026-07-23T17:01:04Z"
-  },
-  {
-   "workflowName": "Documentation",
-   "headBranch": "dev",
-   "conclusion": "success",
-   "status": "completed",
-   "updatedAt": "2026-07-23T16:58:18Z"
-  },
-  {
-   "workflowName": "Documentation",
-   "headBranch": "dev",
-   "conclusion": "failure",
-   "status": "completed",
-   "updatedAt": "2026-07-23T16:48:47Z"
-  },
-  {
-   "workflowName": "ci",
-   "headBranch": "dev",
-   "conclusion": "failure",
-   "status": "completed",
-   "updatedAt": "2026-07-23T16:51:20Z"
   }
  ],
  "latest_commit": {
-  "hash": "9c102de943b88e2bf1766fc6e88a794f8519f2ea",
-  "date": "2026-07-24",
-  "subject": "Merge: docs issues page — dry-run findings",
-  "body": ""
+  "hash": "ffb1f85f79ff82218f54fa26bd56061a5913faee",
+  "date": "2026-08-01",
+  "subject": "Verification Status report (reqs vs tested vs verified vs version) + spec 2.33",
+  "body": "NEW verification/gen_verification_status.py — the owner-asked evidence\nreport. Scores every requirement into four levels from machine-read\nsources only (registry + reports/report.json + testlog/test_runs.db):\nNOT TESTED, TESTED (automated CI test = a claim check against the\nsource), BENCH-TESTED (board-driving tests_mech suite), FIELD-VERIFIED\n(a CONCLUDED testlog run cites the ID — real hardware), and stamps each\nhardware proof with the firmware version of the run that produced it.\nAlso emits the locked-but-no-hardware-evidence gap list and a\nprovenance caveat (a suite=sw report cannot yield BENCH results, so\nthat 0 is a statement about the run, not the bench suite). Outputs\ndocs/fluispotter_verification_status.html + reports/\nverification_status.json; wired into `make verify` and a standalone\n`make verification-status`.\n\nAt fw 0.1.161 / DOC 1.102: 176 requirements, 155 tested, 21\nFIELD-VERIFIED, 21 untested.\n\nLocal site: the report is listed on the Requirements page and its\nheadline appears on the front-page status card (docs/site/\n_refresh_data.py now folds the rollup into _status.json; _build_site.py\nrenders it and registers the document).\n\nSpec repo 2.33: new §5.6.5 Session Robustness — Bounded Waits,\nDeadlines & Entry Ordering (SWR-324/325/326/327), covering the\nsilent-wedge closure, the field-found loading-deadline anchor defect\n(#66) with the \"cadence is a test dimension\" rule, catch-up policy,\nthe recovery forfeit trail, and the entry kick-settle (#67, tripwire\narmed). Restored the missing TOC entries for 5.6.3/5.6.4/5.6.5. .docx\nregenerated; Drive copy updated in place.\n\nmake verify: 176 requirements, 153 PASS / 0 FAIL.\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
  }
 }

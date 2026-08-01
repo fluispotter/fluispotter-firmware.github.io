@@ -35,6 +35,42 @@
 <tr><th>#</th><th>Title</th><th>State</th><th>Opened</th><th>Firmware</th>
 <th>ULP</th><th>Image</th><th>Hub</th><th>Requirements</th><th>Fix</th></tr>
 <tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/67">#67</a></td>
+  <td class="issue-title">Session-entry WDT(3): reboot fires between &#x27;Sample N scheduled&#x27; and &#x27;Entering session loop&#x27; (flash write + power-save arm + hot radio) — 2 of last 3 entries; masked by seamless recovery</td>
+  <td><span class="ci-badge warn">OPEN</span></td>
+  <td>2026-07-31</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td class="issue-swrs">SWR-257, SWR-295</td>
+  <td class="issue-fix">&mdash;</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/63">#63</a></td>
+  <td class="issue-title">Boot unconditionally rewrites the MCP79410 RTC to 2000-01-01 — battery-backed wall clock silently discarded every boot</td>
+  <td><span class="ci-badge warn">OPEN</span></td>
+  <td>2026-07-30</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td class="issue-swrs">SWR-256, SWR-295</td>
+  <td class="issue-fix">&mdash;</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/59">#59</a></td>
+  <td class="issue-title">#46 playbook is inert: crumb=0 on all 3 battery WDTs — stamping opt-in + no checkpoint at the death window + ids reused across versions</td>
+  <td><span class="ci-badge warn">OPEN</span></td>
+  <td>2026-07-28</td>
+  <td>0.1.143</td>
+  <td>dev.0.22</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td class="issue-swrs">SWR-292, SWR-293</td>
+  <td class="issue-fix">&mdash;</td>
+</tr>
+<tr>
   <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/58">#58</a></td>
   <td class="issue-title">Recovery resumes on a stale-but-plausible clock — schedule runs hours behind wall time, sanity gates pass it</td>
   <td><span class="ci-badge warn">OPEN</span></td>
@@ -83,42 +119,6 @@
   <td class="issue-fix">related class previously on ULP 1.12.0 (2026-07-18); fix: none yet — needs its own investigation (stall-window/kick tuning for SPR 20 dry)</td>
 </tr>
 <tr>
-  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/54">#54</a></td>
-  <td class="issue-title">IMG-4 runtime image freezes main.py — filesystem /main.py NEVER executes; every main.py deploy since 2026-07-16 was silently dead</td>
-  <td><span class="ci-badge warn">OPEN</span></td>
-  <td>2026-07-23</td>
-  <td>0.1.132</td>
-  <td>&mdash;</td>
-  <td>IMG-4 v1.25.0-12.ga83202261 (2026-07-16</td>
-  <td>&mdash;</td>
-  <td class="issue-swrs">&mdash;</td>
-  <td class="issue-fix">&mdash;</td>
-</tr>
-<tr>
-  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/53">#53</a></td>
-  <td class="issue-title">WDT(3) BOOT LOOP on battery in AWAIT_CALIBRATION: reboot every 1.5-4 min, board cannot leave the acquire state — highest-rate WDT manifestation yet</td>
-  <td><span class="ci-badge warn">OPEN</span></td>
-  <td>2026-07-23</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td class="issue-swrs">SWR-246, SWR-293</td>
-  <td class="issue-fix">&mdash;</td>
-</tr>
-<tr>
-  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/52">#52</a></td>
-  <td class="issue-title">Session recovery without NTP resumes on a year-2000 clock — schedule becomes unreachable, session silently stops dosing</td>
-  <td><span class="ci-badge warn">OPEN</span></td>
-  <td>2026-07-23</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td class="issue-swrs">SWR-255, SWR-256, SWR-293</td>
-  <td class="issue-fix">&mdash;</td>
-</tr>
-<tr>
   <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/50">#50</a></td>
   <td class="issue-title">Recurring dark-boot: boot completes but WiFi/sync never comes up — device invisible to the hub for hours (3 episodes)</td>
   <td><span class="ci-badge warn">OPEN</span></td>
@@ -131,42 +131,6 @@
   <td class="issue-fix">&mdash;</td>
 </tr>
 <tr>
-  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/49">#49</a></td>
-  <td class="issue-title">SWR-258 AC-first enforcement waits UNBOUNDED for AC revolutions — a pump-dead ULP wedges the session forever at sample 0</td>
-  <td><span class="ci-badge warn">OPEN</span></td>
-  <td>2026-07-23</td>
-  <td>0.1.130, 0.1.11</td>
-  <td>dev.0.5</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td class="issue-swrs">SWR-258</td>
-  <td class="issue-fix">&mdash;</td>
-</tr>
-<tr>
-  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/48">#48</a></td>
-  <td class="issue-title">Motors run wild after USB-attached reboots: global RTC-pad register-clock gate blinds the ULP (encoder + enables dead)</td>
-  <td><span class="ci-badge warn">OPEN</span></td>
-  <td>2026-07-23</td>
-  <td>0.1.126–0.1.130, 0.1.140</td>
-  <td>dev.0.1–dev.0.6, 1.15.0</td>
-  <td>v1.25.0-12.ga83202261, IMG-4</td>
-  <td>1.14.1–1.14.3</td>
-  <td class="issue-swrs">SWR-114, SWR-299</td>
-  <td class="issue-fix">fix: TestOp dev.0.6 tick-top DEFEND_CLOCK (retired — caused #53, op ULP 1.16.0 patch quarantined) → CPU-side pad-clock defense fw 0.1.142 per SWR-299 (2026-07-23; acceptance in progress: 3 recovery-boot motor trials + ≥2 h radio-hot soak), TestOp dev track per SWR-114</td>
-</tr>
-<tr>
-  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/47">#47</a></td>
-  <td class="issue-title">ULP liveness != ability to drive a pump (DAC latch class) — diagnosis shipped, reload escalation refuted</td>
-  <td><span class="ci-badge warn">OPEN</span></td>
-  <td>2026-07-19</td>
-  <td>0.1.125</td>
-  <td>1.13.0</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td class="issue-swrs">SWR-257</td>
-  <td class="issue-fix">&mdash;</td>
-</tr>
-<tr>
   <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/46">#46</a></td>
   <td class="issue-title">REOPENED: WDT(3) at machine.lightsleep entry — fires on BATTERY with USB DETACHED (field-exposed)</td>
   <td><span class="ci-badge warn">OPEN</span></td>
@@ -176,42 +140,6 @@
   <td>&mdash;</td>
   <td>&mdash;</td>
   <td class="issue-swrs">SWR-265, SWR-274, SWR-292, SWR-293</td>
-  <td class="issue-fix">&mdash;</td>
-</tr>
-<tr>
-  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/45">#45</a></td>
-  <td class="issue-title">Resumed session is silent, unreachable and never doses: no syncs, no store commits, load never completes</td>
-  <td><span class="ci-badge warn">OPEN</span></td>
-  <td>2026-07-09</td>
-  <td>0.1.103</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td class="issue-swrs">SWR-246, SWR-257, SWR-258</td>
-  <td class="issue-fix">&mdash;</td>
-</tr>
-<tr>
-  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/44">#44</a></td>
-  <td class="issue-title">WDT reset seconds after SESSION entry (recurring session-start reboot class — now with hard evidence)</td>
-  <td><span class="ci-badge warn">OPEN</span></td>
-  <td>2026-07-09</td>
-  <td>0.1.103</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td class="issue-swrs">SWR-265</td>
-  <td class="issue-fix">SWR-265 serialization fix fw 0.1.104, field-proven 20/20 zero resets 2026-07-13 — candidate for closure on owner confirmation</td>
-</tr>
-<tr>
-  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/43">#43</a></td>
-  <td class="issue-title">Unpersisted-session window at SESSION entry: reset during entry sync silently loses the session</td>
-  <td><span class="ci-badge warn">OPEN</span></td>
-  <td>2026-07-09</td>
-  <td>0.1.103, 0.1.118</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td class="issue-swrs">SWR-292</td>
   <td class="issue-fix">&mdash;</td>
 </tr>
 <tr>
@@ -260,30 +188,6 @@
   <td>&mdash;</td>
   <td>&mdash;</td>
   <td class="issue-swrs">SWR-236, SWR-245</td>
-  <td class="issue-fix">&mdash;</td>
-</tr>
-<tr>
-  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/38">#38</a></td>
-  <td class="issue-title">MicroPython image: ULP-RISCV wake never cuts machine.lightsleep short (suspected CONFIG_ULP_COPROC_TYPE choice in the S3 build)</td>
-  <td><span class="ci-badge warn">OPEN</span></td>
-  <td>2026-07-08</td>
-  <td>0.1.91-0.1.96, 0.1.96</td>
-  <td>&mdash;</td>
-  <td>v1.25.0-8</td>
-  <td>&mdash;</td>
-  <td class="issue-swrs">SWR-251</td>
-  <td class="issue-fix">&mdash;</td>
-</tr>
-<tr>
-  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/37">#37</a></td>
-  <td class="issue-title">Device/Hub stops syncing or loses connection during session; hub intermittently returns Internal Server Error</td>
-  <td><span class="ci-badge warn">OPEN</span></td>
-  <td>2026-07-06</td>
-  <td>0.1.9</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td>1.1</td>
-  <td class="issue-swrs">SWR-236</td>
   <td class="issue-fix">&mdash;</td>
 </tr>
 <tr>
@@ -359,66 +263,6 @@
   <td class="issue-fix">&mdash;</td>
 </tr>
 <tr>
-  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/30">#30</a></td>
-  <td class="issue-title">BP fails to start at hard rotor positions (compression arc; dead-center fails at full power)</td>
-  <td><span class="ci-badge warn">OPEN</span></td>
-  <td>2026-07-03</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td class="issue-swrs">&mdash;</td>
-  <td class="issue-fix">&mdash;</td>
-</tr>
-<tr>
-  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/29">#29</a></td>
-  <td class="issue-title">Crash latches DAC7574 — soft/WDT reset cannot recover the blood pump (power-cycle only)</td>
-  <td><span class="ci-badge warn">OPEN</span></td>
-  <td>2026-07-03</td>
-  <td>0.1.7</td>
-  <td>1.4.0</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td class="issue-swrs">&mdash;</td>
-  <td class="issue-fix">&mdash;</td>
-</tr>
-<tr>
-  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/28">#28</a></td>
-  <td class="issue-title">Device allows start of session even if calibration of Park fails</td>
-  <td><span class="ci-badge warn">OPEN</span></td>
-  <td>2026-07-03</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td class="issue-swrs">&mdash;</td>
-  <td class="issue-fix">&mdash;</td>
-</tr>
-<tr>
-  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/27">#27</a></td>
-  <td class="issue-title">AC must be under active control during Dose and Park</td>
-  <td><span class="ci-badge warn">OPEN</span></td>
-  <td>2026-07-03</td>
-  <td>&mdash;</td>
-  <td>1.4.0, 1.15.0</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td class="issue-swrs">&mdash;</td>
-  <td class="issue-fix">&mdash;</td>
-</tr>
-<tr>
-  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/26">#26</a></td>
-  <td class="issue-title">Resume session on fail not working</td>
-  <td><span class="ci-badge warn">OPEN</span></td>
-  <td>2026-07-03</td>
-  <td>&mdash;</td>
-  <td>1.3.3-1.4.0</td>
-  <td>&mdash;</td>
-  <td>&mdash;</td>
-  <td class="issue-swrs">&mdash;</td>
-  <td class="issue-fix">&mdash;</td>
-</tr>
-<tr>
   <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/17">#17</a></td>
   <td class="issue-title">Stream data from device to hub (same as event syncing)</td>
   <td><span class="ci-badge warn">OPEN</span></td>
@@ -428,6 +272,114 @@
   <td>&mdash;</td>
   <td>1.14.1</td>
   <td class="issue-swrs">&mdash;</td>
+  <td class="issue-fix">&mdash;</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/66">#66</a></td>
+  <td class="issue-title">SWR-324d loading deadline armed at preload entry — every &gt;5-min-cadence scheduled sample abandoned seconds BEFORE its own schedule (fw 0.1.157/158; fixed 0.1.159)</td>
+  <td><span class="ci-badge ok">CLOSED</span></td>
+  <td>2026-07-31</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td class="issue-swrs">SWR-324, SWR-325</td>
+  <td class="issue-fix">&mdash;</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/65">#65</a></td>
+  <td class="issue-title">Power-restore resume of run 011 was consumed by the queued reset_session — conclude-while-dead protocol + overdue catch-up policy</td>
+  <td><span class="ci-badge ok">CLOSED</span></td>
+  <td>2026-07-30</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td class="issue-swrs">SWR-257, SWR-258, SWR-324</td>
+  <td class="issue-fix">&mdash;</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/64">#64</a></td>
+  <td class="issue-title">Hub: no Session Report for sessions that never reach FINISH — reports required for EVERY session ending (power loss, reset, supersede)</td>
+  <td><span class="ci-badge ok">CLOSED</span></td>
+  <td>2026-07-30</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td class="issue-swrs">&mdash;</td>
+  <td class="issue-fix">&mdash;</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/62">#62</a></td>
+  <td class="issue-title">Session pump-revolution statistics corrupt across warm-boot attach (BP over-counts, AC under-counts)</td>
+  <td><span class="ci-badge ok">CLOSED</span></td>
+  <td>2026-07-28</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td class="issue-swrs">SWR-318</td>
+  <td class="issue-fix">&mdash;</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/61">#61</a></td>
+  <td class="issue-title">Post-recovery dose wedge: &#x27;Collecting&#x27; then silence — CPU alive, BP_DOSING never armed; AC kept pumping via ULP autonomy (session 25)</td>
+  <td><span class="ci-badge ok">CLOSED</span></td>
+  <td>2026-07-28</td>
+  <td>0.1.148</td>
+  <td>dev.0.23</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td class="issue-swrs">SWR-246</td>
+  <td class="issue-fix">&mdash;</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/60">#60</a></td>
+  <td class="issue-title">AC pump must keep pumping across in-session reboots (clotting risk) — attach-don&#x27;t-restart boot + wait-out-the-busy-task WDT</td>
+  <td><span class="ci-badge ok">CLOSED</span></td>
+  <td>2026-07-28</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td class="issue-swrs">SWR-215, SWR-250, SWR-274, SWR-295</td>
+  <td class="issue-fix">&mdash;</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/54">#54</a></td>
+  <td class="issue-title">IMG-4 runtime image freezes main.py — filesystem /main.py NEVER executes; every main.py deploy since 2026-07-16 was silently dead</td>
+  <td><span class="ci-badge ok">CLOSED</span></td>
+  <td>2026-07-23</td>
+  <td>0.1.132</td>
+  <td>&mdash;</td>
+  <td>IMG-4 v1.25.0-12.ga83202261 (2026-07-16</td>
+  <td>&mdash;</td>
+  <td class="issue-swrs">&mdash;</td>
+  <td class="issue-fix">&mdash;</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/53">#53</a></td>
+  <td class="issue-title">WDT(3) BOOT LOOP on battery in AWAIT_CALIBRATION: reboot every 1.5-4 min, board cannot leave the acquire state — highest-rate WDT manifestation yet</td>
+  <td><span class="ci-badge ok">CLOSED</span></td>
+  <td>2026-07-23</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td class="issue-swrs">SWR-246, SWR-293</td>
+  <td class="issue-fix">&mdash;</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/52">#52</a></td>
+  <td class="issue-title">Session recovery without NTP resumes on a year-2000 clock — schedule becomes unreachable, session silently stops dosing</td>
+  <td><span class="ci-badge ok">CLOSED</span></td>
+  <td>2026-07-23</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td class="issue-swrs">SWR-255, SWR-256, SWR-293</td>
   <td class="issue-fix">&mdash;</td>
 </tr>
 <tr>
@@ -441,6 +393,162 @@
   <td>&mdash;</td>
   <td class="issue-swrs">SWR-255</td>
   <td class="issue-fix">mechanism present since the ring-fed deque (fw 0.1.116 + ULP 1.13.0); FIXED fw 0.1.131 — acceptance session in progress</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/49">#49</a></td>
+  <td class="issue-title">SWR-258 AC-first enforcement waits UNBOUNDED for AC revolutions — a pump-dead ULP wedges the session forever at sample 0</td>
+  <td><span class="ci-badge ok">CLOSED</span></td>
+  <td>2026-07-23</td>
+  <td>0.1.130, 0.1.11</td>
+  <td>dev.0.5</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td class="issue-swrs">SWR-258</td>
+  <td class="issue-fix">&mdash;</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/48">#48</a></td>
+  <td class="issue-title">Motors run wild after USB-attached reboots: global RTC-pad register-clock gate blinds the ULP (encoder + enables dead)</td>
+  <td><span class="ci-badge ok">CLOSED</span></td>
+  <td>2026-07-23</td>
+  <td>0.1.126–0.1.130, 0.1.140</td>
+  <td>dev.0.1–dev.0.6, 1.15.0</td>
+  <td>v1.25.0-12.ga83202261, IMG-4</td>
+  <td>1.14.1–1.14.3</td>
+  <td class="issue-swrs">SWR-114, SWR-299</td>
+  <td class="issue-fix">fix: TestOp dev.0.6 tick-top DEFEND_CLOCK (retired — caused #53, op ULP 1.16.0 patch quarantined) → CPU-side pad-clock defense fw 0.1.142 per SWR-299 (2026-07-23; acceptance in progress: 3 recovery-boot motor trials + ≥2 h radio-hot soak), TestOp dev track per SWR-114</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/47">#47</a></td>
+  <td class="issue-title">ULP liveness != ability to drive a pump (DAC latch class) — diagnosis shipped, reload escalation refuted</td>
+  <td><span class="ci-badge ok">CLOSED</span></td>
+  <td>2026-07-19</td>
+  <td>0.1.125</td>
+  <td>1.13.0</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td class="issue-swrs">SWR-257</td>
+  <td class="issue-fix">&mdash;</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/45">#45</a></td>
+  <td class="issue-title">Resumed session is silent, unreachable and never doses: no syncs, no store commits, load never completes</td>
+  <td><span class="ci-badge ok">CLOSED</span></td>
+  <td>2026-07-09</td>
+  <td>0.1.103</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td class="issue-swrs">SWR-246, SWR-257, SWR-258</td>
+  <td class="issue-fix">&mdash;</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/44">#44</a></td>
+  <td class="issue-title">WDT reset seconds after SESSION entry (recurring session-start reboot class — now with hard evidence)</td>
+  <td><span class="ci-badge ok">CLOSED</span></td>
+  <td>2026-07-09</td>
+  <td>0.1.103</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td class="issue-swrs">SWR-265</td>
+  <td class="issue-fix">SWR-265 serialization fix fw 0.1.104, field-proven 20/20 zero resets 2026-07-13 — candidate for closure on owner confirmation</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/43">#43</a></td>
+  <td class="issue-title">Unpersisted-session window at SESSION entry: reset during entry sync silently loses the session</td>
+  <td><span class="ci-badge ok">CLOSED</span></td>
+  <td>2026-07-09</td>
+  <td>0.1.103, 0.1.118</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td class="issue-swrs">SWR-292</td>
+  <td class="issue-fix">&mdash;</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/38">#38</a></td>
+  <td class="issue-title">MicroPython image: ULP-RISCV wake never cuts machine.lightsleep short (suspected CONFIG_ULP_COPROC_TYPE choice in the S3 build)</td>
+  <td><span class="ci-badge ok">CLOSED</span></td>
+  <td>2026-07-08</td>
+  <td>0.1.91-0.1.96, 0.1.96</td>
+  <td>&mdash;</td>
+  <td>v1.25.0-8</td>
+  <td>&mdash;</td>
+  <td class="issue-swrs">SWR-251</td>
+  <td class="issue-fix">&mdash;</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/37">#37</a></td>
+  <td class="issue-title">Device/Hub stops syncing or loses connection during session; hub intermittently returns Internal Server Error</td>
+  <td><span class="ci-badge ok">CLOSED</span></td>
+  <td>2026-07-06</td>
+  <td>0.1.9</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>1.1</td>
+  <td class="issue-swrs">SWR-236</td>
+  <td class="issue-fix">&mdash;</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/30">#30</a></td>
+  <td class="issue-title">BP fails to start at hard rotor positions (compression arc; dead-center fails at full power)</td>
+  <td><span class="ci-badge ok">CLOSED</span></td>
+  <td>2026-07-03</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td class="issue-swrs">&mdash;</td>
+  <td class="issue-fix">&mdash;</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/29">#29</a></td>
+  <td class="issue-title">Crash latches DAC7574 — soft/WDT reset cannot recover the blood pump (power-cycle only)</td>
+  <td><span class="ci-badge ok">CLOSED</span></td>
+  <td>2026-07-03</td>
+  <td>0.1.7</td>
+  <td>1.4.0</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td class="issue-swrs">&mdash;</td>
+  <td class="issue-fix">&mdash;</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/28">#28</a></td>
+  <td class="issue-title">Device allows start of session even if calibration of Park fails</td>
+  <td><span class="ci-badge ok">CLOSED</span></td>
+  <td>2026-07-03</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td class="issue-swrs">&mdash;</td>
+  <td class="issue-fix">&mdash;</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/27">#27</a></td>
+  <td class="issue-title">AC must be under active control during Dose and Park</td>
+  <td><span class="ci-badge ok">CLOSED</span></td>
+  <td>2026-07-03</td>
+  <td>&mdash;</td>
+  <td>1.4.0, 1.15.0</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td class="issue-swrs">&mdash;</td>
+  <td class="issue-fix">&mdash;</td>
+</tr>
+<tr>
+  <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/26">#26</a></td>
+  <td class="issue-title">Resume session on fail not working</td>
+  <td><span class="ci-badge ok">CLOSED</span></td>
+  <td>2026-07-03</td>
+  <td>&mdash;</td>
+  <td>1.3.3-1.4.0</td>
+  <td>&mdash;</td>
+  <td>&mdash;</td>
+  <td class="issue-swrs">&mdash;</td>
+  <td class="issue-fix">&mdash;</td>
 </tr>
 <tr>
   <td><a href="https://github.com/fluispotter/fluispotter-firmware/issues/23">#23</a></td>

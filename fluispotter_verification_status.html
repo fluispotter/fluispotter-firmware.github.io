@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Fluispotter Verification Status</title><style>
+body { font-family: -apple-system, Helvetica, Arial, sans-serif;
+       margin: 2em auto; max-width: 68em; color: #111; line-height: 1.45; }
+h1 { border-bottom: 3px solid #0b5; padding-bottom: .2em; }
+h2 { margin-top: 1.6em; border-bottom: 1px solid #ccc; padding-bottom: .15em; }
+p.sub { color: #555; }
+p.caveat { background: #fff8e0; border-left: 4px solid #d90; padding: .6em .8em; }
+table { border-collapse: collapse; width: 100%; margin: .8em 0;
+        font-size: 0.92em; }
+th, td { border: 1px solid #ccc; padding: .35em .5em; text-align: left;
+         vertical-align: top; }
+th { background: #f2f2f2; }
+table.meta { width: auto; }
+tr.lv3 td:first-child { border-left: 5px solid #0a0; }
+tr.lv2 td:first-child { border-left: 5px solid #7a0; }
+tr.lv1 td:first-child { border-left: 5px solid #d90; }
+tr.lv0 td:first-child { border-left: 5px solid #c00; }
+code { background: #f4f4f4; padding: 0 .25em; }
+</style></head><body>
+<h1>Fluispotter Verification Status</h1>
+<p class="sub">Requirements vs tested vs verified on hardware vs the version the proof was taken at. GENERATED — do not hand-edit (<code>python3 -m verification.gen_verification_status</code>).</p>
+<table class="meta">
+<tr><th>Firmware (repo HEAD)</th><td>0.1.161</td></tr>
+<tr><th>Requirements registry</th><td>DOC 1.102</td></tr>
+<tr><th>ULP operational</th><td>9.0.24</td></tr>
+<tr><th>Hub service (submodule)</th><td>5f785e6</td></tr>
+<tr><th>Monitor app</th><td>1.1.3</td></tr>
+<tr><th>Control app</th><td>1.8.1</td></tr>
+<tr><th>Device spec</th><td>2.33</td></tr>
+<tr><th>Git commit</th><td>9623d85*</td></tr>
+<tr><th>Git branch</th><td>ulp-scheduler-redesign</td></tr>
+<tr><th>CI verdicts from</th><td>reports/report.json, suite=<code>sw</code></td></tr>
+</table>
+<p class="caveat"><strong>Provenance caveat:</strong> the CI verdicts above come from the SOFTWARE suite only (<code>make verify</code>). The board-driving suite (<code>make verify-mech</code>, 2 tagged requirements + the 12 MECH-class entries) was not part of this run, so BENCH-TESTED reads 0 here — that is a statement about this report run, not about the bench suite. Run it on an idle board; it turns the motors, so it must never run during a live session.</p>
+<h2>1. Rollup</h2>
+<table><tr><th>Level</th><th>Meaning</th><th>Count</th><th>Share</th></tr>
+<tr class="lv3"><td>FIELD-VERIFIED</td><td>Exercised by a concluded testlog run on real hardware</td><td>21</td><td>12%</td></tr>
+<tr class="lv2"><td>BENCH-TESTED</td><td>Covered by a board-driving test (make verify-mech)</td><td>0</td><td>0%</td></tr>
+<tr class="lv1"><td>TESTED</td><td>Automated CI test only — a claim check against the source, not physical proof</td><td>134</td><td>76%</td></tr>
+<tr class="lv0"><td>NOT TESTED</td><td>No automated test references the ID</td><td>21</td><td>12%</td></tr>
+<tr><th>Total</th><td>—</td><th>176</th><th>100%</th></tr>
+</table>
+<p><strong>Headline:</strong> 176 requirements; 155 tested (88%); 21 with hardware evidence (12%); 0 CI failures.</p>
+<h2>2. By class</h2>
+<table><tr><th>Class</th><th>Total</th><th>FIELD</th><th>BENCH</th><th>TESTED</th><th>NOT TESTED</th></tr>
+<tr><td>MECH</td><td>12</td><td>0</td><td>0</td><td>0</td><td>12</td></tr>
+<tr><td>SW</td><td>164</td><td>21</td><td>0</td><td>134</td><td>9</td></tr>
+</table>
+<h2>3. Hardware-verified requirements (with the version of the proof)</h2>
+<table><tr><th>ID</th><th>Title</th><th>Level</th><th>Evidence</th><th>Verified at</th></tr>
+<tr class="lv3"><td>SWR-129</td><td>bp_parked live home-state flag</td><td>FIELD-VERIFIED</td><td>2026-07-27-001 (completed)</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-132</td><td>BP park SHALL always rest at the dead-point (design invariant)</td><td>FIELD-VERIFIED</td><td>2026-07-25-001 (completed), 2026-07-27-002 (completed)</td><td>fw 0.1.142, fw 0.1.143</td></tr>
+<tr class="lv3"><td>SWR-215</td><td>Session-scoped hardware watchdog (wedge backstop)</td><td>FIELD-VERIFIED</td><td>2026-07-28-002 (completed)</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-221</td><td>Sample confirmation gate</td><td>FIELD-VERIFIED</td><td>2026-07-27-002 (completed)</td><td>fw 0.1.143</td></tr>
+<tr class="lv3"><td>SWR-243</td><td>Blood-pump flush cycle between samples (2 min run / 8 min park)</td><td>FIELD-VERIFIED</td><td>2026-07-27-002 (completed)</td><td>fw 0.1.143</td></tr>
+<tr class="lv3"><td>SWR-249</td><td>ULP fault is visible on a failed start (stack-overflow canary + motor-stop), including during calibration</td><td>FIELD-VERIFIED</td><td>2026-07-27-002 (completed)</td><td>fw 0.1.143</td></tr>
+<tr class="lv3"><td>SWR-256</td><td>NTP time accepted only inside a plausibility window; RTC sanity bounded on both ends (self-healing)</td><td>FIELD-VERIFIED</td><td>2026-07-27-004 (completed)</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-263</td><td>clean_event_store hub command, uid-continuous</td><td>FIELD-VERIFIED</td><td>2026-07-27-002 (completed)</td><td>fw 0.1.143</td></tr>
+<tr class="lv3"><td>SWR-269</td><td>Calibration failure reports the offending tests and returns to Await Calibration</td><td>FIELD-VERIFIED</td><td>2026-07-25-001 (completed)</td><td>fw 0.1.142</td></tr>
+<tr class="lv3"><td>SWR-275</td><td>ULP self-recovery without power-cycle</td><td>FIELD-VERIFIED</td><td>2026-07-27-001 (completed), 2026-07-27-002 (completed), 2026-07-27-003 (completed)</td><td>fw 0.1.143</td></tr>
+<tr class="lv3"><td>SWR-276</td><td>Actuator power-on safety: no motor may run before it is commanded</td><td>FIELD-VERIFIED</td><td>2026-07-28-009 (completed)</td><td>fw 0.1.152</td></tr>
+<tr class="lv3"><td>SWR-282</td><td>Time table immutable after session start</td><td>FIELD-VERIFIED</td><td>2026-07-27-002 (completed)</td><td>fw 0.1.143</td></tr>
+<tr class="lv3"><td>SWR-286</td><td>Device session number: monotonic, globally unique with uid</td><td>FIELD-VERIFIED</td><td>2026-07-26-001 (completed)</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-289</td><td>BP hall crossings counted in EVERY ULP state</td><td>FIELD-VERIFIED</td><td>2026-07-25-001 (completed)</td><td>fw 0.1.142</td></tr>
+<tr class="lv3"><td>SWR-292</td><td>Sample-boundary events are committed before returning to IDLE</td><td>FIELD-VERIFIED</td><td>2026-07-27-004 (completed)</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-296</td><td>AWAIT_CALIBRATION requires a completed NTP sync (clock-first boot ordering; no year-2000 stamps in the operator record)</td><td>FIELD-VERIFIED</td><td>2026-07-28-011 (completed)</td><td>fw 0.1.156</td></tr>
+<tr class="lv3"><td>SWR-300</td><td>AWAIT_SESSION command-poll cadence (at most 1 minute)</td><td>FIELD-VERIFIED</td><td>2026-07-25-001 (completed)</td><td>fw 0.1.142</td></tr>
+<tr class="lv3"><td>SWR-318</td><td>Hall ring maintained by the ULP through main-CPU outages; recovered on restore</td><td>FIELD-VERIFIED</td><td>2026-07-28-002 (completed), 2026-07-28-009 (completed)</td><td>fw 0.1.152</td></tr>
+<tr class="lv3"><td>SWR-324</td><td>Silent-wedge class closed: every network await bounded, scheduled loading deadlined</td><td>FIELD-VERIFIED</td><td>2026-07-30-001 (completed), 2026-07-30-004 (failed)</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-326</td><td>Recovery destructive-command trail (resume forfeit is explicit)</td><td>FIELD-VERIFIED</td><td>2026-07-30-002 (completed)</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-327</td><td>Session-entry kick settles before the entry sync (SWR-265 at entry)</td><td>FIELD-VERIFIED</td><td>2026-07-31-002 (completed)</td><td>—</td></tr>
+</table>
+<h2>4. Gap — LOCKED requirements without hardware evidence</h2>
+<p>These are frozen contracts whose proof today is a CI claim check only. Not necessarily wrong (many are structural or process rules that cannot be exercised by a session), but this is where a hardware-proof campaign would add the most.</p>
+<table><tr><th>ID</th><th>Title</th><th>CI verdict</th></tr>
+<tr><td>SWR-101</td><td>Simple-P error computation</td><td>PASS</td></tr>
+<tr><td>SWR-102</td><td>Simple-P deadband and nudge</td><td>PASS</td></tr>
+<tr><td>SWR-103</td><td>Power clamp and DAC mapping</td><td>PASS</td></tr>
+<tr><td>SWR-104</td><td>Start-power seeding (bumpless)</td><td>PASS</td></tr>
+<tr><td>SWR-105</td><td>Per-pump gain defaults</td><td>PASS</td></tr>
+<tr><td>SWR-106</td><td>Shared Simple-P knob defaults</td><td>PASS</td></tr>
+<tr><td>SWR-107</td><td>Skip-ladder level mapping</td><td>PASS</td></tr>
+<tr><td>SWR-108</td><td>Skip-ladder climb and panic rules</td><td>PASS</td></tr>
+<tr><td>SWR-109</td><td>Hall counting through skip</td><td>PASS</td></tr>
+<tr><td>SWR-110</td><td>Dual stall/measurement deadlines</td><td>PASS</td></tr>
+<tr><td>SWR-111</td><td>No-start kick escalation (adaptive self-tuning)</td><td>NOT-TESTED</td></tr>
+<tr><td>SWR-112</td><td>Motor-stop event bit map</td><td>PASS</td></tr>
+<tr><td>SWR-113</td><td>Running-stall recovery sequence</td><td>NOT-TESTED</td></tr>
+<tr><td>SWR-114</td><td>ULP version packing</td><td>PASS</td></tr>
+<tr><td>SWR-115</td><td>DAC convention constants</td><td>PASS</td></tr>
+<tr><td>SWR-116</td><td>run_pid retired from the operational image</td><td>PASS</td></tr>
+<tr><td>SWR-117</td><td>Stack-canary fail-safe</td><td>PASS</td></tr>
+<tr><td>SWR-118</td><td>Test-ID dispatch partition</td><td>PASS</td></tr>
+<tr><td>SWR-119</td><td>Parking Simple-P drive + exit limits</td><td>PASS</td></tr>
+<tr><td>SWR-120</td><td>Park position at hall-zone centre</td><td>NOT-TESTED</td></tr>
+<tr><td>SWR-121</td><td>Dose handshake with coast capture</td><td>NOT-TESTED</td></tr>
+<tr><td>SWR-122</td><td>AC bench convergence</td><td>NOT-TESTED</td></tr>
+<tr><td>SWR-123</td><td>BP bench convergence</td><td>NOT-TESTED</td></tr>
+<tr><td>SWR-124</td><td>AC slow-setpoint stability (no limit cycle)</td><td>NOT-TESTED</td></tr>
+<tr><td>SWR-125</td><td>Live sensor readings on board</td><td>NOT-TESTED</td></tr>
+<tr><td>SWR-126</td><td>Adaptive self-tuning kick-start (continuous escalating hold)</td><td>PASS</td></tr>
+<tr><td>SWR-127</td><td>BP dose + park driven by continuous Simple-P (bp_drive_window)</td><td>PASS</td></tr>
+<tr><td>SWR-128</td><td>BP park start: shared adaptive START_DAC (try_kick_start), then Simple-P</td><td>PASS</td></tr>
+<tr><td>SWR-130</td><td>Park encoder-tick total published to telemetry (diagnostic)</td><td>PASS</td></tr>
+<tr><td>SWR-201</td><td>Append-only store binary format</td><td>PASS</td></tr>
+<tr><td>SWR-202</td><td>Event record JSONL format</td><td>PASS</td></tr>
+<tr><td>SWR-203</td><td>Event sync upload window</td><td>PASS</td></tr>
+<tr><td>SWR-204</td><td>CSV quoting and torn-row recovery</td><td>PASS</td></tr>
+<tr><td>SWR-205</td><td>HTTP client protocol behaviors</td><td>PASS</td></tr>
+<tr><td>SWR-206</td><td>Diagnostics CSV schema</td><td>PASS</td></tr>
+<tr><td>SWR-207</td><td>Time-table binary format</td><td>PASS</td></tr>
+<tr><td>SWR-208</td><td>Telemetry time-table chunking</td><td>PASS</td></tr>
+<tr><td>SWR-209</td><td>Telemetry enablement and cadence</td><td>PASS</td></tr>
+<tr><td>SWR-210</td><td>Fluid classification thresholds</td><td>PASS</td></tr>
+<tr><td>SWR-211</td><td>Dosing pulse targets</td><td>PASS</td></tr>
+<tr><td>SWR-212</td><td>Sync cadence</td><td>PASS</td></tr>
+<tr><td>SWR-213</td><td>Sync error containment</td><td>PASS</td></tr>
+<tr><td>SWR-214</td><td>Event store provisioning</td><td>PASS</td></tr>
+<tr><td>SWR-216</td><td>BP direction cleared before RTC I2C handover</td><td>PASS</td></tr>
+<tr><td>SWR-217</td><td>No blocking stdin in the asyncio loop</td><td>PASS</td></tr>
+<tr><td>SWR-218</td><td>Blood-detection threshold poll</td><td>PASS</td></tr>
+<tr><td>SWR-219</td><td>Degree-based movement timeouts</td><td>PASS</td></tr>
+<tr><td>SWR-220</td><td>Dose state machine order</td><td>PASS</td></tr>
+<tr><td>SWR-222</td><td>Fatal-error handling</td><td>PASS</td></tr>
+<tr><td>SWR-223</td><td>board_config canonical constants</td><td>PASS</td></tr>
+<tr><td>SWR-224</td><td>Boot config overlay</td><td>PASS</td></tr>
+<tr><td>SWR-225</td><td>Overlay allowlist + hardware guard</td><td>PASS</td></tr>
+<tr><td>SWR-226</td><td>Config hash</td><td>PASS</td></tr>
+<tr><td>SWR-227</td><td>Boot config event + change detection</td><td>PASS</td></tr>
+<tr><td>SWR-228</td><td>Config lock (freeze)</td><td>PASS</td></tr>
+<tr><td>SWR-229</td><td>Tunable consumers route through the accessor</td><td>PASS</td></tr>
+<tr><td>SWR-230</td><td>Session survives a reset</td><td>PASS</td></tr>
+<tr><td>SWR-231</td><td>Connectivity is best-effort, never fatal</td><td>PASS</td></tr>
+<tr><td>SWR-232</td><td>Motor-stop events are logged decoded with context</td><td>PASS</td></tr>
+<tr><td>SWR-233</td><td>Crash-boot DAC safe-off and I2C bus recovery</td><td>PASS</td></tr>
+<tr><td>SWR-234</td><td>Blood-sample dose sub-stages are logged to the event store</td><td>PASS</td></tr>
+<tr><td>SWR-235</td><td>Serial output is non-blocking (measure-and-latch sink)</td><td>PASS</td></tr>
+<tr><td>SWR-242</td><td>Live in-session hub sync on every hall-tick wake</td><td>NOT-TESTED</td></tr>
+<tr><td>SWR-244</td><td>Sample preload — run the blood pump when a sample is within 5 minutes</td><td>PASS</td></tr>
+<tr><td>SWR-245</td><td>Main CPU light-sleeps except while active (pre-session, dosing, hall-tick service, or error)</td><td>PASS</td></tr>
+<tr><td>SWR-246</td><td>In-session hub sync batched to end-of-run, post-dose, and errors</td><td>PASS</td></tr>
+<tr><td>SWR-247</td><td>Blood-pump hall pass recorded in the 7-slot deque from Blood-Primed onward; CPU woken from sleep to record it</td><td>PASS</td></tr>
+<tr><td>SWR-248</td><td>Blood-pump flush cycle continues in FINISH (line stays flushed after the last sample)</td><td>PASS</td></tr>
+<tr><td>SWR-251</td><td>Blood/Air sensor measurement: 4-second powered reading, logged raw + classified (Blood / Air / AC) from board_config cutoffs</td><td>PASS</td></tr>
+<tr><td>SWR-252</td><td>Blood/Air sensor measurement schedule: first hall tick of each flush run; every hall tick during sample load</td><td>PASS</td></tr>
+<tr><td>SWR-253</td><td>AC/Air sensor measurement: 4-second powered reading, logged raw + classified (Air / AC) from the board_config cutoff</td><td>PASS</td></tr>
+<tr><td>SWR-254</td><td>AC/Air sensor measurement schedule: first hall tick of each flush run; every hall tick during sample load</td><td>PASS</td></tr>
+<tr><td>SWR-255</td><td>start_session with no samples is rejected in place (no state change, no flush-cycle restart)</td><td>PASS</td></tr>
+<tr><td>SWR-301</td><td>Monitor app is read-only</td><td>PASS</td></tr>
+<tr><td>SWR-302</td><td>App version in window title</td><td>PASS</td></tr>
+<tr><td>SWR-303</td><td>No hardcoded ULP addresses</td><td>PASS</td></tr>
+<tr><td>SWR-304</td><td>Injected scripts compile</td><td>PASS</td></tr>
+<tr><td>SWR-305</td><td>MONITOR_SCRIPT frame contract</td><td>PASS</td></tr>
+<tr><td>SWR-306</td><td>Control connect-time address guard</td><td>PASS</td></tr>
+<tr><td>SWR-307</td><td>Control mode gating</td><td>PASS</td></tr>
+<tr><td>SWR-308</td><td>Frame history and Sensors repopulate</td><td>PASS</td></tr>
+<tr><td>SWR-309</td><td>Fluid-sensor state-bounds classification</td><td>PASS</td></tr>
+<tr><td>SWR-310</td><td>Board Config tab parses source</td><td>PASS</td></tr>
+<tr><td>SWR-311</td><td>VEML read protocol in host scripts</td><td>PASS</td></tr>
+<tr><td>SWR-312</td><td>ADC full-range attenuation</td><td>PASS</td></tr>
+<tr><td>SWR-313</td><td>park_pump_script guards</td><td>PASS</td></tr>
+<tr><td>SWR-314</td><td>Sensors stream during PID runs</td><td>PASS</td></tr>
+<tr><td>SWR-315</td><td>Monitor Sampling tab reflects the sample deque and schedule</td><td>PASS</td></tr>
+<tr><td>SWR-316</td><td>Control Dose/Park Debug tab drives the operational dose/park</td><td>PASS</td></tr>
+<tr><td>SWR-319</td><td>Warm-boot ULP attach (default-on): adopt the running core, never stop the AC for a reboot</td><td>PASS</td></tr>
+<tr><td>SWR-320</td><td>Attach heal: RTC-I2C engine re-init with per-pump motion gating; turning pumps cross untouched</td><td>PASS</td></tr>
+<tr><td>SWR-321</td><td>Boot actuator safe-off gated on warm+session-live (littlefs /boot.py + /main.py)</td><td>PASS</td></tr>
+<tr><td>SWR-322</td><td>Dose-path syncs hard-bounded: dosing outranks telemetry</td><td>PASS</td></tr>
+<tr><td>SWR-323</td><td>Session pump-revolution statistics survive attach (consumption cursors persisted with totals)</td><td>PASS</td></tr>
+<tr><td>SWR-401</td><td>Hub REST endpoint set</td><td>NOT-TESTED</td></tr>
+<tr><td>SWR-402</td><td>Registration and command acknowledgement</td><td>NOT-TESTED</td></tr>
+<tr><td>SWR-403</td><td>Device-field validation</td><td>NOT-TESTED</td></tr>
+<tr><td>SWR-404</td><td>Content-addressed file storage</td><td>NOT-TESTED</td></tr>
+<tr><td>SWR-501</td><td>ULP build gates</td><td>PASS</td></tr>
+<tr><td>SWR-502</td><td>Address maps importable and complete</td><td>PASS</td></tr>
+<tr><td>SWR-503</td><td>Binary discriminator</td><td>PASS</td></tr>
+<tr><td>SWR-504</td><td>Full-binary deploy verification</td><td>NOT-TESTED</td></tr>
+<tr><td>SWR-505</td><td>Post-deploy telemetry sanity</td><td>NOT-TESTED</td></tr>
+<tr><td>SWR-506</td><td>Post-deploy motion proof</td><td>NOT-TESTED</td></tr>
+<tr><td>SWR-507</td><td>Binary-swap self-test</td><td>NOT-TESTED</td></tr>
+<tr><td>SWR-508</td><td>Version-bump discipline</td><td>PASS</td></tr>
+<tr><td>SWR-509</td><td>Spec-document version consistency</td><td>PASS</td></tr>
+<tr><td>SWR-510</td><td>Requirements doc mirrors the registry</td><td>PASS</td></tr>
+</table>
+<h2>5. Full register</h2>
+<table><tr><th>ID</th><th>Title</th><th>Class</th><th>Lock</th><th>CI</th><th>Level</th><th>Evidence / verified at</th></tr>
+<tr class="lv1"><td>SWR-101</td><td>Simple-P error computation</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-102</td><td>Simple-P deadband and nudge</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-103</td><td>Power clamp and DAC mapping</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-104</td><td>Start-power seeding (bumpless)</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-105</td><td>Per-pump gain defaults</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-106</td><td>Shared Simple-P knob defaults</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-107</td><td>Skip-ladder level mapping</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-108</td><td>Skip-ladder climb and panic rules</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-109</td><td>Hall counting through skip</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-110</td><td>Dual stall/measurement deadlines</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv0"><td>SWR-111</td><td>No-start kick escalation (adaptive self-tuning)</td><td>MECH</td><td>Locked</td><td>NOT-TESTED</td><td>NOT TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-112</td><td>Motor-stop event bit map</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv0"><td>SWR-113</td><td>Running-stall recovery sequence</td><td>MECH</td><td>Locked</td><td>NOT-TESTED</td><td>NOT TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-114</td><td>ULP version packing</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-115</td><td>DAC convention constants</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-116</td><td>run_pid retired from the operational image</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-117</td><td>Stack-canary fail-safe</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-118</td><td>Test-ID dispatch partition</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-119</td><td>Parking Simple-P drive + exit limits</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv0"><td>SWR-120</td><td>Park position at hall-zone centre</td><td>MECH</td><td>Locked</td><td>NOT-TESTED</td><td>NOT TESTED</td><td>—</td></tr>
+<tr class="lv0"><td>SWR-121</td><td>Dose handshake with coast capture</td><td>MECH</td><td>Locked</td><td>NOT-TESTED</td><td>NOT TESTED</td><td>—</td></tr>
+<tr class="lv0"><td>SWR-122</td><td>AC bench convergence</td><td>MECH</td><td>Locked</td><td>NOT-TESTED</td><td>NOT TESTED</td><td>—</td></tr>
+<tr class="lv0"><td>SWR-123</td><td>BP bench convergence</td><td>MECH</td><td>Locked</td><td>NOT-TESTED</td><td>NOT TESTED</td><td>—</td></tr>
+<tr class="lv0"><td>SWR-124</td><td>AC slow-setpoint stability (no limit cycle)</td><td>MECH</td><td>Locked</td><td>NOT-TESTED</td><td>NOT TESTED</td><td>—</td></tr>
+<tr class="lv0"><td>SWR-125</td><td>Live sensor readings on board</td><td>MECH</td><td>Locked</td><td>NOT-TESTED</td><td>NOT TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-126</td><td>Adaptive self-tuning kick-start (continuous escalating hold)</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-127</td><td>BP dose + park driven by continuous Simple-P (bp_drive_window)</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-128</td><td>BP park start: shared adaptive START_DAC (try_kick_start), then Simple-P</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-129</td><td>bp_parked live home-state flag</td><td>SW</td><td>Locked</td><td>PASS</td><td>FIELD-VERIFIED</td><td>2026-07-27-001</td></tr>
+<tr class="lv1"><td>SWR-130</td><td>Park encoder-tick total published to telemetry (diagnostic)</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-131</td><td>BP start-method A/B testbed lives in ULP_Test2, not Operational</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-132</td><td>BP park SHALL always rest at the dead-point (design invariant)</td><td>SW</td><td>Locked</td><td>PASS</td><td>FIELD-VERIFIED</td><td>2026-07-25-001 fw 0.1.142, 2026-07-27-002 fw 0.1.143</td></tr>
+<tr class="lv1"><td>SWR-201</td><td>Append-only store binary format</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-202</td><td>Event record JSONL format</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-203</td><td>Event sync upload window</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-204</td><td>CSV quoting and torn-row recovery</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-205</td><td>HTTP client protocol behaviors</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-206</td><td>Diagnostics CSV schema</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-207</td><td>Time-table binary format</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-208</td><td>Telemetry time-table chunking</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-209</td><td>Telemetry enablement and cadence</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-210</td><td>Fluid classification thresholds</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-211</td><td>Dosing pulse targets</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-212</td><td>Sync cadence</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-213</td><td>Sync error containment</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-214</td><td>Event store provisioning</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-215</td><td>Session-scoped hardware watchdog (wedge backstop)</td><td>SW</td><td>Locked</td><td>PASS</td><td>FIELD-VERIFIED</td><td>2026-07-28-002</td></tr>
+<tr class="lv1"><td>SWR-216</td><td>BP direction cleared before RTC I2C handover</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-217</td><td>No blocking stdin in the asyncio loop</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-218</td><td>Blood-detection threshold poll</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-219</td><td>Degree-based movement timeouts</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-220</td><td>Dose state machine order</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-221</td><td>Sample confirmation gate</td><td>SW</td><td>Locked</td><td>PASS</td><td>FIELD-VERIFIED</td><td>2026-07-27-002 fw 0.1.143</td></tr>
+<tr class="lv1"><td>SWR-222</td><td>Fatal-error handling</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-223</td><td>board_config canonical constants</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-224</td><td>Boot config overlay</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-225</td><td>Overlay allowlist + hardware guard</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-226</td><td>Config hash</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-227</td><td>Boot config event + change detection</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-228</td><td>Config lock (freeze)</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-229</td><td>Tunable consumers route through the accessor</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-230</td><td>Session survives a reset</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-231</td><td>Connectivity is best-effort, never fatal</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-232</td><td>Motor-stop events are logged decoded with context</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-233</td><td>Crash-boot DAC safe-off and I2C bus recovery</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-234</td><td>Blood-sample dose sub-stages are logged to the event store</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-235</td><td>Serial output is non-blocking (measure-and-latch sink)</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-236</td><td>Immediate fault reporting (ULP fault → flash → hub, before give-up)</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-237</td><td>RTC sync robustness (no silent year-2000 clock)</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-238</td><td>Event-store append failures never crash a session</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-239</td><td>Revolution-gated periodic events are edge-triggered</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv0"><td>SWR-240</td><td>ESP32 SHALL light-sleep when idle in a session (single-owner backstop)</td><td>SW</td><td>Open</td><td>NOT-TESTED</td><td>NOT TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-241</td><td>FINISH state syncs and stays commandable</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv0"><td>SWR-242</td><td>Live in-session hub sync on every hall-tick wake</td><td>SW</td><td>Locked</td><td>NOT-TESTED</td><td>NOT TESTED</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-243</td><td>Blood-pump flush cycle between samples (2 min run / 8 min park)</td><td>SW</td><td>Locked</td><td>PASS</td><td>FIELD-VERIFIED</td><td>2026-07-27-002 fw 0.1.143</td></tr>
+<tr class="lv1"><td>SWR-244</td><td>Sample preload — run the blood pump when a sample is within 5 minutes</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-245</td><td>Main CPU light-sleeps except while active (pre-session, dosing, hall-tick service, or error)</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-246</td><td>In-session hub sync batched to end-of-run, post-dose, and errors</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-247</td><td>Blood-pump hall pass recorded in the 7-slot deque from Blood-Primed onward; CPU woken from sleep to record it</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-248</td><td>Blood-pump flush cycle continues in FINISH (line stays flushed after the last sample)</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-249</td><td>ULP fault is visible on a failed start (stack-overflow canary + motor-stop), including during calibration</td><td>SW</td><td>Open</td><td>PASS</td><td>FIELD-VERIFIED</td><td>2026-07-27-002 fw 0.1.143</td></tr>
+<tr class="lv1"><td>SWR-250</td><td>ULP health verified at the start of Calibration (canary clear + core loop advancing)</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-251</td><td>Blood/Air sensor measurement: 4-second powered reading, logged raw + classified (Blood / Air / AC) from board_config cutoffs</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-252</td><td>Blood/Air sensor measurement schedule: first hall tick of each flush run; every hall tick during sample load</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-253</td><td>AC/Air sensor measurement: 4-second powered reading, logged raw + classified (Air / AC) from the board_config cutoff</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-254</td><td>AC/Air sensor measurement schedule: first hall tick of each flush run; every hall tick during sample load</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-255</td><td>start_session with no samples is rejected in place (no state change, no flush-cycle restart)</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-256</td><td>NTP time accepted only inside a plausibility window; RTC sanity bounded on both ends (self-healing)</td><td>SW</td><td>Locked</td><td>PASS</td><td>FIELD-VERIFIED</td><td>2026-07-27-004</td></tr>
+<tr class="lv1"><td>SWR-257</td><td>ULP start verified by zero-baseline advancement; session never resumed on an unverified ULP</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-258</td><td>BP never runs without AC in a session: AC-first enforced at every blood-pump start</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-259</td><td>Session persisted at start_session acceptance (before any sync)</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-260</td><td>Resumed session binds the persistent Wi-Fi station (visible, reachable, committed)</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-261</td><td>Device state sync reports the ULP version</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-262</td><td>Serial-sink total coverage (no unrouted console writers)</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-263</td><td>clean_event_store hub command, uid-continuous</td><td>SW</td><td>Open</td><td>PASS</td><td>FIELD-VERIFIED</td><td>2026-07-27-002 fw 0.1.143</td></tr>
+<tr class="lv1"><td>SWR-264</td><td>Boot event append never blocks boot</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-265</td><td>Post-dose kick serialized against flash+Wi-Fi</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-266</td><td>Hub-not-found: one event per outage, cache, continue</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-267</td><td>Hub-commanded telemetry toggle, default OFF</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-268</td><td>Image provenance: IMG registry, boot fingerprint, gitlink gate</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-269</td><td>Calibration failure reports the offending tests and returns to Await Calibration</td><td>SW</td><td>Open</td><td>PASS</td><td>FIELD-VERIFIED</td><td>2026-07-25-001 fw 0.1.142</td></tr>
+<tr class="lv1"><td>SWR-270</td><td>Pump run-monitor keys off the ULP hall counter, not the CPU edge</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-271</td><td>AC pump is hall-counted and regulated through BP dose/coast/park busy windows</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-272</td><td>Shipping-magnet reed switch performs a complete power-off</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-273</td><td>No session restore before the anticoagulant bag is punctured</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-274</td><td>Never light-sleep during a hub sync (WDT serialization)</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-275</td><td>ULP self-recovery without power-cycle</td><td>SW</td><td>Open</td><td>PASS</td><td>FIELD-VERIFIED</td><td>2026-07-27-001, 2026-07-27-002 fw 0.1.143, 2026-07-27-003</td></tr>
+<tr class="lv3"><td>SWR-276</td><td>Actuator power-on safety: no motor may run before it is commanded</td><td>SW</td><td>Open</td><td>PASS</td><td>FIELD-VERIFIED</td><td>2026-07-28-009 fw 0.1.152</td></tr>
+<tr class="lv1"><td>SWR-277</td><td>Event store auto-cleans before the capacity cap</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-278</td><td>Global commands execute during a running session</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-279</td><td>Abort-session command</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-280</td><td>Sample-on-demand command</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-281</td><td>Session metadata: Animal ID, Study Number, Session ID</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-282</td><td>Time table immutable after session start</td><td>SW</td><td>Open</td><td>NOT-TESTED</td><td>FIELD-VERIFIED</td><td>2026-07-27-002 fw 0.1.143</td></tr>
+<tr class="lv1"><td>SWR-283</td><td>Quantified RTC-vs-NTP offset at session start and end</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv0"><td>SWR-284</td><td>RTC-vs-NTP deviation limit: 30 s in-session</td><td>SW</td><td>Open</td><td>NOT-TESTED</td><td>NOT TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-285</td><td>Time 0 = operator start_session submit time</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-286</td><td>Device session number: monotonic, globally unique with uid</td><td>SW</td><td>Open</td><td>PASS</td><td>FIELD-VERIFIED</td><td>2026-07-26-001</td></tr>
+<tr class="lv1"><td>SWR-288</td><td>Intra-set doses: consecutive segments, no free-run between doses</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-289</td><td>BP hall crossings counted in EVERY ULP state</td><td>SW</td><td>Open</td><td>PASS</td><td>FIELD-VERIFIED</td><td>2026-07-25-001 fw 0.1.142</td></tr>
+<tr class="lv1"><td>SWR-290</td><td>Multi-sample reporting: spots and timepoints distinct</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-291</td><td>Pre-session sample on command in AWAIT_SESSION</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-292</td><td>Sample-boundary events are committed before returning to IDLE</td><td>SW</td><td>Open</td><td>PASS</td><td>FIELD-VERIFIED</td><td>2026-07-27-004</td></tr>
+<tr class="lv0"><td>SWR-293</td><td>Step breadcrumb through the WDT-suspect path (WITHDRAWN)</td><td>SW</td><td>Open</td><td>NOT-TESTED</td><td>NOT TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-294</td><td>Firmware deploy is transactional and import-proven</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-295</td><td>Year-2000 (unsynced) RTC forces an immediate hub time sync in every state</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-296</td><td>AWAIT_CALIBRATION requires a completed NTP sync (clock-first boot ordering; no year-2000 stamps in the operator record)</td><td>SW</td><td>Open</td><td>PASS</td><td>FIELD-VERIFIED</td><td>2026-07-28-011 fw 0.1.156</td></tr>
+<tr class="lv1"><td>SWR-297</td><td>Hub–firmware sync-signal compatibility gate</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv0"><td>SWR-298</td><td>AC revolutions counter baselines at AC Bag Punctured</td><td>SW</td><td>Open</td><td>NOT-TESTED</td><td>NOT TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-299</td><td>CPU-side RTC-pad register-clock defense at claim and start sites</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-300</td><td>AWAIT_SESSION command-poll cadence (at most 1 minute)</td><td>SW</td><td>Open</td><td>NOT-TESTED</td><td>FIELD-VERIFIED</td><td>2026-07-25-001 fw 0.1.142</td></tr>
+<tr class="lv1"><td>SWR-301</td><td>Monitor app is read-only</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-302</td><td>App version in window title</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-303</td><td>No hardcoded ULP addresses</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-304</td><td>Injected scripts compile</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-305</td><td>MONITOR_SCRIPT frame contract</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-306</td><td>Control connect-time address guard</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-307</td><td>Control mode gating</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-308</td><td>Frame history and Sensors repopulate</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-309</td><td>Fluid-sensor state-bounds classification</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-310</td><td>Board Config tab parses source</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-311</td><td>VEML read protocol in host scripts</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-312</td><td>ADC full-range attenuation</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-313</td><td>park_pump_script guards</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-314</td><td>Sensors stream during PID runs</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-315</td><td>Monitor Sampling tab reflects the sample deque and schedule</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-316</td><td>Control Dose/Park Debug tab drives the operational dose/park</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-317</td><td>Control app Session Reset (verified-safe state-file clear + reboot)</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-318</td><td>Hall ring maintained by the ULP through main-CPU outages; recovered on restore</td><td>SW</td><td>Locked</td><td>PASS</td><td>FIELD-VERIFIED</td><td>2026-07-28-002, 2026-07-28-009 fw 0.1.152</td></tr>
+<tr class="lv1"><td>SWR-319</td><td>Warm-boot ULP attach (default-on): adopt the running core, never stop the AC for a reboot</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-320</td><td>Attach heal: RTC-I2C engine re-init with per-pump motion gating; turning pumps cross untouched</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-321</td><td>Boot actuator safe-off gated on warm+session-live (littlefs /boot.py + /main.py)</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-322</td><td>Dose-path syncs hard-bounded: dosing outranks telemetry</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-323</td><td>Session pump-revolution statistics survive attach (consumption cursors persisted with totals)</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-324</td><td>Silent-wedge class closed: every network await bounded, scheduled loading deadlined</td><td>SW</td><td>Open</td><td>PASS</td><td>FIELD-VERIFIED</td><td>2026-07-30-001, 2026-07-30-004</td></tr>
+<tr class="lv1"><td>SWR-325</td><td>Overdue-sample catch-up on session resume (never skip)</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv3"><td>SWR-326</td><td>Recovery destructive-command trail (resume forfeit is explicit)</td><td>SW</td><td>Open</td><td>PASS</td><td>FIELD-VERIFIED</td><td>2026-07-30-002</td></tr>
+<tr class="lv3"><td>SWR-327</td><td>Session-entry kick settles before the entry sync (SWR-265 at entry)</td><td>SW</td><td>Open</td><td>PASS</td><td>FIELD-VERIFIED</td><td>2026-07-31-002</td></tr>
+<tr class="lv0"><td>SWR-401</td><td>Hub REST endpoint set</td><td>SW</td><td>Locked</td><td>NOT-TESTED</td><td>NOT TESTED</td><td>—</td></tr>
+<tr class="lv0"><td>SWR-402</td><td>Registration and command acknowledgement</td><td>SW</td><td>Locked</td><td>NOT-TESTED</td><td>NOT TESTED</td><td>—</td></tr>
+<tr class="lv0"><td>SWR-403</td><td>Device-field validation</td><td>SW</td><td>Locked</td><td>NOT-TESTED</td><td>NOT TESTED</td><td>—</td></tr>
+<tr class="lv0"><td>SWR-404</td><td>Content-addressed file storage</td><td>SW</td><td>Locked</td><td>NOT-TESTED</td><td>NOT TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-501</td><td>ULP build gates</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-502</td><td>Address maps importable and complete</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-503</td><td>Binary discriminator</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv0"><td>SWR-504</td><td>Full-binary deploy verification</td><td>MECH</td><td>Locked</td><td>NOT-TESTED</td><td>NOT TESTED</td><td>—</td></tr>
+<tr class="lv0"><td>SWR-505</td><td>Post-deploy telemetry sanity</td><td>MECH</td><td>Locked</td><td>NOT-TESTED</td><td>NOT TESTED</td><td>—</td></tr>
+<tr class="lv0"><td>SWR-506</td><td>Post-deploy motion proof</td><td>MECH</td><td>Locked</td><td>NOT-TESTED</td><td>NOT TESTED</td><td>—</td></tr>
+<tr class="lv0"><td>SWR-507</td><td>Binary-swap self-test</td><td>MECH</td><td>Locked</td><td>NOT-TESTED</td><td>NOT TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-508</td><td>Version-bump discipline</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-509</td><td>Spec-document version consistency</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-510</td><td>Requirements doc mirrors the registry</td><td>SW</td><td>Locked</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-511</td><td>Locked-requirement immutability guard</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-512</td><td>Requirement change history maintained</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-513</td><td>QC requirements registry maintained</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+<tr class="lv1"><td>SWR-514</td><td>HUB requirements registry maintained</td><td>SW</td><td>Open</td><td>PASS</td><td>TESTED</td><td>—</td></tr>
+</table>
+</body></html>

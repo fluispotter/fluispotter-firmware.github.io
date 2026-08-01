@@ -1594,6 +1594,114 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#253-2026-07-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      253 (2026-07-28)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#254-2026-07-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      254 (2026-07-28)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2026-07-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-30
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2026-07-30-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-30 (2)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2026-07-30-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-30 (3)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2026-07-30-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-30 (4)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2026-07-30-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-30 (5)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2026-07-31" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-31
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2026-07-31-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-31 (2)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2026-07-31-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-31 (3)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2026-07-31-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-07-31 (4)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2026-08-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      2026-08-01
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1634,6 +1742,86 @@
   
   <span class="md-ellipsis">
     Summaries
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../test_runs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fluispotter test-run register
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ulp_1.17.0_verification_status/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Verification status — operational ULP 1.17.0 (the promoted cooperative scheduler)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ulp_fold_behavioural_audit/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ULP fold — behavioural audit against the operational code
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ulp_scheduler_design/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Design Note — ULP Cooperative Scheduler (non-blocking single main loop)
   </span>
   
 
@@ -2978,6 +3166,66 @@ pre-session sample (SWR-291), signing cross-ref; changelog + control table. Both
 <p>go</p>
 <h2 id="252-2026-07-23">252 (2026-07-23)</h2>
 <p>Resume / Make sure the bug is associated with all deployed units, fw, ULP, image etc. / Add list of issues to "Project documentation site" with details such as date, fw, ULP, image version listed, and associated requirements, and fix versions. / Resume</p>
+<h2 id="253-2026-07-28">253 (2026-07-28)</h2>
+<p>go (authorize #60 next step: pad-dump instrumentation in the attach branch -&gt; fw 0.1.150 -&gt; acceptance run 4 with /attach_on)</p>
+<h2 id="254-2026-07-28">254 (2026-07-28)</h2>
+<p>Now Update Spec Repo, Requirements, Including the verification status of requirements, Close issues that have been tested to be fixed, remember to include the fix versions. Push and commit everything. / Do the ladder reset polish as well / go with all / 1 / go</p>
+<h2 id="2026-07-30">2026-07-30</h2>
+<blockquote>
+<p>Fix The silent-wedge class — one fix closes #61's residual, most of #50, and #49's real
+mechanism: bound the HTTP body-read/close in the client (aiorequests.py Response.content()
+is awaited with no timeout — found independently by two agents), make _sync's 45 s bound
+the default rather than dose-path-only, and bound wlan_scan's flag wait. Plus the
+loading/dose-arm deadline: the scheduled TRIGGER branch has no deadline (the commanded
+path has a 5-min gate — mirror it).</p>
+</blockquote>
+<h2 id="2026-07-30-2">2026-07-30 (2)</h2>
+<blockquote>
+<p>New Issue: The latest 50 sample session that ended prematurely due to power loss: No report
+was created. A report must be created for all sessions, no matter their way of ending.
+Second Issue: Why did the unfinished session cut short by power loss not resume when power
+was restored?</p>
+</blockquote>
+<h2 id="2026-07-30-3">2026-07-30 (3)</h2>
+<blockquote>
+<p>Catch up is the right call. Create the req.</p>
+</blockquote>
+<h2 id="2026-07-30-4">2026-07-30 (4)</h2>
+<blockquote>
+<p>Develop the fixes fofr the two issues.</p>
+</blockquote>
+<h2 id="2026-07-30-5">2026-07-30 (5)</h2>
+<blockquote>
+<p>Have no idea what you want me to do: "From that directory:"
+[then] Done</p>
+</blockquote>
+<h2 id="2026-07-31">2026-07-31</h2>
+<blockquote>
+<p>Setup and run 50 samples 44 hours On battery (mounted) USB disconnected now. No Deque
+audit. A pure operational field type DRY run. You progress it.
+[then] status? / Pumps running / Plugging in USB. Prepare for forensics and deep
+analysis of latest code changes. - One or more of those caused this.</p>
+</blockquote>
+<h2 id="2026-07-31-2">2026-07-31 (2)</h2>
+<blockquote>
+<p>Implement the fix, then restart a 3 samle 20 minutes run.</p>
+</blockquote>
+<h2 id="2026-07-31-3">2026-07-31 (3)</h2>
+<blockquote>
+<p>Now I have observed an issue: sample 0 is more than a minute off. That should not be
+possible if the deque is working correctly. Deep analyse this.</p>
+</blockquote>
+<h2 id="2026-07-31-4">2026-07-31 (4)</h2>
+<blockquote>
+<p>Go</p>
+</blockquote>
+<h2 id="2026-08-01">2026-08-01</h2>
+<blockquote>
+<p>The latest update clearly improved timing accuracy. Make sure current version is pushed
+and committed. Update spec repos, requirements and verification report (Reqs vs tested vs
+tested and verified vs version).
+[then] Make the Verification report available on the local website.</p>
+</blockquote>
 
 
 

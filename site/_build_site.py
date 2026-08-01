@@ -31,6 +31,8 @@ DOCUMENTS = [
      "blurb": "Software specification for the Control desktop app, documenting its tabs, structure, data flow, and hardware interfaces."},
     {"file": "fluispotter_sw_requirements.html", "title": "Fluispotter Software Requirements", "category": "Requirements", "kind": "html",
      "blurb": "The generated software requirements registry of testable, ID'd SW and MECH requirements (a fluispotter_sw_requirements.docx twin exists alongside it)."},
+    {"file": "fluispotter_verification_status.html", "title": "Fluispotter Verification Status — Reqs vs Tested vs Verified", "category": "Requirements", "kind": "html",
+     "blurb": "Generated evidence report: every requirement scored NOT TESTED / TESTED (CI claim check) / BENCH-TESTED (board-driving suite) / FIELD-VERIFIED (proven by a concluded testlog run), with the firmware version each hardware proof was taken at, plus the locked-without-hardware-evidence gap list."},
     {"file": "main_cpu_architecture.rtf", "title": "Main CPU Architecture", "category": "Architecture", "kind": "rtf",
      "blurb": "Architecture note describing the MicroPython main-CPU firmware: its async state machine, the MainController object graph, and how real-time pump regulation is offloaded to the ULP."},
     {"file": "ulp_pid_code_annotated.rtf", "title": "ULP RISC-V Pump Regulator — PID Code Annotated Reference", "category": "Architecture", "kind": "rtf",
@@ -91,6 +93,14 @@ def status_panel_html():
          "%s requirements (doc %s)" % (req.get("total", "?"),
                                        req.get("doc_version", "?"))),
     ]
+    ver = req.get("verification") or {}
+    if ver:
+        hw = ver.get("field_verified", 0) + ver.get("bench_tested", 0)
+        tested = hw + ver.get("tested", 0)
+        rows.append(("Verification status",
+                     "%d tested / %d hardware-verified / %d untested "
+                     "(see Requirements \u2192 Verification Status)"
+                     % (tested, hw, ver.get("not_tested", 0))))
     lc = STATUS.get("latest_commit") or {}
     if lc:
         rows.append(("Latest commit", "%s — %s (%s)" % (
