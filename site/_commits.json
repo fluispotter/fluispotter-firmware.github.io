@@ -1,5 +1,11 @@
 [
 {
+"hash": "100670e56d8148ec4c6a7fde668deb2504b8d556",
+"date": "2026-08-02",
+"subject": "docs: PLAN for discriminating the BP stall class (real hesitation vs encoder blindness)",
+"body": "Writes up the open question from #68 as an actionable plan: hypothesis\n(a) real rotor hesitation, with supply sag from the CPU flash+radio\nburst as the leading non-mechanical candidate, vs (b) the rotor kept\nturning and the ULP went blind (#48 SENS_IOMUX_CLK_EN class). Records\nwhat is already settled (same-binary run-011 comparison, the ~16x\ndetector sensitivity change across the fold, all 7 stalls in\nBP_RUNNING, seg_recover's cold restart) and the owner's correction that\nthe devboard park is NOT a hard spot, so mechanical drag is retracted\nas an explanation.\n\nDecisive experiment: capture whether encoder edges were still accruing\nat the instant the stall is declared — an edge-counter witness in the\nFAULT payload (works in the field, forever), plus a bench drive with an\nindependent rotation witness and a must-fail control. Decision table\nmaps each outcome to its consequence; if (b) proves out, #68 becomes\nurgent because seg_recover would be stopping healthy motors.\n\nPrerequisites recorded: finish + conclude the running field test, and\nremove /crumbs_on (a confound armed for the #67 hunt that run 011 did\nnot have).\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
+},
+{
 "hash": "bfa1f0fc6b83c6d2055549502dd3d480ee6f2f30",
 "date": "2026-08-02",
 "subject": "hub 1.17.0: collapsible session reports (HUBR-325) + empty-events dead end fixed (HUBR-326)",
@@ -1792,11 +1798,5 @@
 "date": "2026-07-13",
 "subject": "clean_event_store command + boot append guard (0.1.102, SWR-263/264)",
 "body": "Store-full incident 2026-07-13 (8192 cap via 37h of FINISH-state\nWiFi-disconnect logging; device hub-mute, brick-on-next-boot):\n\n- clean_event_store hub command: wipes + re-initializes the event store,\n  uid-continuous via persisted uid_base (event_uid_base file) so the hub\n  mint gate/dedupe keep working with NO hub-row delete. Crash-safe\n  two-phase (index removal = commit point; boot finishes/rolls back an\n  interrupted clean). Ack lands in the FRESH store (ack-before-clean\n  would re-deliver forever). SWR-238 degraded latch resets.\n- Boot config append guarded (SWR-264): a full store degrades to a log\n  line instead of bricking every boot in create().\n- EventStore grows uid_base; synchronize() claims base+length and\n  resumes uploads at unmask(server_uid)-base+1, clamped at 0.\n- deploy scripts: event_store.py added to FILES (was missing - the\n  0.1.100 lesson again).\n- 8 host-run behavioral tests (real sync math vs fakes) + 5 structure\n  tests; registry 1.54, 131 reqs 0 FAIL, 205 tests.\n- Submodule: hub service 1.3.0 surfaces the command button (deployed).\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
-},
-{
-"hash": "be3a353f756efecd51e266324e02027b4eb5ef51",
-"date": "2026-07-11",
-"subject": "docs: prompts 117-118 (24.5h endurance PASS + 0.1.101 deploy)",
-"body": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 }
 ]

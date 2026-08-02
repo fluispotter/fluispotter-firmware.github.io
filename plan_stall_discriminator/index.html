@@ -1,0 +1,828 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../multi_mode_ulp/">
+      
+      
+        <link rel="next" href="../prompts/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+    
+    
+      
+        <title>PLAN — Discriminating the BP stall class: real hesitation vs encoder blindness - Fluispotter</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.8c3ca2c6.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#plan-discriminating-the-bp-stall-class-real-hesitation-vs-encoder-blindness" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Fluispotter" class="md-header__button md-logo" aria-label="Fluispotter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Fluispotter
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              PLAN — Discriminating the BP stall class: real hesitation vs encoder blindness
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Fluispotter" class="md-nav__button md-logo" aria-label="Fluispotter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Fluispotter
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Reference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../battery_test_2026-07-18/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Battery endurance test — run to power failure (2026-07-16 → 2026-07-18)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bench_run_2026-07-18_10x2/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bench acceptance — 10 samples × 2 spots (dry run), 2026-07-18
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bench_run_2026-07-19_8h_dry/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    8-hour dry run — 1 pre-session sample + 15 triplet samples, 2026-07-19
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ci_release_plan/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CI / Release Process Plan — Fluispotter Firmware &amp; Software
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compacting_log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Compacting Log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multi_mode_ulp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Multi Mode ULP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    PLAN — Discriminating the BP stall class: real hesitation vs encoder blindness
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    PLAN — Discriminating the BP stall class: real hesitation vs encoder blindness
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-what-is-already-settled-do-not-re-litigate" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. What is already settled (do not re-litigate)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-two-live-hypotheses" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. The two live hypotheses
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. The two live hypotheses">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-the-rotor-really-hesitated" class="md-nav__link">
+    <span class="md-ellipsis">
+      (a) The rotor really hesitated
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-the-rotor-kept-turning-and-the-ulp-went-blind" class="md-nav__link">
+    <span class="md-ellipsis">
+      (b) The rotor kept turning and the ULP went blind
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-the-decisive-experiment" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. The decisive experiment
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. The decisive experiment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#experiment-1-edge-counter-witness-in-the-fault-payload-preferred-cheap-permanent" class="md-nav__link">
+    <span class="md-ellipsis">
+      Experiment 1 — edge-counter witness in the fault payload (preferred; cheap, permanent)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#experiment-2-bench-drive-with-an-independent-rotation-witness-confirmatory" class="md-nav__link">
+    <span class="md-ellipsis">
+      Experiment 2 — bench drive with an independent rotation witness (confirmatory)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#experiment-3-a-specific-only-if-experiment-12-point-at-a-real-stop" class="md-nav__link">
+    <span class="md-ellipsis">
+      Experiment 3 — (a)-specific, only if Experiment 1/2 point at a real stop
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-decision-rules-and-consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Decision rules and consequences
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-prerequisites-and-sequencing" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Prerequisites and sequencing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-explicit-non-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Explicit non-goals
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prompts/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    User Prompts Log
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../requirements_implementation_map/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Requirements Implementation Map — 2026-07-16 (registry 1.69, 148 requirements)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../summaries/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Summaries
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../test_runs/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fluispotter test-run register
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ulp_1.17.0_verification_status/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Verification status — operational ULP 1.17.0 (the promoted cooperative scheduler)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ulp_fold_behavioural_audit/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ULP fold — behavioural audit against the operational code
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ulp_scheduler_design/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Design Note — ULP Cooperative Scheduler (non-blocking single main loop)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wdt_lightsleep_usb_investigation_2026-07-20/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    GitHub #46 — WDT(3) at lightsleep entry: investigation record (WON'T FIX)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="plan-discriminating-the-bp-stall-class-real-hesitation-vs-encoder-blindness">PLAN — Discriminating the BP stall class: real hesitation vs encoder blindness</h1>
+<p><strong>Status:</strong> OPEN, blocked only on the bench board becoming free (field run 2 finishes
+~19:45 local 2026-08-02).
+<strong>Owns:</strong> GitHub <a href="https://github.com/fluispotter/fluispotter-firmware/issues/68">#68</a>
+(detector sensitivity + <code>seg_recover</code> policy), touches
+<a href="https://github.com/fluispotter/fluispotter-firmware/issues/48">#48</a> (encoder blindness).
+<strong>Origin:</strong> owner question 2026-08-02 — <em>"can the stalls be attributed to the latest code
+changes? We ran 44 hours without a single stall event before this."</em></p>
+<hr />
+<h2 id="1-what-is-already-settled-do-not-re-litigate">1. What is already settled (do not re-litigate)</h2>
+<ul>
+<li><strong>The events are real, not a reporting artifact of the fold alone.</strong> Run
+  <code>2026-07-28-011</code> (fw 0.1.156) and run <code>2026-07-31-003</code> (fw 0.1.161) ran the
+  <strong>identical ULP dev.0.24 binary</strong>, same 53-min cadence, comparable duty (205 vs 187 BP
+  starts). Run 011: <strong>0 motor stops in 36 h</strong>. This run: <strong>9</strong>. Same detector, different
+  outcome.</li>
+<li><strong>The detector did get ~16× more sensitive across the fold</strong> (relevant only to the
+  older 44 h baseline, ULP 1.12.0): the stall clock changed from a <em>first-edge</em> window
+  (live ~6 % of a segment) to a <em>free-running inter-edge watchdog</em> (live 100 %). Timeout
+  value unchanged at 50 ms. So a 50–400 ms hesitation that ULP 1.12.0 could not see is
+  reported now. <strong>Never compare stall counts across the fold boundary.</strong></li>
+<li><strong>All 7 BP stalls were <code>bp_state_word = 1</code> (BP_RUNNING)</strong> — the inter-edge watchdog.
+  Not the new <code>BP_PARK_OFFSET</code> site, not dose, not park.</li>
+<li><strong><code>seg_recover</code> de-energizes and cold-restarts</strong> on that 50 ms window, which is what
+  produces the 3 downstream <code>BP start-FAIL</code>s.</li>
+<li><strong>RETRACTED (owner correction 2026-08-02):</strong> the "dead-point / position hard spot"
+  explanation. <strong>On the devboard the parking position is NOT in a hard spot.</strong> That
+  measurement came from the Test2 bench and must not be reused here. Any mechanical
+  explanation now needs its own evidence.</li>
+</ul>
+<h2 id="2-the-two-live-hypotheses">2. The two live hypotheses</h2>
+<h3 id="a-the-rotor-really-hesitated">(a) The rotor really hesitated</h3>
+<p>With the park not a hard spot, this needs its own evidence instead of being the default.
+The leading candidate in this branch is <strong>non-mechanical</strong>: supply sag from the CPU's
+flash-commit + Wi-Fi burst running concurrently with regulation — the mechanism the
+firmware review flagged, which also explains the self-reinforcing cluster (a stall wakes
+the CPU in ~1 ms, which does <code>statvfs</code> + a large event append + a flash commit + a radio
+push <em>while the ULP executes its escalated re-kick</em>; a failed re-kick emits another
+fault, which fires another burst). This is the SWR-265 collision class recreated at the
+fault-report path.</p>
+<h3 id="b-the-rotor-kept-turning-and-the-ulp-went-blind">(b) The rotor kept turning and the ULP went blind</h3>
+<p>The <strong>#48 <code>SENS_IOMUX_CLK_EN</code> class</strong>, where RTC_GPIO reads freeze. A blind ULP on a
+perfectly healthy motor trips the same watchdog identically. Two things point this way
+that were under-weighted:
+- at the first stall the regulator was driving at a <strong>normal running power</strong> (3370 —
+  not a struggling motor), and
+- every fault payload carries <strong><code>iomux14 = iomux18 = 0x00001a00</code></strong> on the two
+  encoder-enable pads.</p>
+<p>Both are <strong>suggestive, not conclusive</strong>: the iomux value was originally dismissed because
+RTC <code>MUX_SEL</code> was still set (RTC override wins), and the same <code>0x00001a00</code> appears in an
+fw 0.1.143 payload never attributed to pad theft.</p>
+<p><strong>No pick between (a) and (b) without evidence.</strong></p>
+<h2 id="3-the-decisive-experiment">3. The decisive experiment</h2>
+<p><strong>Question:</strong> <em>were encoder edges still accruing at the instant the stall was declared?</em></p>
+<p>That single fact separates the hypotheses cleanly:
+- edges still accruing → the ULP was <strong>blind</strong> → (b)
+- genuinely no edges → the rotor <strong>stopped</strong> → (a)</p>
+<h3 id="experiment-1-edge-counter-witness-in-the-fault-payload-preferred-cheap-permanent">Experiment 1 — edge-counter witness in the fault payload (preferred; cheap, permanent)</h3>
+<p>Record the ULP's encoder edge/interval counter (and the RTC tick of the last observed
+edge) <em>at the moment <code>seg_stalled()</code> fires</em>, and surface both in the existing FAULT
+payload alongside the fields already there.</p>
+<ul>
+<li>Cost: a few words of ULP state + payload fields; no new machinery, no extra RTC maths.</li>
+<li>Watch the ULP stack headroom gate (<code>build_verify_ulp.py</code>) — it is the binding
+  constraint on any ULP change.</li>
+<li>Value: works <strong>in the field, forever</strong>, on every future stall, without a bench rig.</li>
+<li>Note the payload already carries <code>gpio_in</code>; a <em>single</em> sample of it is not a witness —
+  the counter is.</li>
+</ul>
+<h3 id="experiment-2-bench-drive-with-an-independent-rotation-witness-confirmatory">Experiment 2 — bench drive with an independent rotation witness (confirmatory)</h3>
+<p>Drive the BP continuously on the bench (board idle, USB attached, session not required)
+and check whether declared stalls coincide with an <strong>actual rotor stop</strong>, judged
+independently of the encoder path: hall-crossing counter and/or direct observation.</p>
+<ul>
+<li>If stalls are declared while the hall counter keeps advancing → (b) confirmed
+  outright, no ambiguity.</li>
+<li>Pair with the #48 probe already in the tree (<code>tools/ulp_probe/</code>) to read
+  <code>SENS_IOMUX_CLK_EN</code> at the moment of declaration.</li>
+<li>Must include a <strong>must-fail control</strong> (a deliberately stalled rotor) so a "no stalls
+  detected" result cannot be mistaken for a working test.</li>
+</ul>
+<h3 id="experiment-3-a-specific-only-if-experiment-12-point-at-a-real-stop">Experiment 3 — (a)-specific, only if Experiment 1/2 point at a real stop</h3>
+<p>Correlate stall timestamps against the CPU's flash+radio bursts, and A/B the burst by
+deferring the fault report away from the recovery kick (the #68 fix). If deferring the
+burst removes the cluster, (a)'s supply-sag mechanism is confirmed by intervention.</p>
+<h2 id="4-decision-rules-and-consequences">4. Decision rules and consequences</h2>
+<table>
+<thead>
+<tr>
+<th>Outcome</th>
+<th>Verdict</th>
+<th>Consequence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Edges accruing at declaration</td>
+<td><strong>(b)</strong> — spurious stall reports</td>
+<td><strong>Escalates #68 from advisable to urgent</strong>: <code>seg_recover</code> is stopping <em>healthy</em> motors. Fix the detector (require a real edge-loss, not a blind read) AND the recovery policy. Re-open #48 scope: blindness reaches the operational path.</td>
+</tr>
+<tr>
+<td>No edges, rotor stopped</td>
+<td><strong>(a)</strong> — real hesitation</td>
+<td>Pursue the supply-sag mechanism; land the #68 burst-deferral (SWR-265 pattern, third instance) and re-measure. Mechanical remains unexplained and needs its own investigation — <em>not</em> hard-spot drag.</td>
+</tr>
+<tr>
+<td>Mixed across events</td>
+<td>Both classes present</td>
+<td>Fix (b) first — it is the one that corrupts the evidence for (a).</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Independent of outcome, already justified by #68:</strong> do not power-cycle a motor on a
+single 50 ms window. Require N consecutive stall windows, or first raise power on the
+<strong>energized</strong> motor (ULP 1.9.0 lesson: stiction only has to be overcome once) and
+power-cycle only if that fails.</p>
+<h2 id="5-prerequisites-and-sequencing">5. Prerequisites and sequencing</h2>
+<ol>
+<li><strong>Field run 2 completes</strong> (~19:45 local 2026-08-02) and is concluded with
+   <code>reset_session</code>. Do not touch the board before then.</li>
+<li><strong>Remove <code>/crumbs_on</code></strong> — armed during this run for the #67 hunt, it is a confound
+   (2 RTC-RAM read-modify-writes per console line) that run 011 did not have. Any
+   comparison run must be without it.</li>
+<li>Experiment 1 (ULP change) → build, headroom gate, deploy, boot-prove.</li>
+<li>Experiment 2 on the idle bench, with the must-fail control.</li>
+<li>Record on #68 with file:line + failure scenario; update SWR/HUBR text only once a
+   branch is <em>proven</em>, per the fix-closure discipline.</li>
+</ol>
+<h2 id="6-explicit-non-goals">6. Explicit non-goals</h2>
+<ul>
+<li>Do <strong>not</strong> re-run a 44-hour endurance test to chase this. The discriminator is a
+  bench-minutes experiment, not an endurance question.</li>
+<li>Do <strong>not</strong> quote historical stall counts across the fold boundary as a trend.</li>
+<li>Do <strong>not</strong> attribute anything to mechanical drag at the park position on this board.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.525ec568.min.js"></script>
+      
+    
+  </body>
+</html>

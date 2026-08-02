@@ -39,6 +39,34 @@
     <div class="commit">
   <div class="commit-head">
     <span class="commit-date">2026-08-02</span>
+    <span class="commit-hash">100670e5</span>
+  </div>
+  <div class="commit-subject">docs: PLAN for discriminating the BP stall class (real hesitation vs encoder blindness)</div>
+  <div class="commit-body">Writes up the open question from #68 as an actionable plan: hypothesis
+(a) real rotor hesitation, with supply sag from the CPU flash+radio
+burst as the leading non-mechanical candidate, vs (b) the rotor kept
+turning and the ULP went blind (#48 SENS_IOMUX_CLK_EN class). Records
+what is already settled (same-binary run-011 comparison, the ~16x
+detector sensitivity change across the fold, all 7 stalls in
+BP_RUNNING, seg_recover&#x27;s cold restart) and the owner&#x27;s correction that
+the devboard park is NOT a hard spot, so mechanical drag is retracted
+as an explanation.
+
+Decisive experiment: capture whether encoder edges were still accruing
+at the instant the stall is declared — an edge-counter witness in the
+FAULT payload (works in the field, forever), plus a bench drive with an
+independent rotation witness and a must-fail control. Decision table
+maps each outcome to its consequence; if (b) proves out, #68 becomes
+urgent because seg_recover would be stopping healthy motors.
+
+Prerequisites recorded: finish + conclude the running field test, and
+remove /crumbs_on (a confound armed for the #67 hunt that run 011 did
+not have).
+
+Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</div>
+</div><div class="commit">
+  <div class="commit-head">
+    <span class="commit-date">2026-08-02</span>
     <span class="commit-hash">bfa1f0fc</span>
   </div>
   <div class="commit-subject">hub 1.17.0: collapsible session reports (HUBR-325) + empty-events dead end fixed (HUBR-326)</div>
@@ -4525,13 +4553,6 @@ WiFi-disconnect logging; device hub-mute, brick-on-next-boot):
 - Submodule: hub service 1.3.0 surfaces the command button (deployed).
 
 Co-Authored-By: Claude Fable 5 &lt;noreply@anthropic.com&gt;</div>
-</div><div class="commit">
-  <div class="commit-head">
-    <span class="commit-date">2026-07-11</span>
-    <span class="commit-hash">be3a353f</span>
-  </div>
-  <div class="commit-subject">docs: prompts 117-118 (24.5h endurance PASS + 0.1.101 deploy)</div>
-  <div class="commit-body">Co-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;</div>
 </div>
   </div>
 </section>
@@ -6515,6 +6536,14 @@ fw 0.1.101 (the adversarially-hardened build) DEPLOYED post-FINISH + boot-verifi
 <div class="prompt-entry"><span class="prompt-num">&middot;</span><div class="prompt-text">&gt; and committed. Update spec repos, requirements and verification report (Reqs vs tested vs</div></div>
 <div class="prompt-entry"><span class="prompt-num">&middot;</span><div class="prompt-text">&gt; tested and verified vs version).</div></div>
 <div class="prompt-entry"><span class="prompt-num">&middot;</span><div class="prompt-text">&gt; [then] Make the Verification report available on the local website.</div></div>
+</div>
+<div class="prompt-session">
+<h3>2026-08-02</h3>
+<div class="prompt-entry"><span class="prompt-num">&middot;</span><div class="prompt-text">&gt; btw: It is not a mechanical issue - in the devboard the parking position is not even in</div></div>
+<div class="prompt-entry"><span class="prompt-num">&middot;</span><div class="prompt-text">&gt; the hard spot. So stop using that as an explanation.</div></div>
+<div class="prompt-entry"><span class="prompt-num">&middot;</span><div class="prompt-text">&gt; [then] Bug: Hub; Event display breaks when event store exceeds (N (16 bit?)) events.</div></div>
+<div class="prompt-entry"><span class="prompt-num">&middot;</span><div class="prompt-text">&gt; [then] HUBR: Make the session reports list collapsable</div></div>
+<div class="prompt-entry"><span class="prompt-num">&middot;</span><div class="prompt-text">&gt; [then] status on the run. And put this into a PLAN: [(a)/(b) stall discriminator]</div></div>
 </div>
 </section>
 

@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-02T08:12:24+00:00",
+ "generated_at": "2026-08-02T09:16:31+00:00",
  "firmware_version": "0.1.161",
  "ulp_operational": "1.24.2",
  "hub_service": null,
@@ -16,18 +16,32 @@
  },
  "ci": [
   {
-   "workflowName": "ci",
-   "headBranch": "dev",
-   "conclusion": "",
-   "status": "in_progress",
-   "updatedAt": "2026-08-02T08:12:09Z"
-  },
-  {
    "workflowName": "Documentation",
    "headBranch": "dev",
    "conclusion": "",
    "status": "in_progress",
-   "updatedAt": "2026-08-02T08:12:01Z"
+   "updatedAt": "2026-08-02T09:16:13Z"
+  },
+  {
+   "workflowName": "ci",
+   "headBranch": "dev",
+   "conclusion": "",
+   "status": "in_progress",
+   "updatedAt": "2026-08-02T09:16:06Z"
+  },
+  {
+   "workflowName": "ci",
+   "headBranch": "dev",
+   "conclusion": "failure",
+   "status": "completed",
+   "updatedAt": "2026-08-02T08:14:56Z"
+  },
+  {
+   "workflowName": "Documentation",
+   "headBranch": "dev",
+   "conclusion": "success",
+   "status": "completed",
+   "updatedAt": "2026-08-02T08:12:31Z"
   },
   {
    "workflowName": "ci",
@@ -84,26 +98,12 @@
    "conclusion": "failure",
    "status": "completed",
    "updatedAt": "2026-07-28T10:03:55Z"
-  },
-  {
-   "workflowName": "Documentation",
-   "headBranch": "dev",
-   "conclusion": "success",
-   "status": "completed",
-   "updatedAt": "2026-07-24T17:02:48Z"
-  },
-  {
-   "workflowName": "ci",
-   "headBranch": "dev",
-   "conclusion": "failure",
-   "status": "completed",
-   "updatedAt": "2026-07-24T17:05:00Z"
   }
  ],
  "latest_commit": {
-  "hash": "bfa1f0fc6b83c6d2055549502dd3d480ee6f2f30",
+  "hash": "100670e56d8148ec4c6a7fde668deb2504b8d556",
   "date": "2026-08-02",
-  "subject": "hub 1.17.0: collapsible session reports (HUBR-325) + empty-events dead end fixed (HUBR-326)",
-  "body": "Owner asks, both deployed and live-verified.\n\nHUBR-325: the Session Reports list is collapsed by default behind a\n<details> whose summary counts session reports and total files. It had\nreached 85 session reports / 340 files on the bench device once\nHUBR-324 started generating a report for every session ending.\n\nHUBR-326: the device page could render \"68456 events in total\" and\nNOTHING else - no table, no navigation. Reproduced live: with\norder=DESC the list filter is events.id < events_after, and the\nNext-page link passes the smallest id on the page, so paging to the end\n(or any stale/bookmarked small cursor) selects zero rows while the\ncount query still returns the full total (events_after=1 and =500 both\ngave 0 rows). The branch now states the cursor is past the end, echoes\nits value, and links back to the newest events. This is NOT an\nevent-count or 16-bit limit: event ids are ~16.7M and the underlying\nquery returns 200 rows correctly.\n\nVerified by an offline full-template render of both branches BEFORE\ndeploy - which caught a first draft using a non-existent Jinja 'search'\ntest that would have 500'd the page - then live on the hub.\n\nHub registry DOC 1.19; doc regenerated; source archived with deploy and\nrollback instructions in development/hub_1.17.0/.\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
+  "subject": "docs: PLAN for discriminating the BP stall class (real hesitation vs encoder blindness)",
+  "body": "Writes up the open question from #68 as an actionable plan: hypothesis\n(a) real rotor hesitation, with supply sag from the CPU flash+radio\nburst as the leading non-mechanical candidate, vs (b) the rotor kept\nturning and the ULP went blind (#48 SENS_IOMUX_CLK_EN class). Records\nwhat is already settled (same-binary run-011 comparison, the ~16x\ndetector sensitivity change across the fold, all 7 stalls in\nBP_RUNNING, seg_recover's cold restart) and the owner's correction that\nthe devboard park is NOT a hard spot, so mechanical drag is retracted\nas an explanation.\n\nDecisive experiment: capture whether encoder edges were still accruing\nat the instant the stall is declared — an edge-counter witness in the\nFAULT payload (works in the field, forever), plus a bench drive with an\nindependent rotation witness and a must-fail control. Decision table\nmaps each outcome to its consequence; if (b) proves out, #68 becomes\nurgent because seg_recover would be stopping healthy motors.\n\nPrerequisites recorded: finish + conclude the running field test, and\nremove /crumbs_on (a confound armed for the #67 hunt that run 011 did\nnot have).\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
  }
 }
