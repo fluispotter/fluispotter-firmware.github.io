@@ -835,6 +835,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#265-2026-08-02-field-dry-run-2-concluded-4350-in-374-h-zero-reboots" class="md-nav__link">
+    <span class="md-ellipsis">
+      265 (2026-08-02) — Field dry run 2 concluded: 43/50 in 37.4 h, zero reboots
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1404,6 +1413,21 @@ tested, 21 field-verified, 21 untested. Site: report listed on the Requirements 
 cadence-is-a-test-dimension rule, #67 entry kick-settle) + TOC entries 5.6.3/4/5 that
 were missing; .docx regenerated and the Drive copy updated in place. Field run 2
 continues (audit off, crumbs armed).</p>
+<h2 id="265-2026-08-02-field-dry-run-2-concluded-4350-in-374-h-zero-reboots">265 (2026-08-02) — Field dry run 2 concluded: 43/50 in 37.4 h, zero reboots</h2>
+<p>Battery exhaustion at 08-02 11:48:26 UTC (started 07-31 22:27:14). fw 0.1.161 +
+dev.0.24, audit OFF, crumbs armed (my confound). ZERO reboots in 37.4 h (48 h board
+uptime). Death = silent stop in the flush cycle, BP PARKED + disabled 8 s before the
+end, clean final sync, NO early-warning burst. Timing excellent: mostly 0-2 s deltas
+with two bounded +14/+15 s excursions that self-corrected. Faults: 7 BP stall + 3
+start-FAIL all in one 31-min window (all BP_RUNNING inter-edge watchdog) + 2 AC
+stalls; nothing in the last 20 h. KEY ENDURANCE RESULT: 37.4 h audit-OFF vs run 011's
+36.0 h audit-ON = the deque audit bought only ~1.4 h, so it was NOT the dominant
+drain — the 44h10m reference remains unexplained by audit state alone (it ran a
+109-min cadence with 22 samples, i.e. far less pump duty). INCOMPLETE report generated
+via the HUBR-324 manual open-tail override (43 rows, dual-signed) — first real use of
+that path. reset_session deliberately NOT queued (#65: a queued reset consumes the
+resume on revival). Next: the #68 stall discriminator per docs/plan_stall_discriminator.md,
+after removing /crumbs_on.</p>
 
 
 

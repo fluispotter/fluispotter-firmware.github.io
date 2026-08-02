@@ -1,5 +1,11 @@
 [
 {
+"hash": "782cdda55c39a1f896013915bd21862f8dbafb35",
+"date": "2026-08-02",
+"subject": "field run 2 concluded: 43/50 in 37.4 h, zero reboots, battery exhaustion",
+"body": "fw 0.1.161 + ULP dev.0.24, audit OFF. Started 07-31 22:27:14 UTC, died\n08-02 11:48:26 UTC. Safe posture: BP parked at 11:48:18 and disabled at\n11:48:26, clean final sync, no early-warning burst, ZERO reboots across\n37.4 h (48 h board uptime).\n\nEndurance result worth recording: 37.4 h audit-OFF vs run 011's 36.0 h\naudit-ON — turning the deque audit off bought only ~1.4 h, so the audit\nwas NOT the dominant drain and the 44h10m reference is not explained by\naudit state alone (that run used a 109-min cadence with 22 samples, far\nless pump duty; sample rate here 1.15/h vs run 011's 1.14/h).\n\nTiming: mostly 0-2 s deltas with two bounded +14/+15 s excursions that\nboth self-corrected. Faults: 7 BP stall + 3 BP start-FAIL, all in one\n31-minute window on 08-01 and all bp_state_word=1 (BP_RUNNING\ninter-edge watchdog), plus 2 isolated AC stalls; nothing in the final\n20 hours.\n\nThe INCOMPLETE report was generated through the HUBR-324 manual\nopen-tail override (43 sample rows, dual-signed) — first real use of\nthat path on a dead, never-revived session.\n\nreset_session deliberately NOT queued: the board is dead and a queued\nreset would consume the resume on revival (#65).\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
+},
+{
 "hash": "26a51bcab26ccb9f9e45595dfbbe4f926990546d",
 "date": "2026-08-02",
 "subject": "spec 2.34: §4A.6 documents the LIVE Simple-P regulator + skip ladder, not the retired PID",
@@ -1792,11 +1798,5 @@
 "date": "2026-07-13",
 "subject": "docs: prompts/summaries log entries 2026-07-13",
 "body": "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
-},
-{
-"hash": "e7c6cb2a99fab5113a2e18669ab7f0e243b3c7db",
-"date": "2026-07-13",
-"subject": "clean_event_store idempotency per command uid (0.1.103, SWR-263)",
-"body": "Live 0.1.102 proof run: the command executed TWICE (base 27->30) —\nfast polls re-deliver until the ack uploads, and each re-execution\nwipes the previous ack. A repeated command uid now re-acks without\nre-cleaning. Live 0.1.103 proof: exactly one clean (purged 10,\nbase 30->40), single cleaned event uid 16711720 continuing past the\npre-clean high-water, command cleared. Registry 1.55, 206 tests 0 FAIL.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 }
 ]

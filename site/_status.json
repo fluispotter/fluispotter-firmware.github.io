@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-02T09:43:53+00:00",
+ "generated_at": "2026-08-02T12:16:30+00:00",
  "firmware_version": "0.1.161",
  "ulp_operational": "1.24.2",
  "hub_service": null,
@@ -20,14 +20,28 @@
    "headBranch": "dev",
    "conclusion": "",
    "status": "in_progress",
-   "updatedAt": "2026-08-02T09:43:25Z"
+   "updatedAt": "2026-08-02T12:16:05Z"
   },
   {
    "workflowName": "ci",
    "headBranch": "dev",
    "conclusion": "",
    "status": "in_progress",
-   "updatedAt": "2026-08-02T09:43:32Z"
+   "updatedAt": "2026-08-02T12:16:14Z"
+  },
+  {
+   "workflowName": "Documentation",
+   "headBranch": "dev",
+   "conclusion": "success",
+   "status": "completed",
+   "updatedAt": "2026-08-02T09:44:00Z"
+  },
+  {
+   "workflowName": "ci",
+   "headBranch": "dev",
+   "conclusion": "failure",
+   "status": "completed",
+   "updatedAt": "2026-08-02T09:46:25Z"
   },
   {
    "workflowName": "Documentation",
@@ -84,26 +98,12 @@
    "conclusion": "success",
    "status": "completed",
    "updatedAt": "2026-08-01T10:55:16Z"
-  },
-  {
-   "workflowName": "Build",
-   "headBranch": "v0.1.147-img6",
-   "conclusion": "success",
-   "status": "completed",
-   "updatedAt": "2026-07-28T11:33:35Z"
-  },
-  {
-   "workflowName": "Build",
-   "headBranch": "v0.1.145-img5",
-   "conclusion": "success",
-   "status": "completed",
-   "updatedAt": "2026-07-28T10:25:44Z"
   }
  ],
  "latest_commit": {
-  "hash": "26a51bcab26ccb9f9e45595dfbbe4f926990546d",
+  "hash": "782cdda55c39a1f896013915bd21862f8dbafb35",
   "date": "2026-08-02",
-  "subject": "spec 2.34: §4A.6 documents the LIVE Simple-P regulator + skip ladder, not the retired PID",
-  "body": "Owner report: the board-config regulator tables described the ULP 1.2.4\npositional PID, which has not been the operational law since the\nSimple-P 16-tick regulator landed. The section now documents what\nactually runs, with every value read from source:\n\nSimple-P: N=16 encoder pulses per measurement, 1 % deadband, power\nceiling 4095, per-pump kp (step_per_pct) AC 6 / BP 10, max-error clamp\nAC 30 % / BP 50 %, power floor 20 both — and the law stated plainly\n(pwr += err% x step_per_pct, no integral, no derivative,\nsaturate-and-continue).\n\nNEW table for the adaptive skip ladder and spin-up kick: the per-pump\nladders (AC 0,2,8,16,32,64,128,256,512,1024; BP\n0,4,8,16,24,64,128,256,512,1024), skip_max 9 and skip_good 2 both,\nDAC_START_AC 700 / DAC_START_BP 3200, escalate step 200 with decay on a\nsuccessful start, and the standing rule that one MOTOR_START_FAIL_AC\nper boot/recovery is EXPECTED by design because the AC deliberately\nstarts below its ~1900 break-away so the device learns its start power.\n\nThe PID gains are demoted to an explicit LEGACY note — they remain in\nboard_config.py for the legacy run_pid path (BP dosing/parking history,\nControl App test modes) and must not be read as the live tuning.\n\nSources: esp32/pump_regulator/main/ulp/main.c (op_p_*/ac_p_*/bp_p_*,\nskip tables, DAC_START_ESCALATE_STEP) and fluispotter/board_config.py\n(DAC_START_AC/_BP, SPR targets). .docx regenerated, Drive copy updated.\nverify: 176 requirements, 153 PASS / 0 FAIL; spec-version gate sees 2.34.\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
+  "subject": "field run 2 concluded: 43/50 in 37.4 h, zero reboots, battery exhaustion",
+  "body": "fw 0.1.161 + ULP dev.0.24, audit OFF. Started 07-31 22:27:14 UTC, died\n08-02 11:48:26 UTC. Safe posture: BP parked at 11:48:18 and disabled at\n11:48:26, clean final sync, no early-warning burst, ZERO reboots across\n37.4 h (48 h board uptime).\n\nEndurance result worth recording: 37.4 h audit-OFF vs run 011's 36.0 h\naudit-ON — turning the deque audit off bought only ~1.4 h, so the audit\nwas NOT the dominant drain and the 44h10m reference is not explained by\naudit state alone (that run used a 109-min cadence with 22 samples, far\nless pump duty; sample rate here 1.15/h vs run 011's 1.14/h).\n\nTiming: mostly 0-2 s deltas with two bounded +14/+15 s excursions that\nboth self-corrected. Faults: 7 BP stall + 3 BP start-FAIL, all in one\n31-minute window on 08-01 and all bp_state_word=1 (BP_RUNNING\ninter-edge watchdog), plus 2 isolated AC stalls; nothing in the final\n20 hours.\n\nThe INCOMPLETE report was generated through the HUBR-324 manual\nopen-tail override (43 sample rows, dual-signed) — first real use of\nthat path on a dead, never-revived session.\n\nreset_session deliberately NOT queued: the board is dead and a queued\nreset would consume the resume on revival (#65).\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
  }
 }

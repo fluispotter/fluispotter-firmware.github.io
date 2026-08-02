@@ -39,6 +39,37 @@
     <div class="commit">
   <div class="commit-head">
     <span class="commit-date">2026-08-02</span>
+    <span class="commit-hash">782cdda5</span>
+  </div>
+  <div class="commit-subject">field run 2 concluded: 43/50 in 37.4 h, zero reboots, battery exhaustion</div>
+  <div class="commit-body">fw 0.1.161 + ULP dev.0.24, audit OFF. Started 07-31 22:27:14 UTC, died
+08-02 11:48:26 UTC. Safe posture: BP parked at 11:48:18 and disabled at
+11:48:26, clean final sync, no early-warning burst, ZERO reboots across
+37.4 h (48 h board uptime).
+
+Endurance result worth recording: 37.4 h audit-OFF vs run 011&#x27;s 36.0 h
+audit-ON — turning the deque audit off bought only ~1.4 h, so the audit
+was NOT the dominant drain and the 44h10m reference is not explained by
+audit state alone (that run used a 109-min cadence with 22 samples, far
+less pump duty; sample rate here 1.15/h vs run 011&#x27;s 1.14/h).
+
+Timing: mostly 0-2 s deltas with two bounded +14/+15 s excursions that
+both self-corrected. Faults: 7 BP stall + 3 BP start-FAIL, all in one
+31-minute window on 08-01 and all bp_state_word=1 (BP_RUNNING
+inter-edge watchdog), plus 2 isolated AC stalls; nothing in the final
+20 hours.
+
+The INCOMPLETE report was generated through the HUBR-324 manual
+open-tail override (43 sample rows, dual-signed) — first real use of
+that path on a dead, never-revived session.
+
+reset_session deliberately NOT queued: the board is dead and a queued
+reset would consume the resume on revival (#65).
+
+Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</div>
+</div><div class="commit">
+  <div class="commit-head">
+    <span class="commit-date">2026-08-02</span>
     <span class="commit-hash">26a51bca</span>
   </div>
   <div class="commit-subject">spec 2.34: §4A.6 documents the LIVE Simple-P regulator + skip ladder, not the retired PID</div>
@@ -4548,20 +4579,6 @@ Co-Authored-By: Claude Fable 5 &lt;noreply@anthropic.com&gt;</div>
   </div>
   <div class="commit-subject">docs: prompts/summaries log entries 2026-07-13</div>
   <div class="commit-body">Co-Authored-By: Claude Fable 5 &lt;noreply@anthropic.com&gt;</div>
-</div><div class="commit">
-  <div class="commit-head">
-    <span class="commit-date">2026-07-13</span>
-    <span class="commit-hash">e7c6cb2a</span>
-  </div>
-  <div class="commit-subject">clean_event_store idempotency per command uid (0.1.103, SWR-263)</div>
-  <div class="commit-body">Live 0.1.102 proof run: the command executed TWICE (base 27-&gt;30) —
-fast polls re-deliver until the ack uploads, and each re-execution
-wipes the previous ack. A repeated command uid now re-acks without
-re-cleaning. Live 0.1.103 proof: exactly one clean (purged 10,
-base 30-&gt;40), single cleaned event uid 16711720 continuing past the
-pre-clean high-water, command cleared. Registry 1.55, 206 tests 0 FAIL.
-
-Co-Authored-By: Claude Fable 5 &lt;noreply@anthropic.com&gt;</div>
 </div>
   </div>
 </section>
