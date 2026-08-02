@@ -38,6 +38,38 @@
   <div class="timeline">
     <div class="commit">
   <div class="commit-head">
+    <span class="commit-date">2026-08-02</span>
+    <span class="commit-hash">bfa1f0fc</span>
+  </div>
+  <div class="commit-subject">hub 1.17.0: collapsible session reports (HUBR-325) + empty-events dead end fixed (HUBR-326)</div>
+  <div class="commit-body">Owner asks, both deployed and live-verified.
+
+HUBR-325: the Session Reports list is collapsed by default behind a
+&lt;details&gt; whose summary counts session reports and total files. It had
+reached 85 session reports / 340 files on the bench device once
+HUBR-324 started generating a report for every session ending.
+
+HUBR-326: the device page could render &quot;68456 events in total&quot; and
+NOTHING else - no table, no navigation. Reproduced live: with
+order=DESC the list filter is events.id &lt; events_after, and the
+Next-page link passes the smallest id on the page, so paging to the end
+(or any stale/bookmarked small cursor) selects zero rows while the
+count query still returns the full total (events_after=1 and =500 both
+gave 0 rows). The branch now states the cursor is past the end, echoes
+its value, and links back to the newest events. This is NOT an
+event-count or 16-bit limit: event ids are ~16.7M and the underlying
+query returns 200 rows correctly.
+
+Verified by an offline full-template render of both branches BEFORE
+deploy - which caught a first draft using a non-existent Jinja &#x27;search&#x27;
+test that would have 500&#x27;d the page - then live on the hub.
+
+Hub registry DOC 1.19; doc regenerated; source archived with deploy and
+rollback instructions in development/hub_1.17.0/.
+
+Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</div>
+</div><div class="commit">
+  <div class="commit-head">
     <span class="commit-date">2026-08-01</span>
     <span class="commit-hash">b9094530</span>
   </div>
@@ -4499,13 +4531,6 @@ Co-Authored-By: Claude Fable 5 &lt;noreply@anthropic.com&gt;</div>
     <span class="commit-hash">be3a353f</span>
   </div>
   <div class="commit-subject">docs: prompts 117-118 (24.5h endurance PASS + 0.1.101 deploy)</div>
-  <div class="commit-body">Co-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;</div>
-</div><div class="commit">
-  <div class="commit-head">
-    <span class="commit-date">2026-07-11</span>
-    <span class="commit-hash">52397df2</span>
-  </div>
-  <div class="commit-subject">deploy scripts: ship main.py (the resume-aware gate lives there — caught during the 0.1.101 deploy)</div>
   <div class="commit-body">Co-Authored-By: Claude Opus 4.8 &lt;noreply@anthropic.com&gt;</div>
 </div>
   </div>

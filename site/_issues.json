@@ -1,5 +1,21 @@
 [
  {
+  "number": 68,
+  "title": "Stall events are not comparable across the ULP fold: detector went from ~6% to 100% duty, and seg_recover stops a still-turning motor on a 50 ms hesitation",
+  "state": "OPEN",
+  "created": "2026-08-02",
+  "closed": null,
+  "seen_on": null,
+  "fix": null,
+  "fw": null,
+  "ulp": null,
+  "image": null,
+  "hub": null,
+  "swrs": [
+   "SWR-132"
+  ]
+ },
+ {
   "number": 67,
   "title": "Session-entry WDT(3): reboot fires between 'Sample N scheduled' and 'Entering session loop' (flash write + power-save arm + hot radio) — 2 of last 3 entries; masked by seamless recovery",
   "state": "OPEN",

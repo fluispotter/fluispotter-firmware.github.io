@@ -1,5 +1,11 @@
 [
 {
+"hash": "bfa1f0fc6b83c6d2055549502dd3d480ee6f2f30",
+"date": "2026-08-02",
+"subject": "hub 1.17.0: collapsible session reports (HUBR-325) + empty-events dead end fixed (HUBR-326)",
+"body": "Owner asks, both deployed and live-verified.\n\nHUBR-325: the Session Reports list is collapsed by default behind a\n<details> whose summary counts session reports and total files. It had\nreached 85 session reports / 340 files on the bench device once\nHUBR-324 started generating a report for every session ending.\n\nHUBR-326: the device page could render \"68456 events in total\" and\nNOTHING else - no table, no navigation. Reproduced live: with\norder=DESC the list filter is events.id < events_after, and the\nNext-page link passes the smallest id on the page, so paging to the end\n(or any stale/bookmarked small cursor) selects zero rows while the\ncount query still returns the full total (events_after=1 and =500 both\ngave 0 rows). The branch now states the cursor is past the end, echoes\nits value, and links back to the newest events. This is NOT an\nevent-count or 16-bit limit: event ids are ~16.7M and the underlying\nquery returns 200 rows correctly.\n\nVerified by an offline full-template render of both branches BEFORE\ndeploy - which caught a first draft using a non-existent Jinja 'search'\ntest that would have 500'd the page - then live on the hub.\n\nHub registry DOC 1.19; doc regenerated; source archived with deploy and\nrollback instructions in development/hub_1.17.0/.\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
+},
+{
 "hash": "b9094530a7462dd7ba67dec114bab0689ace2a52",
 "date": "2026-08-01",
 "subject": "docs site: front-page verification card survives CI (committed rollup)",
@@ -1791,12 +1797,6 @@
 "hash": "be3a353f756efecd51e266324e02027b4eb5ef51",
 "date": "2026-07-11",
 "subject": "docs: prompts 117-118 (24.5h endurance PASS + 0.1.101 deploy)",
-"body": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
-},
-{
-"hash": "52397df2380e6feb047022e75eb57ff24847f584",
-"date": "2026-07-11",
-"subject": "deploy scripts: ship main.py (the resume-aware gate lives there — caught during the 0.1.101 deploy)",
 "body": "Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>"
 }
 ]
