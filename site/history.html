@@ -39,6 +39,43 @@
     <div class="commit">
   <div class="commit-head">
     <span class="commit-date">2026-08-02</span>
+    <span class="commit-hash">d07809c3</span>
+  </div>
+  <div class="commit-subject">plan: sample deltas are phase quantisation, not a health signal (§1b)</div>
+  <div class="commit-body">Adds the 2026-08-02 finding to the stall-discriminator plan.
+
+Owner hypothesis &quot;deltas &gt;3 s coincide with a flush cycle continuing
+into the 5-minute pre-sample flush&quot; is REFUTED: the pump was PARKED at
+42/42 preloads with a determinable state, because the flush cycle
+restarts after each sample and is therefore phase-locked to the 53-min
+schedule (every preload landed 100-148 s into the 8-min REST).
+Independent phases would have caught a RUN in ~20 % of samples.
+
+The deltas are one-revolution phase quantisation: spin-up (19.4 s) and
+revolution period (16.0 s) are IDENTICAL between the delta&lt;=3 (n=34)
+and delta&gt;3 (n=9) groups; the big-delta samples just took one extra
+revolution (26 vs 25). Loading requires 7 crossings after scheduled_at
+and sampled_at is the first of them, so delta wraps: +15 s means a
+crossing missed the schedule by ~1 s. Added to non-goals: never use
+delta as a pump-health signal (an earlier mid-run reading of the +15 s
+cluster as battery decline was wrong).
+
+What it contributes to hypothesis (b): across 43 loading windows the
+inter-crossing intervals were uniform 15-17 s with ZERO intervals
+&gt;=24 s — ~1,075 consecutive hall crossings with no dropped
+registration. So the hall path is demonstrably healthy in the TRIGGER
+context and any blindness is episodic, not systemic. This does NOT
+refute (b) — the stalls were in the flush-cycle BP_RUNNING context —
+but Experiment 2 must now reproduce the FLUSH-RUN context specifically
+(2-min RUN / 8-min REST, CPU napping between hall wakes) or it will
+re-measure the healthy path and produce a false negative.
+
+Status updated: the board is free (run ended on battery exhaustion).
+
+Co-Authored-By: Claude Opus 5 &lt;noreply@anthropic.com&gt;</div>
+</div><div class="commit">
+  <div class="commit-head">
+    <span class="commit-date">2026-08-02</span>
     <span class="commit-hash">782cdda5</span>
   </div>
   <div class="commit-subject">field run 2 concluded: 43/50 in 37.4 h, zero reboots, battery exhaustion</div>
@@ -4572,13 +4609,6 @@ NOTE: verified off-device; deploy pending — board currently detached
 from USB (alive on 0.1.103 via hub).
 
 Co-Authored-By: Claude Fable 5 &lt;noreply@anthropic.com&gt;</div>
-</div><div class="commit">
-  <div class="commit-head">
-    <span class="commit-date">2026-07-13</span>
-    <span class="commit-hash">c7bbbcd6</span>
-  </div>
-  <div class="commit-subject">docs: prompts/summaries log entries 2026-07-13</div>
-  <div class="commit-body">Co-Authored-By: Claude Fable 5 &lt;noreply@anthropic.com&gt;</div>
 </div>
   </div>
 </section>

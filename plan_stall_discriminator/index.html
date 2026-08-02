@@ -353,6 +353,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#1b-evidence-added-2026-08-02-sample-deltas-are-not-a-signal-and-the-hall-path-was-healthy-in-every-loading-window" class="md-nav__link">
+    <span class="md-ellipsis">
+      1b. Evidence added 2026-08-02 — sample deltas are NOT a signal, and the hall path was healthy in every loading window
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#2-the-two-live-hypotheses" class="md-nav__link">
     <span class="md-ellipsis">
       2. The two live hypotheses
@@ -638,8 +647,9 @@
 
 
 <h1 id="plan-discriminating-the-bp-stall-class-real-hesitation-vs-encoder-blindness">PLAN — Discriminating the BP stall class: real hesitation vs encoder blindness</h1>
-<p><strong>Status:</strong> OPEN, blocked only on the bench board becoming free (field run 2 finishes
-~19:45 local 2026-08-02).
+<p><strong>Status:</strong> OPEN, board now FREE — field run 2 ended 2026-08-02 11:48 UTC on battery
+exhaustion (43/50 samples, 37.4 h, zero reboots). Board is dead/unpowered until the
+owner revives it; <code>reset_session</code> deliberately NOT queued (#65).
 <strong>Owns:</strong> GitHub <a href="https://github.com/fluispotter/fluispotter-firmware/issues/68">#68</a>
 (detector sensitivity + <code>seg_recover</code> policy), touches
 <a href="https://github.com/fluispotter/fluispotter-firmware/issues/48">#48</a> (encoder blindness).
@@ -667,6 +677,66 @@ changes? We ran 44 hours without a single stall event before this."</em></p>
   measurement came from the Test2 bench and must not be reused here. Any mechanical
   explanation now needs its own evidence.</li>
 </ul>
+<h2 id="1b-evidence-added-2026-08-02-sample-deltas-are-not-a-signal-and-the-hall-path-was-healthy-in-every-loading-window">1b. Evidence added 2026-08-02 — sample deltas are NOT a signal, and the hall path was healthy in every loading window</h2>
+<p>Owner hypothesis tested: <em>"deltas of more than 3 seconds coincide with a flush cycle
+continuing into the 5-minute pre-sample flush."</em> <strong>REFUTED — the condition never
+occurred.</strong> Pump state at preload, derived from the enable/disable events against each
+<code>Waking up for sample</code>, was <strong>PARKED at 42/42 samples</strong> with a determinable state
+(sample 0 indeterminate). Not one preload caught a running flush cycle. Structural
+reason: the flush cycle <strong>restarts after each sample</strong> (SWR-243, session IDLE branch),
+phase-locking it to the 53-min schedule — every preload landed 100–148 s into the
+8-minute REST. Independent phases would have caught a RUN in roughly 20 % of samples;
+0/42 is not chance.</p>
+<p><strong>What the deltas actually are: one-revolution phase quantisation.</strong> Loading requires 7
+hall crossings AFTER <code>scheduled_at</code> and <code>sampled_at</code> is the first of them, so the delta
+is bounded by one revolution period and <strong>wraps</strong>. Measured across the run:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>delta ≤ 3 s (n=34)</th>
+<th>delta &gt; 3 s (n=9)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>spin-up (preload → first crossing)</td>
+<td>19.4 s</td>
+<td><strong>19.4 s</strong></td>
+</tr>
+<tr>
+<td>revolution period</td>
+<td>16.0 s</td>
+<td><strong>16.0 s</strong></td>
+</tr>
+<tr>
+<td>crossings preload → loaded</td>
+<td>25</td>
+<td><strong>26</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Nothing physical differs. A +15 s delta means a crossing missed the scheduled instant by
+about <strong>one second</strong>, so the next arrives ~15 s later. Intermediate values (samples 5, 6,
+11 at +3; 7 at +4; 8 at +5) show the phase creeping through the boundary rather than
+flipping. <strong>Consequence for this plan: delta is not evidence of pump health and must not
+be used as one</strong> — an earlier mid-run reading of the +15 s cluster as battery decline was
+wrong.</p>
+<p><strong>What this DOES contribute to hypothesis (b).</strong> Across 43 loading windows the
+inter-crossing intervals were a uniform <strong>15–17 s with ZERO intervals ≥ 24 s</strong> —
+roughly 1,075 consecutive hall crossings with <strong>no dropped registration anywhere</strong>. So:</p>
+<ul>
+<li>the hall registration path is <strong>demonstrably healthy</strong> in the <code>TRIGGER</code> / loading
+  context (CPU awake, measuring every revolution), and</li>
+<li>therefore any blindness is <strong>episodic, not systemic</strong> — it did not manifest once in
+  ~1,075 crossings.</li>
+</ul>
+<p>This does <strong>not</strong> refute (b): the stalls occurred in the flush-cycle <code>BP_RUNNING</code>
+context, which differs from loading (CPU mostly asleep between hall wakes, different
+duty). But it narrows the target and <strong>raises the value of Experiment 2</strong> — the bench
+drive must reproduce the <em>flush-RUN</em> context specifically, not a loading-style
+continuous drive with the CPU attentive, or it will simply re-confirm the healthy path
+already measured here.</p>
 <h2 id="2-the-two-live-hypotheses">2. The two live hypotheses</h2>
 <h3 id="a-the-rotor-really-hesitated">(a) The rotor really hesitated</h3>
 <p>With the park not a hard spot, this needs its own evidence instead of being the default.
@@ -707,9 +777,13 @@ payload alongside the fields already there.</p>
   the counter is.</li>
 </ul>
 <h3 id="experiment-2-bench-drive-with-an-independent-rotation-witness-confirmatory">Experiment 2 — bench drive with an independent rotation witness (confirmatory)</h3>
-<p>Drive the BP continuously on the bench (board idle, USB attached, session not required)
-and check whether declared stalls coincide with an <strong>actual rotor stop</strong>, judged
-independently of the encoder path: hall-crossing counter and/or direct observation.</p>
+<p>Drive the BP on the bench (board idle, USB attached, session not required) and check
+whether declared stalls coincide with an <strong>actual rotor stop</strong>, judged independently of
+the encoder path: hall-crossing counter and/or direct observation.</p>
+<p><strong>Reproduce the FLUSH-RUN context, not a loading-style drive</strong> (see §1b): the 2-min
+RUN / 8-min REST cycle with the CPU napping between hall wakes, repeated for hours.
+A continuous attentive drive would only re-measure the path already proven healthy
+across ~1,075 loading crossings, and would produce a false negative.</p>
 <ul>
 <li>If stalls are declared while the hall counter keeps advancing → (b) confirmed
   outright, no ambiguity.</li>
@@ -771,6 +845,8 @@ power-cycle only if that fails.</p>
   bench-minutes experiment, not an endurance question.</li>
 <li>Do <strong>not</strong> quote historical stall counts across the fold boundary as a trend.</li>
 <li>Do <strong>not</strong> attribute anything to mechanical drag at the park position on this board.</li>
+<li>Do <strong>not</strong> use sample deltas as a health signal (§1b): they are one-revolution phase
+  quantisation, identical spin-up and revolution period on both sides.</li>
 </ul>
 
 

@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-02T12:16:30+00:00",
+ "generated_at": "2026-08-02T13:02:35+00:00",
  "firmware_version": "0.1.161",
  "ulp_operational": "1.24.2",
  "hub_service": null,
@@ -16,18 +16,32 @@
  },
  "ci": [
   {
-   "workflowName": "Documentation",
-   "headBranch": "dev",
-   "conclusion": "",
-   "status": "in_progress",
-   "updatedAt": "2026-08-02T12:16:05Z"
-  },
-  {
    "workflowName": "ci",
    "headBranch": "dev",
    "conclusion": "",
    "status": "in_progress",
-   "updatedAt": "2026-08-02T12:16:14Z"
+   "updatedAt": "2026-08-02T13:02:21Z"
+  },
+  {
+   "workflowName": "Documentation",
+   "headBranch": "dev",
+   "conclusion": "",
+   "status": "in_progress",
+   "updatedAt": "2026-08-02T13:02:16Z"
+  },
+  {
+   "workflowName": "Documentation",
+   "headBranch": "dev",
+   "conclusion": "success",
+   "status": "completed",
+   "updatedAt": "2026-08-02T12:16:39Z"
+  },
+  {
+   "workflowName": "ci",
+   "headBranch": "dev",
+   "conclusion": "failure",
+   "status": "completed",
+   "updatedAt": "2026-08-02T12:19:00Z"
   },
   {
    "workflowName": "Documentation",
@@ -84,26 +98,12 @@
    "conclusion": "success",
    "status": "completed",
    "updatedAt": "2026-08-01T11:01:42Z"
-  },
-  {
-   "workflowName": "ci",
-   "headBranch": "dev",
-   "conclusion": "failure",
-   "status": "completed",
-   "updatedAt": "2026-08-01T10:57:39Z"
-  },
-  {
-   "workflowName": "Documentation",
-   "headBranch": "dev",
-   "conclusion": "success",
-   "status": "completed",
-   "updatedAt": "2026-08-01T10:55:16Z"
   }
  ],
  "latest_commit": {
-  "hash": "782cdda55c39a1f896013915bd21862f8dbafb35",
+  "hash": "d07809c3a2cdab6a28e3fe79d270acc270993329",
   "date": "2026-08-02",
-  "subject": "field run 2 concluded: 43/50 in 37.4 h, zero reboots, battery exhaustion",
-  "body": "fw 0.1.161 + ULP dev.0.24, audit OFF. Started 07-31 22:27:14 UTC, died\n08-02 11:48:26 UTC. Safe posture: BP parked at 11:48:18 and disabled at\n11:48:26, clean final sync, no early-warning burst, ZERO reboots across\n37.4 h (48 h board uptime).\n\nEndurance result worth recording: 37.4 h audit-OFF vs run 011's 36.0 h\naudit-ON — turning the deque audit off bought only ~1.4 h, so the audit\nwas NOT the dominant drain and the 44h10m reference is not explained by\naudit state alone (that run used a 109-min cadence with 22 samples, far\nless pump duty; sample rate here 1.15/h vs run 011's 1.14/h).\n\nTiming: mostly 0-2 s deltas with two bounded +14/+15 s excursions that\nboth self-corrected. Faults: 7 BP stall + 3 BP start-FAIL, all in one\n31-minute window on 08-01 and all bp_state_word=1 (BP_RUNNING\ninter-edge watchdog), plus 2 isolated AC stalls; nothing in the final\n20 hours.\n\nThe INCOMPLETE report was generated through the HUBR-324 manual\nopen-tail override (43 sample rows, dual-signed) — first real use of\nthat path on a dead, never-revived session.\n\nreset_session deliberately NOT queued: the board is dead and a queued\nreset would consume the resume on revival (#65).\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
+  "subject": "plan: sample deltas are phase quantisation, not a health signal (§1b)",
+  "body": "Adds the 2026-08-02 finding to the stall-discriminator plan.\n\nOwner hypothesis \"deltas >3 s coincide with a flush cycle continuing\ninto the 5-minute pre-sample flush\" is REFUTED: the pump was PARKED at\n42/42 preloads with a determinable state, because the flush cycle\nrestarts after each sample and is therefore phase-locked to the 53-min\nschedule (every preload landed 100-148 s into the 8-min REST).\nIndependent phases would have caught a RUN in ~20 % of samples.\n\nThe deltas are one-revolution phase quantisation: spin-up (19.4 s) and\nrevolution period (16.0 s) are IDENTICAL between the delta<=3 (n=34)\nand delta>3 (n=9) groups; the big-delta samples just took one extra\nrevolution (26 vs 25). Loading requires 7 crossings after scheduled_at\nand sampled_at is the first of them, so delta wraps: +15 s means a\ncrossing missed the schedule by ~1 s. Added to non-goals: never use\ndelta as a pump-health signal (an earlier mid-run reading of the +15 s\ncluster as battery decline was wrong).\n\nWhat it contributes to hypothesis (b): across 43 loading windows the\ninter-crossing intervals were uniform 15-17 s with ZERO intervals\n>=24 s — ~1,075 consecutive hall crossings with no dropped\nregistration. So the hall path is demonstrably healthy in the TRIGGER\ncontext and any blindness is episodic, not systemic. This does NOT\nrefute (b) — the stalls were in the flush-cycle BP_RUNNING context —\nbut Experiment 2 must now reproduce the FLUSH-RUN context specifically\n(2-min RUN / 8-min REST, CPU napping between hall wakes) or it will\nre-measure the healthy path and produce a false negative.\n\nStatus updated: the board is free (run ended on battery exhaustion).\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
  }
 }
