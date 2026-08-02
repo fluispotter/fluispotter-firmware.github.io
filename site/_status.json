@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-02T09:16:31+00:00",
+ "generated_at": "2026-08-02T09:43:53+00:00",
  "firmware_version": "0.1.161",
  "ulp_operational": "1.24.2",
  "hub_service": null,
@@ -20,14 +20,28 @@
    "headBranch": "dev",
    "conclusion": "",
    "status": "in_progress",
-   "updatedAt": "2026-08-02T09:16:13Z"
+   "updatedAt": "2026-08-02T09:43:25Z"
   },
   {
    "workflowName": "ci",
    "headBranch": "dev",
    "conclusion": "",
    "status": "in_progress",
-   "updatedAt": "2026-08-02T09:16:06Z"
+   "updatedAt": "2026-08-02T09:43:32Z"
+  },
+  {
+   "workflowName": "Documentation",
+   "headBranch": "dev",
+   "conclusion": "success",
+   "status": "completed",
+   "updatedAt": "2026-08-02T09:16:36Z"
+  },
+  {
+   "workflowName": "ci",
+   "headBranch": "dev",
+   "conclusion": "failure",
+   "status": "completed",
+   "updatedAt": "2026-08-02T09:19:04Z"
   },
   {
    "workflowName": "ci",
@@ -84,26 +98,12 @@
    "conclusion": "success",
    "status": "completed",
    "updatedAt": "2026-07-28T10:25:44Z"
-  },
-  {
-   "workflowName": "Build",
-   "headBranch": "v0.1.145-img5",
-   "conclusion": "failure",
-   "status": "completed",
-   "updatedAt": "2026-07-28T10:13:57Z"
-  },
-  {
-   "workflowName": "Build",
-   "headBranch": "v0.1.145-img5",
-   "conclusion": "failure",
-   "status": "completed",
-   "updatedAt": "2026-07-28T10:03:55Z"
   }
  ],
  "latest_commit": {
-  "hash": "100670e56d8148ec4c6a7fde668deb2504b8d556",
+  "hash": "26a51bcab26ccb9f9e45595dfbbe4f926990546d",
   "date": "2026-08-02",
-  "subject": "docs: PLAN for discriminating the BP stall class (real hesitation vs encoder blindness)",
-  "body": "Writes up the open question from #68 as an actionable plan: hypothesis\n(a) real rotor hesitation, with supply sag from the CPU flash+radio\nburst as the leading non-mechanical candidate, vs (b) the rotor kept\nturning and the ULP went blind (#48 SENS_IOMUX_CLK_EN class). Records\nwhat is already settled (same-binary run-011 comparison, the ~16x\ndetector sensitivity change across the fold, all 7 stalls in\nBP_RUNNING, seg_recover's cold restart) and the owner's correction that\nthe devboard park is NOT a hard spot, so mechanical drag is retracted\nas an explanation.\n\nDecisive experiment: capture whether encoder edges were still accruing\nat the instant the stall is declared — an edge-counter witness in the\nFAULT payload (works in the field, forever), plus a bench drive with an\nindependent rotation witness and a must-fail control. Decision table\nmaps each outcome to its consequence; if (b) proves out, #68 becomes\nurgent because seg_recover would be stopping healthy motors.\n\nPrerequisites recorded: finish + conclude the running field test, and\nremove /crumbs_on (a confound armed for the #67 hunt that run 011 did\nnot have).\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
+  "subject": "spec 2.34: §4A.6 documents the LIVE Simple-P regulator + skip ladder, not the retired PID",
+  "body": "Owner report: the board-config regulator tables described the ULP 1.2.4\npositional PID, which has not been the operational law since the\nSimple-P 16-tick regulator landed. The section now documents what\nactually runs, with every value read from source:\n\nSimple-P: N=16 encoder pulses per measurement, 1 % deadband, power\nceiling 4095, per-pump kp (step_per_pct) AC 6 / BP 10, max-error clamp\nAC 30 % / BP 50 %, power floor 20 both — and the law stated plainly\n(pwr += err% x step_per_pct, no integral, no derivative,\nsaturate-and-continue).\n\nNEW table for the adaptive skip ladder and spin-up kick: the per-pump\nladders (AC 0,2,8,16,32,64,128,256,512,1024; BP\n0,4,8,16,24,64,128,256,512,1024), skip_max 9 and skip_good 2 both,\nDAC_START_AC 700 / DAC_START_BP 3200, escalate step 200 with decay on a\nsuccessful start, and the standing rule that one MOTOR_START_FAIL_AC\nper boot/recovery is EXPECTED by design because the AC deliberately\nstarts below its ~1900 break-away so the device learns its start power.\n\nThe PID gains are demoted to an explicit LEGACY note — they remain in\nboard_config.py for the legacy run_pid path (BP dosing/parking history,\nControl App test modes) and must not be read as the live tuning.\n\nSources: esp32/pump_regulator/main/ulp/main.c (op_p_*/ac_p_*/bp_p_*,\nskip tables, DAC_START_ESCALATE_STEP) and fluispotter/board_config.py\n(DAC_START_AC/_BP, SPR targets). .docx regenerated, Drive copy updated.\nverify: 176 requirements, 153 PASS / 0 FAIL; spec-version gate sees 2.34.\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
  }
 }

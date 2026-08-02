@@ -1,5 +1,11 @@
 [
 {
+"hash": "26a51bcab26ccb9f9e45595dfbbe4f926990546d",
+"date": "2026-08-02",
+"subject": "spec 2.34: §4A.6 documents the LIVE Simple-P regulator + skip ladder, not the retired PID",
+"body": "Owner report: the board-config regulator tables described the ULP 1.2.4\npositional PID, which has not been the operational law since the\nSimple-P 16-tick regulator landed. The section now documents what\nactually runs, with every value read from source:\n\nSimple-P: N=16 encoder pulses per measurement, 1 % deadband, power\nceiling 4095, per-pump kp (step_per_pct) AC 6 / BP 10, max-error clamp\nAC 30 % / BP 50 %, power floor 20 both — and the law stated plainly\n(pwr += err% x step_per_pct, no integral, no derivative,\nsaturate-and-continue).\n\nNEW table for the adaptive skip ladder and spin-up kick: the per-pump\nladders (AC 0,2,8,16,32,64,128,256,512,1024; BP\n0,4,8,16,24,64,128,256,512,1024), skip_max 9 and skip_good 2 both,\nDAC_START_AC 700 / DAC_START_BP 3200, escalate step 200 with decay on a\nsuccessful start, and the standing rule that one MOTOR_START_FAIL_AC\nper boot/recovery is EXPECTED by design because the AC deliberately\nstarts below its ~1900 break-away so the device learns its start power.\n\nThe PID gains are demoted to an explicit LEGACY note — they remain in\nboard_config.py for the legacy run_pid path (BP dosing/parking history,\nControl App test modes) and must not be read as the live tuning.\n\nSources: esp32/pump_regulator/main/ulp/main.c (op_p_*/ac_p_*/bp_p_*,\nskip tables, DAC_START_ESCALATE_STEP) and fluispotter/board_config.py\n(DAC_START_AC/_BP, SPR targets). .docx regenerated, Drive copy updated.\nverify: 176 requirements, 153 PASS / 0 FAIL; spec-version gate sees 2.34.\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
+},
+{
 "hash": "100670e56d8148ec4c6a7fde668deb2504b8d556",
 "date": "2026-08-02",
 "subject": "docs: PLAN for discriminating the BP stall class (real hesitation vs encoder blindness)",
@@ -1792,11 +1798,5 @@
 "date": "2026-07-13",
 "subject": "clean_event_store idempotency per command uid (0.1.103, SWR-263)",
 "body": "Live 0.1.102 proof run: the command executed TWICE (base 27->30) —\nfast polls re-deliver until the ack uploads, and each re-execution\nwipes the previous ack. A repeated command uid now re-acks without\nre-cleaning. Live 0.1.103 proof: exactly one clean (purged 10,\nbase 30->40), single cleaned event uid 16711720 continuing past the\npre-clean high-water, command cleared. Registry 1.55, 206 tests 0 FAIL.\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
-},
-{
-"hash": "336c15c3978b90ef53ebd7d47a279f011a4a56fc",
-"date": "2026-07-13",
-"subject": "clean_event_store command + boot append guard (0.1.102, SWR-263/264)",
-"body": "Store-full incident 2026-07-13 (8192 cap via 37h of FINISH-state\nWiFi-disconnect logging; device hub-mute, brick-on-next-boot):\n\n- clean_event_store hub command: wipes + re-initializes the event store,\n  uid-continuous via persisted uid_base (event_uid_base file) so the hub\n  mint gate/dedupe keep working with NO hub-row delete. Crash-safe\n  two-phase (index removal = commit point; boot finishes/rolls back an\n  interrupted clean). Ack lands in the FRESH store (ack-before-clean\n  would re-deliver forever). SWR-238 degraded latch resets.\n- Boot config append guarded (SWR-264): a full store degrades to a log\n  line instead of bricking every boot in create().\n- EventStore grows uid_base; synchronize() claims base+length and\n  resumes uploads at unmask(server_uid)-base+1, clamped at 0.\n- deploy scripts: event_store.py added to FILES (was missing - the\n  0.1.100 lesson again).\n- 8 host-run behavioral tests (real sync math vs fakes) + 5 structure\n  tests; registry 1.54, 131 reqs 0 FAIL, 205 tests.\n- Submodule: hub service 1.3.0 surfaces the command button (deployed).\n\nCo-Authored-By: Claude Fable 5 <noreply@anthropic.com>"
 }
 ]
